@@ -174,13 +174,15 @@ svg {
   top: 0;
   left: var(--sidebar-width);
   right: 0;
-  height: var(--topnav-height, 68px);
+  height: calc(var(--topnav-height, 68px) + var(--safe-top));
+  padding-top: var(--safe-top);
   background-color: #ffffff;
   border-bottom: 1px solid var(--border-subtle);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 28px;
+  padding-left: max(28px, var(--safe-left));
+  padding-right: max(28px, var(--safe-right));
   z-index: 80;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
   transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -1028,12 +1030,12 @@ input::-ms-clear {
   /* Remove sidebar space & fix topnav on mobile */
   .main-content {
     margin-left: 0;
-    padding-top: var(--topnav-height, 68px);
+    padding-top: calc(var(--topnav-height, 68px) + var(--safe-top));
   }
 
   .app-topnav {
     left: 0;
-    padding: 0 16px;
+    padding: var(--safe-top) 16px 0 16px;
   }
 
   /* Sidebar slides in from left */
