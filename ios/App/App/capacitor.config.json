@@ -1,0 +1,22 @@
+{
+	"appId": "com.agritrack.app",
+	"appName": "AgriTrack",
+	"webDir": "www",
+	"server": {
+		"url": "https://agri-track-smoky.vercel.app/",
+		"cleartext": true,
+		"androidScheme": "https",
+		"iosScheme": "https"
+	},
+	"android": {
+		"allowMixedContent": true,
+		"captureInput": true,
+		"webContentsDebuggingEnabled": false
+	},
+	"ios": {
+		"contentInset": "always",
+		"backgroundColor": "#0c2b1d",
+		"preferredContentMode": "mobile"
+	},
+	"packageClassList": []
+}

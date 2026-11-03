@@ -27,11 +27,14 @@ export const metadata: Metadata = {
   manifest: '/manifest.json',
   icons: {
     icon: '/images/icon.svg',
-    apple: '/images/icon.svg',
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+      { url: '/images/icon.svg' },
+    ],
   },
   appleWebApp: {
     capable: true,
-    statusBarStyle: 'black-translucent',
+    statusBarStyle: 'default',
     title: 'AgriTrack',
   },
   formatDetection: {

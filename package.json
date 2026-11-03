@@ -16,7 +16,9 @@
     "install:all": "npm install --prefix frontend && npm install --prefix backend",
     "db:init": "npm run db:init --prefix backend",
     "cap:sync": "cap sync android",
-    "cap:open": "cap open android"
+    "cap:open": "cap open android",
+    "cap:sync:ios": "cap sync ios",
+    "cap:open:ios": "cap open ios"
   },
   "devDependencies": {
     "concurrently": "^9.1.2"
@@ -24,6 +26,7 @@
   "dependencies": {
     "@capacitor/android": "^8.6.0",
     "@capacitor/cli": "^8.6.0",
-    "@capacitor/core": "^8.6.0"
+    "@capacitor/core": "^8.6.0",
+    "@capacitor/ios": "^8.6.0"
   }
 }
