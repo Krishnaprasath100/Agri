@@ -3,7 +3,7 @@
   "appName": "AgriTrack",
   "webDir": "www",
   "server": {
-    "url": "https://agri-track-smoky.vercel.app",
+    "url": "https://agri-track-smoky.vercel.app/",
     "cleartext": true,
     "androidScheme": "https"
   },
@@ -13,4 +13,3 @@
     "webContentsDebuggingEnabled": false
   }
 }
-
