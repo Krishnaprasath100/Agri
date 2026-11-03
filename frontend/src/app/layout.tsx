@@ -3,6 +3,7 @@ import { Inter, Poppins } from 'next/font/google';
 import '@/styles/globals.css';
 import { AuthProvider } from '@/context/AuthContext';
 import { LanguageProvider } from '@/context/LanguageContext';
+import { GeminiAiChat } from '@/components/ai/GeminiAiChat';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -66,7 +67,10 @@ export default function RootLayout({
         style={{ margin: 0, padding: 0 }}
       >
         <LanguageProvider>
-          <AuthProvider>{children}</AuthProvider>
+          <AuthProvider>
+            {children}
+            <GeminiAiChat />
+          </AuthProvider>
         </LanguageProvider>
       </body>
     </html>
