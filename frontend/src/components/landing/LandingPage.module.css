@@ -379,7 +379,7 @@
 
 .mobileDrawer {
   position: fixed;
-  top: 62px;
+  top: calc(60px + max(env(safe-area-inset-top, 0px), 8px));
   left: 0;
   right: 0;
   background: rgba(255, 255, 255, 0.96);

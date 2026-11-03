@@ -5,40 +5,37 @@
     android:viewportWidth="108"
     android:viewportHeight="108">
     <group
-        android:translateX="18.8"
-        android:translateY="15.6"
-        android:scaleX="3.2"
-        android:scaleY="3.2">
-        <!-- Ground Line -->
+        android:translateX="54"
+        android:translateY="55"
+        android:scaleX="0.18"
+        android:scaleY="0.18">
+        <!-- Vertical Stem -->
         <path
-            android:pathData="M7,20 L17,20"
+            android:pathData="M0,-20 L0,95"
             android:strokeColor="#FFFFFF"
-            android:strokeWidth="2.2"
+            android:strokeWidth="18"
             android:strokeLineCap="round"
             android:strokeLineJoin="round" />
-        <!-- Main Stem -->
+        <!-- Ground Line -->
         <path
-            android:pathData="M10,20 C15.5,17.5 10.8,13.6 13,10"
+            android:pathData="M-55,95 L55,95"
             android:strokeColor="#FFFFFF"
-            android:strokeWidth="2.2"
+            android:strokeWidth="18"
             android:strokeLineCap="round"
             android:strokeLineJoin="round" />
         <!-- Left Leaf -->
         <path
-            android:pathData="M9.5,9.4 C10.6,10.2 11.3,11.6 11.8,13.1 C9.8,13.5 8.3,13.5 7,12.8 C5.8,12.2 4.7,10.9 4,8.6 C6.8,8.1 8.4,8.6 9.5,9.4 Z"
-            android:fillColor="#52B788"
+            android:pathData="M0,-20 C0,-95 -75,-125 -75,-125 C-75,-125 -50,-45 0,-20"
             android:strokeColor="#FFFFFF"
-            android:strokeWidth="2.2"
+            android:strokeWidth="18"
             android:strokeLineCap="round"
             android:strokeLineJoin="round" />
         <!-- Right Leaf -->
         <path
-            android:pathData="M14.1,6 C13.3,7.2 12.9,8.6 13,10 C14.9,9.9 16.3,9.4 17.3,8.6 C18.3,7.6 18.9,6.3 19,4 C16.3,4.1 15,5 14.1,6 Z"
-            android:fillColor="#52B788"
+            android:pathData="M0,-20 C0,-95 75,-125 75,-125 C75,-125 50,-45 0,-20"
             android:strokeColor="#FFFFFF"
-            android:strokeWidth="2.2"
+            android:strokeWidth="18"
             android:strokeLineCap="round"
             android:strokeLineJoin="round" />
     </group>
 </vector>
-
