@@ -279,7 +279,7 @@ export const GeminiAiChat: React.FC = () => {
 
           {/* Welcome Alert / Info Notice */}
           <div className={styles.welcomeBanner}>
-            <Sparkles size={16} style={{ color: '#2563eb', flexShrink: 0, marginTop: 2 }} />
+            <Sparkles size={16} style={{ color: '#16a34a', flexShrink: 0, marginTop: 2 }} />
             <div className={styles.welcomeText}>
               Ask any question about AgriTrack, how to record entries, crop cycles, or the <strong>functions of each button</strong>.
             </div>
@@ -340,7 +340,7 @@ export const GeminiAiChat: React.FC = () => {
                         <>
                           {renderFormattedContent(msg.content)}
                           <div className={styles.sourceBadge}>
-                            <Sparkles size={11} style={{ color: '#2563eb' }} />
+                            <Sparkles size={11} style={{ color: '#16a34a' }} />
                             <span>
                               {msg.source === 'gemini'
                                 ? 'Gemini 3.8 Flash'
