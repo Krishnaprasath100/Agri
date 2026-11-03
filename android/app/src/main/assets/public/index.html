@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#1b6343" />
+  <title>AgriTrack</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-color: #0c2b1d;
+      color: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+      padding: 24px;
+    }
+    .logo-container {
+      width: 72px;
+      height: 72px;
+      background: linear-gradient(135deg, #1b6343 0%, #0c2b1d 100%);
+      border: 2px solid #52b788;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    }
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      color: #52b788;
+    }
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3.5px solid rgba(82, 183, 136, 0.25);
+      border-top-color: #52b788;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 20px;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    h1 {
+      font-size: 26px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 6px;
+      letter-spacing: -0.5px;
+    }
+    .subtitle {
+      font-size: 14px;
+      color: #52b788;
+      font-weight: 500;
+      margin-bottom: 28px;
+    }
+    .status-text {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.7);
+    }
+  </style>
+</head>
+<body>
+  <div class="logo-container">
+    <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      <path d="M12 8v8" />
+      <path d="M8 12h8" />
+    </svg>
+  </div>
+  <div class="spinner"></div>
+  <h1>AgriTrack</h1>
+  <div class="subtitle">Smart Farm Management</div>
+  <p class="status-text">Connecting to farm ledger...</p>
+
+  <script>
+    const targetUrl = 'https://agri-track-smoky.vercel.app';
+    window.location.replace(targetUrl);
+  </script>
+</body>
+</html>
