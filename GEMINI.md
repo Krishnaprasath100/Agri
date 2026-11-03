@@ -10,3 +10,4 @@ When making changes:
 4. Verify frontend changes with `npm.cmd run build --prefix frontend`.
 5. Avoid deleting user data, credentials, or project files unless the request clearly authorizes it.
 6. For custom crop or expense-type choices, persist them per signed-in user so they reappear in the relevant dropdown.
+7. Do not deploy or push to production automatically. After finishing and verifying changes locally, ask the user for confirmation before deploying.

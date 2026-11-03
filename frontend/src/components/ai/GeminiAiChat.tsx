@@ -140,12 +140,6 @@ export const GeminiAiChat: React.FC = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Draggable position state
-  const [position, setPosition] = useState<{ x: number; y: number } | null>(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const dragStartRef = useRef<{ pointerX: number; pointerY: number; startX: number; startY: number } | null>(null);
-  const movedThresholdRef = useRef(false);
-
   // Speech Recognition (Voice Note / Mic)
   const [isListening, setIsListening] = useState(false);
   const [speechLang, setSpeechLang] = useState<'ta-IN' | 'en-IN'>('ta-IN');
@@ -160,35 +154,12 @@ export const GeminiAiChat: React.FC = () => {
   // Initialize on mount
   useEffect(() => {
     setMounted(true);
-    // Set default speech language based on app language
     if (language === 'ta') {
       setSpeechLang('ta-IN');
     } else {
       setSpeechLang('en-IN');
     }
-
-    // Default trigger placement in right down corner
-    if (typeof window !== 'undefined') {
-      const isMobile = window.innerWidth <= 992;
-      const initialX = Math.max(16, window.innerWidth - 82);
-      const initialY = Math.max(16, window.innerHeight - (isMobile ? 150 : 92));
-      setPosition({ x: initialX, y: initialY });
-    }
   }, [language]);
-
-  // Handle window resizing to keep button within bounds
-  useEffect(() => {
-    const handleResize = () => {
-      setPosition((prev) => {
-        if (!prev) return null;
-        const newX = Math.min(prev.x, window.innerWidth - 76);
-        const newY = Math.min(prev.y, window.innerHeight - 76);
-        return { x: Math.max(12, newX), y: Math.max(12, newY) };
-      });
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -264,54 +235,7 @@ export const GeminiAiChat: React.FC = () => {
     setSpeakingId(null);
   };
 
-  // Drag Handlers for pointer events
-  const handlePointerDown = (e: React.PointerEvent<HTMLButtonElement>) => {
-    if (isOpen) return;
-    e.currentTarget.setPointerCapture(e.pointerId);
-    dragStartRef.current = {
-      pointerX: e.clientX,
-      pointerY: e.clientY,
-      startX: position?.x ?? (window.innerWidth - 82),
-      startY: position?.y ?? (window.innerHeight - 92),
-    };
-    movedThresholdRef.current = false;
-    setIsDragging(true);
-  };
 
-  const handlePointerMove = (e: React.PointerEvent<HTMLButtonElement>) => {
-    if (!dragStartRef.current) return;
-    const dx = e.clientX - dragStartRef.current.pointerX;
-    const dy = e.clientY - dragStartRef.current.pointerY;
-
-    if (Math.hypot(dx, dy) > 6) {
-      movedThresholdRef.current = true;
-    }
-
-    if (movedThresholdRef.current) {
-      const maxX = window.innerWidth - 72;
-      const maxY = window.innerHeight - 72;
-      const newX = Math.max(12, Math.min(maxX, dragStartRef.current.startX + dx));
-      const newY = Math.max(12, Math.min(maxY, dragStartRef.current.startY + dy));
-      setPosition({ x: newX, y: newY });
-    }
-  };
-
-  const handlePointerUp = (e: React.PointerEvent<HTMLButtonElement>) => {
-    if (dragStartRef.current) {
-      try {
-        e.currentTarget.releasePointerCapture(e.pointerId);
-      } catch {
-        // Safe fallback
-      }
-    }
-    setIsDragging(false);
-
-    // If moved less than threshold, treat as a click to open modal
-    if (!movedThresholdRef.current) {
-      setIsOpen(true);
-    }
-    dragStartRef.current = null;
-  };
 
   // Voice Input (Speech Recognition)
   const toggleVoiceInput = () => {
@@ -520,28 +444,20 @@ export const GeminiAiChat: React.FC = () => {
 
   return (
     <>
-      {/* Draggable Floating Trigger Button in Right Down Corner */}
+      {/* Floating Trigger Button in Right Down Corner */}
       {!isOpen && (
         <button
-          className={`${styles.floatingTrigger} ${isDragging ? styles.isDragging : ''}`}
-          style={
-            position
-              ? { left: `${position.x}px`, top: `${position.y}px`, bottom: 'auto', right: 'auto' }
-              : undefined
-          }
-          onPointerDown={handlePointerDown}
-          onPointerMove={handlePointerMove}
-          onPointerUp={handlePointerUp}
-          onPointerCancel={handlePointerUp}
-          aria-label="Ask AgriTrack AI (Draggable)"
-          title="AgriTrack AI Assistant (Drag anywhere)"
+          className={styles.floatingTrigger}
+          onClick={() => setIsOpen(true)}
+          aria-label="Ask AgriTrack AI"
+          title="Ask AgriTrack AI"
         >
           <GeminiSparkleIcon className={styles.triggerSparkleIcon} />
           <span className={styles.triggerText}>Ask AI</span>
         </button>
       )}
 
-      {/* Expandable Chat Modal Window */}
+      {/* Expandable Chat Modal Window in Right Down Corner */}
       {isOpen && (
         <div
           className={`${styles.chatModal} ${isExpanded ? styles.expanded : ''}`}

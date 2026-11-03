@@ -5,9 +5,11 @@
 /* Includes Draggable Trigger & Tamil/English Voice Features    */
 /* ============================================================ */
 
-/* Floating trigger button - Draggable */
+/* Floating trigger button - Right Down Corner */
 .floatingTrigger {
   position: fixed;
+  bottom: 24px;
+  right: 24px;
   width: 62px;
   height: 62px;
   background: linear-gradient(135deg, #1b6343 0%, #0c2b1d 100%);
@@ -20,35 +22,27 @@
   justify-content: center;
   gap: 3px;
   color: #ffffff;
-  cursor: grab;
-  touch-action: none;
+  cursor: pointer;
   z-index: 9999;
-  transition: box-shadow 0.22s ease, border-color 0.22s ease;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   outline: none;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
 
 .floatingTrigger:hover {
+  transform: translateY(-3px) scale(1.04);
   box-shadow: 0 14px 34px -3px rgba(12, 43, 29, 0.65), 0 5px 14px rgba(82, 183, 136, 0.32);
 }
 
 .floatingTrigger:active {
-  cursor: grabbing;
-}
-
-.floatingTrigger.isDragging {
-  cursor: grabbing;
-  transform: scale(1.08);
-  box-shadow: 0 18px 42px -4px rgba(12, 43, 29, 0.75), 0 8px 20px rgba(82, 183, 136, 0.4);
-  transition: none;
+  transform: translateY(0) scale(0.96);
 }
 
 .triggerSparkleIcon {
   width: 24px;
   height: 24px;
   filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.25));
-  pointer-events: none;
 }
 
 .triggerText {
@@ -57,10 +51,9 @@
   letter-spacing: 0.02em;
   color: #ffffff;
   line-height: 1;
-  pointer-events: none;
 }
 
-/* Modal Chat Window */
+/* Modal Chat Window - Right Down Corner */
 .chatModal {
   position: fixed;
   bottom: 96px;
@@ -693,6 +686,14 @@
 
 /* Responsive styles */
 @media (max-width: 992px) {
+  .floatingTrigger {
+    bottom: calc(var(--bottom-nav-height, 64px) + var(--safe-bottom, 0px) + 16px);
+    right: 16px;
+    width: 58px;
+    height: 58px;
+    border-radius: 16px;
+  }
+
   .chatModal {
     bottom: calc(var(--bottom-nav-height, 64px) + var(--safe-bottom, 0px) + 84px);
     right: 12px;
