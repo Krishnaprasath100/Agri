@@ -1,0 +1,294 @@
+/* ============================================================ */
+/* AGRITRACK INTRO / SPLASH ANIMATION SCREEN                    */
+/* ============================================================ */
+
+.splashContainer {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 40%, #154e35 0%, #0c2b1d 60%, #06170f 100%);
+  color: #ffffff;
+  overflow: hidden;
+  z-index: 9999;
+  user-select: none;
+  cursor: pointer;
+  padding: max(env(safe-area-inset-top, 0px), 24px) 24px max(env(safe-area-inset-bottom, 0px), 24px);
+  box-sizing: border-box;
+}
+
+/* Ambient glow particles behind logo */
+.ambientGlow {
+  position: absolute;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(82, 183, 136, 0.28) 0%, rgba(27, 99, 67, 0.15) 50%, transparent 70%);
+  filter: blur(40px);
+  animation: glowPulse 3s infinite ease-in-out;
+  pointer-events: none;
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    transform: scale(0.95);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 0.95;
+  }
+}
+
+/* Central Animation Stage */
+.stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+  gap: 20px;
+}
+
+/* Logo Wrapper with outer ring glow */
+.logoWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ripple rings */
+.rippleRing {
+  position: absolute;
+  width: 110px;
+  height: 110px;
+  border-radius: 30px;
+  border: 1.5px solid rgba(82, 183, 136, 0.35);
+  animation: ringExpand 2s infinite cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+@keyframes ringExpand {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+/* Logo Badge */
+.logoBadge {
+  width: 96px;
+  height: 96px;
+  border-radius: 26px;
+  background: linear-gradient(135deg, #1b6343 0%, #0c2b1d 100%);
+  border: 2px solid rgba(82, 183, 136, 0.55);
+  box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.6), 0 0 28px rgba(82, 183, 136, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: logoEntrance 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  position: relative;
+  z-index: 3;
+}
+
+@keyframes logoEntrance {
+  0% {
+    opacity: 0;
+    transform: scale(0.4) rotate(-10deg);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.08) rotate(2deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+/* Sprout Icon inside badge */
+.sproutSvg {
+  width: 54px;
+  height: 54px;
+  animation: sproutGrow 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+  transform-origin: 50% 85%;
+  opacity: 0;
+}
+
+@keyframes sproutGrow {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* App Title Group */
+.titleGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.appName {
+  font-family: var(--font-heading, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-size: clamp(2.4rem, 6.5vw, 3.2rem);
+  font-weight: 850;
+  letter-spacing: -0.03em;
+  margin: 0;
+  line-height: 1.1;
+  display: flex;
+  align-items: center;
+  animation: titleSlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.35s forwards;
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+.nameAgri {
+  color: #ffffff;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.35);
+}
+
+.nameTrack {
+  color: #52b788;
+  margin-left: 1px;
+  text-shadow: 0 2px 18px rgba(82, 183, 136, 0.4);
+}
+
+@keyframes titleSlideUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Tagline */
+.tagline {
+  font-size: clamp(0.88rem, 2.5vw, 1.05rem);
+  font-weight: 500;
+  color: #b7e4c7;
+  letter-spacing: 0.04em;
+  margin: 0;
+  opacity: 0;
+  animation: fadeIn 0.8s ease 0.6s forwards;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.taglineDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #52b788;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 0.9;
+  }
+}
+
+/* Loading Bar */
+.progressContainer {
+  width: 140px;
+  height: 3.5px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 99px;
+  overflow: hidden;
+  margin-top: 22px;
+  opacity: 0;
+  animation: fadeIn 0.6s ease 0.7s forwards;
+}
+
+.progressBar {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #2d6a4f 0%, #52b788 50%, #74c69d 100%);
+  border-radius: 99px;
+  transform: translateX(-100%);
+  animation: progressFill 1.4s cubic-bezier(0.4, 0, 0.2, 1) 0.8s forwards;
+}
+
+@keyframes progressFill {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+/* Skip / Enter Action Pill */
+.actionPill {
+  margin-top: 18px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(82, 183, 136, 0.25);
+  border-radius: 99px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #b7e4c7;
+  text-decoration: none;
+  opacity: 0;
+  animation: fadeIn 0.6s ease 1s forwards;
+  transition: all 0.2s ease;
+}
+
+.actionPill:hover {
+  background: rgba(82, 183, 136, 0.2);
+  color: #ffffff;
+  border-color: #52b788;
+  transform: translateY(-1px);
+}
+
+/* Mobile Adjustments */
+@media (max-width: 640px) {
+  .logoBadge {
+    width: 84px;
+    height: 84px;
+    border-radius: 22px;
+  }
+
+  .sproutSvg {
+    width: 46px;
+    height: 46px;
+  }
+
+  .appName {
+    font-size: 2.3rem;
+  }
+
+  .tagline {
+    font-size: 0.84rem;
+  }
+
+  .progressContainer {
+    width: 120px;
+    margin-top: 16px;
+  }
+}
+
