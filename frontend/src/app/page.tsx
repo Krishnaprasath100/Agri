@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useLanguage } from '@/context/LanguageContext';
 import {
   Sprout,
   ArrowRight,
@@ -138,6 +139,15 @@ const FAQ_ITEMS = [
 ];
 
 export default function LandingPage() {
+  const { setLanguage } = useLanguage();
+
+  useEffect(() => {
+    setLanguage('en');
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('agritrack_language', 'en');
+    }
+  }, [setLanguage]);
+
   // Mobile Nav State
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 

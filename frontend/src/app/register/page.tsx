@@ -14,10 +14,19 @@ import {
   UserPlus,
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
+import { useLanguage } from '@/context/LanguageContext';
 import styles from '@/components/auth/AuthPage.module.css';
 
 export default function RegisterPage() {
   const { register } = useAuth();
+  const { setLanguage } = useLanguage();
+
+  useEffect(() => {
+    setLanguage('en');
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('agritrack_language', 'en');
+    }
+  }, [setLanguage]);
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',

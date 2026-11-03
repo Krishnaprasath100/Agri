@@ -4,10 +4,20 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { AlertCircle, CheckCircle2, ArrowLeft, ArrowRight, Eye, EyeOff, LogIn, Sprout, UserPlus } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
+import { useLanguage } from '@/context/LanguageContext';
 import styles from '@/components/auth/AuthPage.module.css';
 
 export default function LoginPage() {
   const { login } = useAuth();
+  const { setLanguage } = useLanguage();
+
+  useEffect(() => {
+    // Always force English on the login page
+    setLanguage('en');
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('agritrack_language', 'en');
+    }
+  }, [setLanguage]);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);

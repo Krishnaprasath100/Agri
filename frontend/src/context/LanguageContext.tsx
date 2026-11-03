@@ -190,13 +190,6 @@ const tamil: Record<string, string> = {
   'Update Crop Cycle': 'நடவைப் புதுப்பிக்கவும்',
   'Close modal': 'சாளரத்தை மூடு',
   'Open calendar': 'நாட்காட்டியைத் திறக்கவும்',
-  'Welcome Back': 'மீண்டும் வரவேற்கிறோம்',
-  'Email Address': 'மின்னஞ்சல் முகவரி',
-  'Password': 'கடவுச்சொல்',
-  'Sign In': 'உள்நுழைக',
-  'Sign Up': 'பதிவு செய்க',
-  'Sign In to Account': 'கணக்கில் உள்நுழைக',
-  'Create New Farmer Account': 'புதிய விவசாயி கணக்கை உருவாக்கவும்',
   'Save Changes': 'மாற்றங்களைச் சேமிக்கவும்',
   'Delete': 'நீக்கவும்',
   'Edit': 'திருத்தவும்',
@@ -218,11 +211,32 @@ Object.assign(tamil, {
   'Farmer': 'விவசாயி',
 });
 
-const english = Object.fromEntries(Object.entries(tamil).map(([key, value]) => [value, key]));
+const legacyAuthRevert: Record<string, string> = {
+  'மீண்டும் வரவேற்கிறோம்': 'Welcome Back',
+  'மின்னஞ்சல் முகவரி': 'Email Address',
+  'கடவுச்சொல்': 'Password',
+  'உள்நுழைக': 'Sign In',
+  'பதிவு செய்க': 'Sign Up',
+  'கணக்கில் உள்நுழைக': 'Sign In to Account',
+  'புதிய விவசாயி கணக்கை உருவாக்கவும்': 'Create New Farmer Account',
+};
+
+const english: Record<string, string> = {
+  ...Object.fromEntries(Object.entries(tamil).map(([key, value]) => [value, key])),
+  ...legacyAuthRevert,
+};
+
+function isAuthOrLandingRoute(): boolean {
+  if (typeof window === 'undefined') return false;
+  const p = window.location.pathname;
+  return p === '/' || p === '/login' || p === '/register' || p === '/forgot-password';
+}
 
 function translateDocument(language: Language) {
   if (typeof document === 'undefined') return;
-  const dictionary = language === 'ta' ? tamil : english;
+  // Auth and landing pages are strictly English only
+  const effectiveLanguage = isAuthOrLandingRoute() ? 'en' : language;
+  const dictionary = effectiveLanguage === 'ta' ? tamil : english;
   const translate = (value: string) => dictionary[value.trim()] || value;
   const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
   const nodes: Text[] = [];
@@ -244,11 +258,28 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguageState] = useState<Language>('en');
 
   useEffect(() => {
+    if (isAuthOrLandingRoute()) {
+      setLanguageState('en');
+      localStorage.setItem(STORAGE_KEY, 'en');
+      translateDocument('en');
+      return;
+    }
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored === 'ta' || stored === 'en') setLanguageState(stored);
   }, []);
 
   useEffect(() => {
+    if (isAuthOrLandingRoute()) {
+      if (language !== 'en') {
+        setLanguageState('en');
+      }
+      localStorage.setItem(STORAGE_KEY, 'en');
+      translateDocument('en');
+      const observer = new MutationObserver(() => translateDocument('en'));
+      observer.observe(document.body, { childList: true, subtree: true });
+      return () => observer.disconnect();
+    }
+
     localStorage.setItem(STORAGE_KEY, language);
     translateDocument(language);
     const observer = new MutationObserver(() => translateDocument(language));

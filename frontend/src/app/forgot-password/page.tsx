@@ -13,10 +13,19 @@ import {
   Loader2,
   Sprout,
 } from 'lucide-react';
+import { useLanguage } from '@/context/LanguageContext';
 import styles from '@/components/auth/AuthPage.module.css';
 
 export default function ForgotPasswordPage() {
+  const { setLanguage } = useLanguage();
   const [identifier, setIdentifier] = useState('');
+
+  React.useEffect(() => {
+    setLanguage('en');
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('agritrack_language', 'en');
+    }
+  }, [setLanguage]);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);

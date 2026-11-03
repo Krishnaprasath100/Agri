@@ -144,6 +144,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setUser(null);
     if (typeof window !== 'undefined') {
       localStorage.removeItem(AUTH_STORAGE_KEY);
+      // Ensure language is always reset to English on logout
+      localStorage.setItem('agritrack_language', 'en');
       if (redirectTo) {
         window.location.replace(redirectTo);
       }
