@@ -1,15 +1,20 @@
 /* ============================================================ */
-/* AGRITRACK EXACT LEDGER VIEW (MATCHING USER REFERENCE DESIGN) */
+/* AGRITRACK ADAPTIVE LEDGER VIEW (MOBILE APP & DESKTOP WEBSITE) */
 /* Kept strictly with AgriTrack Green Branding Palette           */
 /* ============================================================ */
 
 .pageWrapper {
-  max-width: 640px;
+  width: 100%;
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 12px 14px 100px;
-  background: #ffffff;
-  min-height: 100vh;
+  padding: 4px 0 20px;
   box-sizing: border-box;
+}
+
+@media (max-width: 640px) {
+  .pageWrapper {
+    padding: 0 0 12px;
+  }
 }
 
 /* 1. Top Filters Row */
@@ -17,7 +22,20 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .filterRow {
+    display: flex;
+    gap: 12px;
+    max-width: 520px;
+  }
+  .filterBox {
+    flex: 1;
+    min-width: 220px;
+  }
 }
 
 .filterBox {
@@ -92,6 +110,15 @@
   margin-bottom: 14px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+  width: 100%;
+  box-shadow: 0 1px 4px rgba(12, 43, 29, 0.03);
+}
+
+@media (min-width: 768px) {
+  .summaryCard {
+    padding: 16px 20px;
+    margin-bottom: 18px;
+  }
 }
 
 .summaryCol {
@@ -112,6 +139,12 @@
   font-weight: 600;
   color: #52796f;
   margin-bottom: 4px;
+}
+
+@media (min-width: 768px) {
+  .summaryLabel {
+    font-size: 14px;
+  }
 }
 
 .summaryIncome {
@@ -135,13 +168,22 @@
   line-height: 1.1;
 }
 
+@media (min-width: 768px) {
+  .summaryIncome,
+  .summaryExpense,
+  .summaryBalance {
+    font-size: 24px;
+  }
+}
+
 /* 3. Table Structure */
 .tableContainer {
   border: 1.5px solid #dcebe0;
   border-radius: 14px;
   overflow: hidden;
   background: #ffffff;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
+  width: 100%;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
 }
 
@@ -152,13 +194,26 @@
   border-bottom: 1.5px solid #dcebe0;
 }
 
+@media (min-width: 768px) {
+  .tableHeader {
+    grid-template-columns: 1fr 200px 200px;
+  }
+}
+
 .tableHeaderCol {
-  padding: 11px 14px;
+  padding: 12px 14px;
   font-size: 15px;
   font-weight: 800;
   color: #0c2b1d;
   display: flex;
   align-items: center;
+}
+
+@media (min-width: 768px) {
+  .tableHeaderCol {
+    padding: 14px 20px;
+    font-size: 16px;
+  }
 }
 
 .tableHeaderColBorder {
@@ -174,6 +229,12 @@
   transition: background 0.15s ease;
 }
 
+@media (min-width: 768px) {
+  .tableRow {
+    grid-template-columns: 1fr 200px 200px;
+  }
+}
+
 .tableRow:hover {
   background: #fbfdfb;
 }
@@ -183,7 +244,13 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 2px;
+  gap: 3px;
+}
+
+@media (min-width: 768px) {
+  .detailsCol {
+    padding: 16px 20px;
+  }
 }
 
 .rowDate {
@@ -204,10 +271,24 @@
   color: #0f172a;
 }
 
+@media (min-width: 768px) {
+  .rowCategory {
+    font-size: 15.5px;
+  }
+}
+
 .rowPerson {
   font-size: 13px;
   font-weight: 500;
   color: #64748b;
+}
+
+.rowMetaRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 3px;
 }
 
 .rowAccount {
@@ -217,7 +298,6 @@
   font-size: 12px;
   font-weight: 600;
   color: #2563eb;
-  margin: 3px 0 6px 0;
 }
 
 .bankIcon {
@@ -258,6 +338,12 @@
   text-align: center;
 }
 
+@media (min-width: 768px) {
+  .amountCol {
+    padding: 16px 20px;
+  }
+}
+
 .incomeAmount {
   font-size: 16px;
   font-weight: 800;
@@ -268,6 +354,13 @@
   font-size: 16px;
   font-weight: 800;
   color: #dc2626;
+}
+
+@media (min-width: 768px) {
+  .incomeAmount,
+  .expenseAmount {
+    font-size: 18px;
+  }
 }
 
 .dash {
@@ -284,6 +377,12 @@
   border-top: 1.5px solid #dcebe0;
 }
 
+@media (min-width: 768px) {
+  .tableTotalRow {
+    grid-template-columns: 1fr 200px 200px;
+  }
+}
+
 .totalLabel {
   padding: 12px 14px;
   font-size: 17px;
@@ -291,6 +390,13 @@
   color: #0c2b1d;
   display: flex;
   align-items: center;
+}
+
+@media (min-width: 768px) {
+  .totalLabel {
+    padding: 16px 20px;
+    font-size: 18px;
+  }
 }
 
 .totalIncome {
@@ -315,22 +421,28 @@
   color: #dc2626;
 }
 
+@media (min-width: 768px) {
+  .totalIncome,
+  .totalExpense {
+    padding: 16px 20px;
+    font-size: 18px;
+  }
+}
+
 /* 6. Lower Middle "+ New Entry" Button */
 .lowerMiddleBar {
-  position: sticky;
-  bottom: calc(var(--bottom-nav-height, 64px) + env(safe-area-inset-bottom, 0px) + 12px);
   width: 100%;
   display: flex;
   justify-content: center;
-  z-index: 50;
+  align-items: center;
+  margin: 16px auto 8px;
   padding: 0 4px;
-  margin-top: 18px;
 }
 
 .newEntryButton {
   width: 100%;
-  max-width: 500px;
-  height: 50px;
+  max-width: 440px;
+  height: 48px;
   background: linear-gradient(135deg, #1b6343 0%, #0c2b1d 100%);
   color: #ffffff;
   border: 1.5px solid rgba(82, 183, 136, 0.45);
@@ -339,10 +451,10 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  font-size: 16px;
+  font-size: 15.5px;
   font-weight: 800;
   text-decoration: none;
-  box-shadow: 0 10px 28px -4px rgba(12, 43, 29, 0.45), 0 3px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 24px -4px rgba(12, 43, 29, 0.35);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   cursor: pointer;
   user-select: none;
@@ -350,7 +462,7 @@
 
 .newEntryButton:hover {
   transform: translateY(-2px);
-  box-shadow: 0 14px 34px -4px rgba(12, 43, 29, 0.6), 0 5px 14px rgba(82, 183, 136, 0.3);
+  box-shadow: 0 12px 28px -4px rgba(12, 43, 29, 0.5);
 }
 
 .newEntryButton:active {

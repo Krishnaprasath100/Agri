@@ -600,23 +600,25 @@ export default function LedgerPage() {
                   {row.person && row.person !== '—' && (
                     <span className={styles.rowPerson}>{row.person}</span>
                   )}
-                  <div className={styles.rowAccount}>
-                    <Landmark className={styles.bankIcon} />
-                    <span>
-                      {(row.accountPrefix ||
-                        (row.type === 'income' ? 'Received in' : 'Paid from')) +
-                        ': ' +
-                        row.account}
-                    </span>
+                  <div className={styles.rowMetaRow}>
+                    <div className={styles.rowAccount}>
+                      <Landmark className={styles.bankIcon} />
+                      <span>
+                        {(row.accountPrefix ||
+                          (row.type === 'income' ? 'Received in' : 'Paid from')) +
+                          ': ' +
+                          row.account}
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      className={styles.editButton}
+                      onClick={() => openEditModal(row)}
+                    >
+                      <Pencil size={11} strokeWidth={2.5} />
+                      <span>Edit</span>
+                    </button>
                   </div>
-                  <button
-                    type="button"
-                    className={styles.editButton}
-                    onClick={() => openEditModal(row)}
-                  >
-                    <Pencil size={11} strokeWidth={2.5} />
-                    <span>Edit</span>
-                  </button>
                 </div>
 
                 {/* Column 2: Income ₹ */}
@@ -662,7 +664,7 @@ export default function LedgerPage() {
         <div className={styles.lowerMiddleBar}>
           <Link href="/entry" className={styles.newEntryButton}>
             <Plus size={20} strokeWidth={2.8} />
-            <span>+ New Entry</span>
+            <span>New Entry</span>
           </Link>
         </div>
 
