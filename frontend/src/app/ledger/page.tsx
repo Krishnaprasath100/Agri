@@ -694,6 +694,7 @@ export default function LedgerPage() {
                   <input
                     type="date"
                     className={styles.formInput}
+                    style={{ backgroundColor: '#ffffff', color: '#0f172a' }}
                     value={
                       editDate.includes('-')
                         ? editDate.split('T')[0]
@@ -708,6 +709,7 @@ export default function LedgerPage() {
                   <input
                     type="text"
                     className={styles.formInput}
+                    style={{ backgroundColor: '#ffffff', color: '#0f172a' }}
                     value={editCrop}
                     onChange={(e) => setEditCrop(e.target.value)}
                     placeholder="e.g. Paddy, Banana"
@@ -719,6 +721,7 @@ export default function LedgerPage() {
                   <input
                     type="text"
                     className={styles.formInput}
+                    style={{ backgroundColor: '#ffffff', color: '#0f172a' }}
                     value={editDetails}
                     onChange={(e) => setEditDetails(e.target.value)}
                     placeholder="e.g. Fertilizer Purchase, Crop Sales"
@@ -732,6 +735,7 @@ export default function LedgerPage() {
                   <input
                     type="text"
                     className={styles.formInput}
+                    style={{ backgroundColor: '#ffffff', color: '#0f172a' }}
                     value={editPerson}
                     onChange={(e) => setEditPerson(e.target.value)}
                     placeholder="e.g. Murugan Store, Ramasamy"
@@ -743,6 +747,7 @@ export default function LedgerPage() {
                   <input
                     type="text"
                     className={styles.formInput}
+                    style={{ backgroundColor: '#ffffff', color: '#0f172a' }}
                     value={editAccount}
                     onChange={(e) => setEditAccount(e.target.value)}
                     placeholder="e.g. Axis ••1234, SBI ••5678"
@@ -754,6 +759,7 @@ export default function LedgerPage() {
                   <input
                     type="number"
                     className={styles.formInput}
+                    style={{ backgroundColor: '#ffffff', color: '#0f172a' }}
                     value={editAmount}
                     onChange={(e) => setEditAmount(Number(e.target.value))}
                     min={0}
