@@ -76,8 +76,42 @@ function AccountFields({
   inputRef?: React.RefObject<HTMLInputElement | null>;
   idPrefix?: string;
 }) {
-  const bankDatalistId = `bank-list-${idPrefix}`;
-  const branchDatalistId = `branch-list-${idPrefix}`;
+  const bankOptions = React.useMemo(() => {
+    const list = POPULAR_BANKS.map((bank, index) => ({
+      value: bank,
+      label: bank,
+      group:
+        index < 12
+          ? 'Public Sector / Nationalized Banks'
+          : index < 21
+          ? 'Leading Private Banks'
+          : 'Agricultural & Cooperative / Rural Banks',
+    }));
+    if (form.bankName && !POPULAR_BANKS.includes(form.bankName)) {
+      list.unshift({
+        value: form.bankName,
+        label: form.bankName,
+        group: 'Custom Bank',
+      });
+    }
+    return list;
+  }, [form.bankName]);
+
+  const branchOptions = React.useMemo(() => {
+    const list = BRANCH_TYPES.map((branch) => ({
+      value: branch,
+      label: branch,
+      group: 'Branch types',
+    }));
+    if (form.branch && !BRANCH_TYPES.includes(form.branch)) {
+      list.unshift({
+        value: form.branch,
+        label: form.branch,
+        group: 'Custom Branch',
+      });
+    }
+    return list;
+  }, [form.branch]);
 
   return (
     <>
@@ -96,79 +130,15 @@ function AccountFields({
         <div className="form-group">
           <label className="form-label">Bank name</label>
           <ChoicePicker
-            ariaLabel="Popular bank"
-            value={POPULAR_BANKS.includes(form.bankName || '') ? form.bankName || '' : ''}
-            placeholder="Choose popular bank (or type below)"
-            onChange={(bankName) => onChange({ ...form, bankName })}
-            options={POPULAR_BANKS.map((bank, index) => ({
-              value: bank,
-              label: bank,
-              group: index < 12 ? 'Public Sector / Nationalized Banks' : index < 21 ? 'Leading Private Banks' : 'Agricultural & Cooperative / Rural Banks',
-            }))}
-          />
-          <select
-            className="form-select"
-            style={{ display: 'none' }}
-            value={POPULAR_BANKS.includes(form.bankName || '') ? form.bankName : ''}
-            onChange={(e) => {
-              if (e.target.value) {
-                onChange({ ...form, bankName: e.target.value });
-              }
-            }}
-          >
-            <option value="">-- Choose popular bank (or type below) --</option>
-            <optgroup label="Public Sector / Nationalized Banks">
-              <option value="State Bank of India (SBI)">State Bank of India (SBI)</option>
-              <option value="Punjab National Bank (PNB)">Punjab National Bank (PNB)</option>
-              <option value="Bank of Baroda (BOB)">Bank of Baroda (BOB)</option>
-              <option value="Canara Bank">Canara Bank</option>
-              <option value="Union Bank of India">Union Bank of India</option>
-              <option value="Indian Bank">Indian Bank</option>
-              <option value="Central Bank of India">Central Bank of India</option>
-              <option value="Bank of India (BOI)">Bank of India (BOI)</option>
-              <option value="Indian Overseas Bank (IOB)">Indian Overseas Bank (IOB)</option>
-              <option value="UCO Bank">UCO Bank</option>
-              <option value="Bank of Maharashtra">Bank of Maharashtra</option>
-              <option value="Punjab & Sind Bank">Punjab & Sind Bank</option>
-            </optgroup>
-            <optgroup label="Leading Private Banks">
-              <option value="HDFC Bank">HDFC Bank</option>
-              <option value="ICICI Bank">ICICI Bank</option>
-              <option value="Axis Bank">Axis Bank</option>
-              <option value="Kotak Mahindra Bank">Kotak Mahindra Bank</option>
-              <option value="IndusInd Bank">IndusInd Bank</option>
-              <option value="Federal Bank">Federal Bank</option>
-              <option value="IDBI Bank">IDBI Bank</option>
-              <option value="Yes Bank">Yes Bank</option>
-              <option value="Bandhan Bank">Bandhan Bank</option>
-            </optgroup>
-            <optgroup label="Agricultural & Cooperative / Rural Banks">
-              <option value="Regional Rural Bank (Gramin Bank)">Regional Rural Bank (Gramin Bank)</option>
-              <option value="District Central Cooperative Bank (DCCB)">District Central Cooperative Bank (DCCB)</option>
-              <option value="State Cooperative Agriculture & Rural Dev Bank">State Cooperative Agriculture & Rural Dev Bank</option>
-              <option value="Primary Agricultural Credit Society (PACS)">Primary Agricultural Credit Society (PACS)</option>
-              <option value="India Post Payments Bank (IPPB)">India Post Payments Bank (IPPB)</option>
-              <option value="AU Small Finance Bank">AU Small Finance Bank</option>
-              <option value="Equitas Small Finance Bank">Equitas Small Finance Bank</option>
-              <option value="Ujjivan Small Finance Bank">Ujjivan Small Finance Bank</option>
-            </optgroup>
-          </select>
-
-          <input
-            list={bankDatalistId}
-            className="form-input"
+            ariaLabel="Bank name"
             value={form.bankName || ''}
-            onChange={(e) => onChange({ ...form, bankName: e.target.value })}
-            placeholder="Type or select bank name (e.g. State Bank of India)"
+            placeholder="Choose or search bank name"
+            onChange={(bankName) => onChange({ ...form, bankName })}
+            allowCreate
+            createPlaceholder="Type or search bank name..."
+            onCreate={(bankName) => onChange({ ...form, bankName })}
+            options={bankOptions}
           />
-          <datalist id={bankDatalistId}>
-            {POPULAR_BANKS.map((bank) => (
-              <option key={bank} value={bank} />
-            ))}
-          </datalist>
-          <div style={{ fontSize: '0.76rem', color: 'var(--text-muted)', marginTop: 4 }}>
-            Choose from the list above or type any custom bank name.
-          </div>
         </div>
       </div>
 
@@ -198,45 +168,15 @@ function AccountFields({
         <div className="form-group">
           <label className="form-label">Branch</label>
           <ChoicePicker
-            ariaLabel="Branch type"
-            value={BRANCH_TYPES.includes(form.branch || '') ? form.branch || '' : ''}
-            placeholder="Choose branch type (or type below)"
-            onChange={(branch) => onChange({ ...form, branch })}
-            options={BRANCH_TYPES.map((branch) => ({ value: branch, label: branch, group: 'Branch types' }))}
-          />
-          <select
-            className="form-select"
-            style={{ display: 'none' }}
-            value={BRANCH_TYPES.includes(form.branch || '') ? form.branch : ''}
-            onChange={(e) => {
-              if (e.target.value) {
-                onChange({ ...form, branch: e.target.value });
-              }
-            }}
-          >
-            <option value="">-- Choose branch type (or type below) --</option>
-            {BRANCH_TYPES.map((bType) => (
-              <option key={bType} value={bType}>
-                {bType}
-              </option>
-            ))}
-          </select>
-
-          <input
-            list={branchDatalistId}
-            className="form-input"
+            ariaLabel="Branch"
             value={form.branch || ''}
-            onChange={(e) => onChange({ ...form, branch: e.target.value })}
-            placeholder="Type or select branch name (e.g. Ludhiana Main / Rural)"
+            placeholder="Choose or search branch"
+            onChange={(branch) => onChange({ ...form, branch })}
+            allowCreate
+            createPlaceholder="Type or search branch name..."
+            onCreate={(branch) => onChange({ ...form, branch })}
+            options={branchOptions}
           />
-          <datalist id={branchDatalistId}>
-            {BRANCH_TYPES.map((bType) => (
-              <option key={bType} value={bType} />
-            ))}
-          </datalist>
-          <div style={{ fontSize: '0.76rem', color: 'var(--text-muted)', marginTop: 4 }}>
-            Choose a branch classification or type specific branch location.
-          </div>
         </div>
 
         <div className="form-group">
@@ -248,20 +188,6 @@ function AccountFields({
             onChange={(accountType) => onChange({ ...form, accountType: accountType as LedgerAccount['accountType'] })}
             options={[{ value: 'Savings', label: 'Savings' }, { value: 'Current', label: 'Current' }]}
           />
-          <select
-            className="form-select"
-            style={{ display: 'none' }}
-            value={form.accountType}
-            onChange={(e) =>
-              onChange({
-                ...form,
-                accountType: e.target.value as LedgerAccount['accountType'],
-              })
-            }
-          >
-            <option>Savings</option>
-            <option>Current</option>
-          </select>
         </div>
       </div>
 

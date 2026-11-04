@@ -408,7 +408,21 @@ export default function CropsPage() {
         <form onSubmit={handleSave} className="planting-form-box">
           <div className="form-group">
             <label className="form-label">Crop Name or Variety *</label>
-            <ChoicePicker ariaLabel="Crop name" value={formData.cropType} placeholder="Choose a crop" onChange={(cropType) => setFormData({ ...formData, cropType })} options={CROP_OPTIONS.map((crop) => ({ value: crop, label: crop, group: 'Quick crop choices' }))} />
+            <ChoicePicker
+              ariaLabel="Crop name"
+              value={formData.cropType}
+              placeholder="Choose a crop"
+              onChange={(cropType) => setFormData({ ...formData, cropType })}
+              allowCreate
+              createPlaceholder="Type or search crop to add..."
+              onCreate={(cropType) => setFormData({ ...formData, cropType })}
+              options={[
+                ...(formData.cropType && !CROP_OPTIONS.includes(formData.cropType)
+                  ? [{ value: formData.cropType, label: formData.cropType, group: 'Custom Crop' }]
+                  : []),
+                ...CROP_OPTIONS.map((crop) => ({ value: crop, label: crop, group: 'Quick crop choices' })),
+              ]}
+            />
             <select
               className="form-input"
               style={{ display: 'none' }}

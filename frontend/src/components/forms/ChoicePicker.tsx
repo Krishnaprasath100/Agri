@@ -97,14 +97,14 @@ export function ChoicePicker({
       <button
         type="button"
         className={`choice-picker-trigger${open ? ' is-open' : ''}${
-          selected ? '' : ' is-placeholder'
+          selected || value ? '' : ' is-placeholder'
         }`}
         aria-label={ariaLabel}
         aria-haspopup="listbox"
         aria-expanded={open}
         onClick={() => setOpen((current) => !current)}
       >
-        <span>{selected?.label || placeholder}</span>
+        <span>{selected?.label || value || placeholder}</span>
         <ChevronDown
           size={18}
           aria-hidden="true"
