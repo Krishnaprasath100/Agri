@@ -99,6 +99,69 @@ export function getDaysRemaining(targetDateStr: string): {
 }
 
 /**
+ * Format string with Indian comma numbering system as user types (e.g. 50000 -> 50,000)
+ */
+export function formatIndianCurrencyInput(value: string | number): string {
+  if (value === '' || value === null || value === undefined) return '';
+  const str = String(value).replace(/,/g, '');
+  const parts = str.split('.');
+  const integer = parts[0];
+  const decimal = parts.length > 1 ? '.' + parts[1].slice(0, 2) : '';
+
+  if (!integer && !decimal) return '';
+  if (!integer) return '0' + decimal;
+
+  // Remove leading zeros unless it's just '0'
+  const cleanInt = integer.replace(/^0+(?=\d)/, '');
+
+  // Indian numbering: last 3 digits, then groups of 2 digits
+  const lastThree = cleanInt.slice(-3);
+  const other = cleanInt.slice(0, -3);
+  const formattedInt = other !== ''
+    ? other.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + ',' + lastThree
+    : lastThree;
+
+  return formattedInt + decimal;
+}
+
+/**
+ * Convert number to readable Indian words (e.g. 50000 -> "Fifty Thousand Rupees")
+ */
+export function numberToIndianWords(amount: number): string {
+  if (!amount || isNaN(amount) || amount <= 0) return '';
+  const single = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine'];
+  const double = ['Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
+  const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+
+  const formatBelowHundred = (n: number): string => {
+    if (n < 10) return single[n];
+    if (n < 20) return double[n - 10];
+    return `${tens[Math.floor(n / 10)]} ${single[n % 10]}`.trim();
+  };
+
+  const formatBelowThousand = (n: number): string => {
+    if (n < 100) return formatBelowHundred(n);
+    return `${single[Math.floor(n / 100)]} Hundred ${formatBelowHundred(n % 100)}`.trim();
+  };
+
+  const intAmount = Math.floor(amount);
+  if (intAmount === 0) return 'Zero Rupees';
+
+  const crore = Math.floor(intAmount / 10000000);
+  const lakh = Math.floor((intAmount % 10000000) / 100000);
+  const thousand = Math.floor((intAmount % 100000) / 1000);
+  const remainder = intAmount % 1000;
+
+  const result: string[] = [];
+  if (crore) result.push(`${formatBelowHundred(crore)} Crore`);
+  if (lakh) result.push(`${formatBelowHundred(lakh)} Lakh`);
+  if (thousand) result.push(`${formatBelowHundred(thousand)} Thousand`);
+  if (remainder) result.push(formatBelowThousand(remainder));
+
+  return `${result.join(' ')} Rupees`.trim();
+}
+
+/**
  * Calculate progress percentage of crop cycle
  */
 export function calculateCropProgress(seedingDateStr: string, harvestDateStr: string): number {

@@ -16,6 +16,8 @@ import {
   saveExpenseTypeOption,
   saveIncome,
   saveQuickCropChoice,
+  saveLedgerContact,
+  saveLedgerAccount,
 } from '@/lib/services/dataService';
 import {
   CropCycle,
@@ -23,9 +25,13 @@ import {
   LedgerAccount,
   LedgerContact,
 } from '@/types';
-import { ArrowDownCircle, ArrowUpCircle, Plus, Save } from 'lucide-react';
+import {
+  formatIndianCurrencyInput,
+  numberToIndianWords,
+} from '@/lib/utils';
+import { ArrowDownCircle, ArrowUpCircle, Save } from 'lucide-react';
 
-const expenseTypes = [
+const defaultExpenseTypes = [
   'Pesticide Purchase',
   'Weeding',
   'Fertilizer Purchase',
@@ -69,10 +75,7 @@ export default function EntryPage() {
   const [persons, setPersons] = useState<LedgerContact[]>([]);
   const [accounts, setAccounts] = useState<LedgerAccount[]>([]);
   const [types, setTypes] = useState<ExpenseTypeOption[]>([]);
-
   const [savedQuickCrops, setSavedQuickCrops] = useState<string[]>([]);
-  const [typedCrop, setTypedCrop] = useState('');
-  const [typedExpenseType, setTypedExpenseType] = useState('');
 
   const [form, setForm] = useState({
     date: '',
@@ -83,6 +86,7 @@ export default function EntryPage() {
     amount: '',
     notes: '',
   });
+  const [displayAmount, setDisplayAmount] = useState('');
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -96,49 +100,84 @@ export default function EntryPage() {
     setAccounts(accountList);
     setTypes(getExpenseTypeOptions(user.uid));
     setSavedQuickCrops(getQuickCropChoices(user.uid));
-
-    setForm((current) => ({
-      ...current,
-      account: current.account,
-    }));
   }, [user]);
 
   const selectedPlanting = crops.find((crop) => crop.cropCycleId === form.crop);
   const cropName =
     selectedPlanting?.cropType ||
-    (form.crop.startsWith('quick:') ? form.crop.slice(6) : '');
+    (form.crop.startsWith('quick:') ? form.crop.slice(6) : form.crop);
   const contacts = kind === 'expense' ? payees : persons;
 
-  const allTypes = [...expenseTypes, ...types.map((type) => type.name)].filter(
-    (value, index, list) => list.indexOf(value) === index
-  );
+  const allTypes = [
+    ...defaultExpenseTypes,
+    ...types.map((type) => type.name),
+  ].filter((value, index, list) => list.indexOf(value) === index);
 
   const allQuickCrops = [...defaultQuickCrops, ...savedQuickCrops].filter(
     (crop, index, list) =>
       list.findIndex((item) => item.toLowerCase() === crop.toLowerCase()) === index
   );
 
-  const addTypedCrop = () => {
-    if (!user || !typedCrop.trim()) return;
-    const name = typedCrop.trim().replace(/\s+/g, ' ');
-    setSavedQuickCrops(saveQuickCropChoice(user.uid, name));
-    setForm({ ...form, crop: `quick:${name}` });
-    setTypedCrop('');
+  // Unified inline creation inside the choose boxes
+  const handleCreateCrop = (name: string) => {
+    if (!user || !name.trim()) return;
+    const cleanName = name.trim().replace(/\s+/g, ' ');
+    const updated = saveQuickCropChoice(user.uid, cleanName);
+    setSavedQuickCrops(updated);
+    setForm((prev) => ({ ...prev, crop: `quick:${cleanName}` }));
     setError('');
   };
 
-  const addTypedExpenseType = () => {
-    if (!user || !typedExpenseType.trim()) return;
-    const name = typedExpenseType.trim().replace(/\s+/g, ' ');
-    const saved = saveExpenseTypeOption({ userId: user.uid, name });
+  const handleCreateExpenseType = (name: string) => {
+    if (!user || !name.trim()) return;
+    const cleanName = name.trim().replace(/\s+/g, ' ');
+    const saved = saveExpenseTypeOption({ userId: user.uid, name: cleanName });
     setTypes((current) =>
       current.some((type) => type.name.toLowerCase() === saved.name.toLowerCase())
         ? current
         : [...current, saved]
     );
-    setForm({ ...form, expenseType: name });
-    setTypedExpenseType('');
+    setForm((prev) => ({ ...prev, expenseType: cleanName }));
     setError('');
+  };
+
+  const handleCreatePayee = (name: string) => {
+    if (!user || !name.trim()) return;
+    const cleanName = name.trim().replace(/\s+/g, ' ');
+    const kindType = kind === 'expense' ? 'payee' : 'person';
+    const saved = saveLedgerContact({ userId: user.uid, name: cleanName, kind: kindType });
+    if (kind === 'expense') {
+      setPayees((prev) => [...prev, saved]);
+    } else {
+      setPersons((prev) => [...prev, saved]);
+    }
+    setForm((prev) => ({ ...prev, counterparty: cleanName }));
+    setError('');
+  };
+
+  const handleCreateAccount = (displayName: string) => {
+    if (!user || !displayName.trim()) return;
+    const cleanName = displayName.trim().replace(/\s+/g, ' ');
+    const saved = saveLedgerAccount({ userId: user.uid, displayName: cleanName, accountType: 'Savings', isDefault: false });
+    setAccounts((prev) => [...prev, saved]);
+    setForm((prev) => ({ ...prev, account: cleanName }));
+    setError('');
+  };
+
+  // Live comma formatting for amount
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.value;
+    // Allow digits and only one decimal point
+    const cleaned = raw.replace(/[^0-9.]/g, '');
+    const dotIndex = cleaned.indexOf('.');
+    const sanitized =
+      dotIndex !== -1
+        ? cleaned.slice(0, dotIndex + 1) + cleaned.slice(dotIndex + 1).replace(/\./g, '')
+        : cleaned;
+
+    const formatted = formatIndianCurrencyInput(sanitized);
+    setDisplayAmount(formatted);
+    setForm((prev) => ({ ...prev, amount: sanitized }));
   };
 
   const save = async (event: React.FormEvent) => {
@@ -147,7 +186,11 @@ export default function EntryPage() {
 
     const amount = Number(form.amount);
     if (!form.date || !cropName || !amount || amount <= 0 || (kind === 'expense' && !form.expenseType)) {
-      setError(kind === 'expense' ? 'Choose a date, crop, and expense type, then enter an amount greater than zero.' : 'Choose a date and crop, then enter an amount greater than zero.');
+      setError(
+        kind === 'expense'
+          ? 'Choose a date, crop, and expense type, then enter an amount greater than zero.'
+          : 'Choose a date and crop, then enter an amount greater than zero.'
+      );
       return;
     }
 
@@ -170,7 +213,7 @@ export default function EntryPage() {
         cropCycleId: selectedPlanting?.cropCycleId,
         cropType: cropName,
         quantity: 1,
-        quantityUnit: 'kg',
+        quantityUnit: 'bags',
         unitPrice: amount,
         buyerName: form.counterparty || undefined,
         notes: form.notes || undefined,
@@ -180,6 +223,7 @@ export default function EntryPage() {
 
     router.push('/ledger');
   };
+
   return (
     <AppShell>
       <div className="page-header">
@@ -226,6 +270,7 @@ export default function EntryPage() {
               />
             </div>
 
+            {/* Crop / Planting with in-box search and add */}
             <div className="form-group">
               <label className="form-label">Crop / planting</label>
               <ChoicePicker
@@ -233,71 +278,25 @@ export default function EntryPage() {
                 value={form.crop}
                 placeholder="Choose a crop"
                 onChange={(crop) => setForm({ ...form, crop })}
+                allowCreate
+                createPlaceholder="Type or search crop to add..."
+                onCreate={handleCreateCrop}
                 options={[
-                  ...crops.map((crop) => ({ value: crop.cropCycleId, label: `${crop.cropType}${crop.farmName ? ` · ${crop.farmName}` : ''}`, group: 'Your plantings' })),
-                  ...allQuickCrops.map((crop) => ({ value: `quick:${crop}`, label: crop, group: 'Quick crop choices' })),
+                  ...crops.map((crop) => ({
+                    value: crop.cropCycleId,
+                    label: `${crop.cropType}${crop.farmName ? ` · ${crop.farmName}` : ''}`,
+                    group: 'Your plantings',
+                  })),
+                  ...allQuickCrops.map((crop) => ({
+                    value: `quick:${crop}`,
+                    label: crop,
+                    group: 'Quick crop choices',
+                  })),
                 ]}
               />
-              <select
-                className="form-select"
-                style={{ display: 'none' }}
-                value={form.crop}
-                onChange={(e) => setForm({ ...form, crop: e.target.value })}
-              >
-                <option value="">Choose a crop</option>
-                {crops.length > 0 && (
-                  <optgroup label="Your plantings">
-                    {crops.map((crop) => (
-                      <option key={crop.cropCycleId} value={crop.cropCycleId}>
-                        {crop.cropType}
-                        {crop.farmName ? ` · ${crop.farmName}` : ''}
-                      </option>
-                    ))}
-                  </optgroup>
-                )}
-                <optgroup label="Quick crop choices">
-                  {allQuickCrops.map((crop) => (
-                    <option key={crop} value={`quick:${crop}`}>
-                      {crop}
-                    </option>
-                  ))}
-                </optgroup>
-              </select>
-
-              <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
-                <input
-                  className="form-input"
-                  value={typedCrop}
-                  onChange={(e) => setTypedCrop(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault();
-                      addTypedCrop();
-                    }
-                  }}
-                  placeholder="Type a new crop name"
-                />
-                <button
-                  type="button"
-                  className="btn btn-secondary btn-sm"
-                  onClick={addTypedCrop}
-                  disabled={!typedCrop.trim()}
-                >
-                  <Plus size={14} /> Add crop
-                </button>
-              </div>
-              <div
-                style={{
-                  color: 'var(--text-muted)',
-                  fontSize: '0.82rem',
-                  fontWeight: 500,
-                  marginTop: 6,
-                }}
-              >
-                Added crops are saved to Quick crop choices for future entries.
-              </div>
             </div>
 
+            {/* Expense Type with in-box search and add */}
             {kind === 'expense' && (
               <div className="form-group">
                 <label className="form-label">Expense type</label>
@@ -306,54 +305,19 @@ export default function EntryPage() {
                   value={form.expenseType}
                   placeholder="Choose an expense type"
                   onChange={(expenseType) => setForm({ ...form, expenseType })}
-                  options={allTypes.map((type) => ({ value: type, label: type, group: 'Expense types' }))}
+                  allowCreate
+                  createPlaceholder="Type or search expense type..."
+                  onCreate={handleCreateExpenseType}
+                  options={allTypes.map((type) => ({
+                    value: type,
+                    label: type,
+                    group: 'Expense types',
+                  }))}
                 />
-                <select
-                  className="form-select"
-                  style={{ display: 'none' }}
-                  value={form.expenseType}
-                  onChange={(e) => setForm({ ...form, expenseType: e.target.value })}
-                >
-                  {allTypes.map((type) => (
-                    <option key={type}>{type}</option>
-                  ))}
-                </select>
-
-                <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
-                  <input
-                    className="form-input"
-                    value={typedExpenseType}
-                    onChange={(e) => setTypedExpenseType(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault();
-                        addTypedExpenseType();
-                      }
-                    }}
-                    placeholder="Type a new expense type"
-                  />
-                  <button
-                    type="button"
-                    className="btn btn-secondary btn-sm"
-                    onClick={addTypedExpenseType}
-                    disabled={!typedExpenseType.trim()}
-                  >
-                    <Plus size={14} /> Add type
-                  </button>
-                </div>
-                <div
-                  style={{
-                    color: 'var(--text-muted)',
-                    fontSize: '0.82rem',
-                    fontWeight: 500,
-                    marginTop: 6,
-                  }}
-                >
-                  Added types are saved to the expense type choices.
-                </div>
               </div>
             )}
 
+            {/* Payee / Counterparty with in-box search and add */}
             <div className="form-group">
               <label className="form-label">{kind === 'expense' ? 'Payee' : 'Received from'}</label>
               <ChoicePicker
@@ -361,31 +325,17 @@ export default function EntryPage() {
                 value={form.counterparty}
                 placeholder={`Choose ${kind === 'expense' ? 'a payee' : 'a person'} (optional)`}
                 onChange={(counterparty) => setForm({ ...form, counterparty })}
-                options={contacts.map((contact) => ({ value: contact.name, label: contact.name }))}
+                allowCreate
+                createPlaceholder={`Type or search ${kind === 'expense' ? 'payee' : 'person'}...`}
+                onCreate={handleCreatePayee}
+                options={contacts.map((contact) => ({
+                  value: contact.name,
+                  label: contact.name,
+                }))}
               />
-              <select
-                className="form-select"
-                style={{ display: 'none' }}
-                value={form.counterparty}
-                onChange={(e) => setForm({ ...form, counterparty: e.target.value })}
-              >
-                <option value="">Select optional {kind === 'expense' ? 'payee' : 'person'}</option>
-                {contacts.map((contact) => (
-                  <option key={contact.id} value={contact.name}>
-                    {contact.name}
-                  </option>
-                ))}
-              </select>
-              <button
-                type="button"
-                className="btn btn-secondary btn-sm"
-                style={{ marginTop: 10 }}
-                onClick={() => router.push(kind === 'expense' ? '/payees' : '/persons')}
-              >
-                <Plus size={14} /> Add {kind === 'expense' ? 'payee' : 'person'}
-              </button>
             </div>
 
+            {/* Account with in-box search and add */}
             <div className="form-group">
               <label className="form-label">
                 {kind === 'expense' ? 'Paid from account' : 'Received into account'}
@@ -395,41 +345,50 @@ export default function EntryPage() {
                 value={form.account}
                 placeholder="Choose an account"
                 onChange={(account) => setForm({ ...form, account })}
-                options={accounts.map((account) => ({ value: account.displayName, label: account.displayName }))}
+                allowCreate
+                createPlaceholder="Type or search bank account..."
+                onCreate={handleCreateAccount}
+                options={accounts.map((account) => ({
+                  value: account.displayName,
+                  label: account.displayName,
+                }))}
               />
-              <select
-                className="form-select"
-                style={{ display: 'none' }}
-                value={form.account}
-                onChange={(e) => setForm({ ...form, account: e.target.value })}
-              >
-                {accounts.map((account) => (
-                  <option key={account.id} value={account.displayName}>
-                    {account.displayName}
-                  </option>
-                ))}
-              </select>
-              <button
-                type="button"
-                className="btn btn-secondary btn-sm"
-                style={{ marginTop: 10 }}
-                onClick={() => router.push('/accounts')}
-              >
-                <Plus size={14} /> Add account
-              </button>
             </div>
 
+            {/* Amount with Indian comma formatting */}
             <div className="form-group">
               <label className="form-label">Amount (₹)</label>
               <input
-                type="number"
-                min="0"
-                step="0.01"
+                type="text"
+                inputMode="decimal"
                 className="form-input"
-                value={form.amount}
-                onChange={(e) => setForm({ ...form, amount: e.target.value })}
+                value={displayAmount}
+                onChange={handleAmountChange}
                 placeholder="0.00"
+                style={{
+                  fontWeight: 650,
+                  fontSize: '1.05rem',
+                  letterSpacing: '0.02em',
+                }}
               />
+              {form.amount && Number(form.amount) > 0 && (
+                <div
+                  style={{
+                    fontSize: '0.84rem',
+                    fontWeight: 600,
+                    color: '#1b6343',
+                    marginTop: 6,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 6,
+                  }}
+                >
+                  <span>₹ {displayAmount}</span>
+                  <span style={{ color: 'var(--text-muted)', fontWeight: 500 }}>
+                    ({numberToIndianWords(Number(form.amount))})
+                  </span>
+                </div>
+              )}
             </div>
           </div>
 

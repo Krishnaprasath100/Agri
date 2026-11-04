@@ -15,6 +15,10 @@ import {
 } from '@/lib/services/dataService';
 import { CropCycle, ExpenseRecord, IncomeRecord } from '@/types';
 import {
+  formatIndianCurrencyInput,
+  numberToIndianWords,
+} from '@/lib/utils';
+import {
   ChevronDown,
   Landmark,
   Pencil,
@@ -175,6 +179,7 @@ export default function LedgerPage() {
   const [editPerson, setEditPerson] = useState('');
   const [editAccount, setEditAccount] = useState('');
   const [editAmount, setEditAmount] = useState<number>(0);
+  const [editAmountDisplay, setEditAmountDisplay] = useState('');
   const [editDate, setEditDate] = useState('');
   const [savingEdit, setSavingEdit] = useState(false);
 
@@ -366,7 +371,9 @@ export default function LedgerPage() {
     setEditCrop(row.crop);
     setEditPerson(row.person === '—' ? '' : row.person);
     setEditAccount(row.account);
-    setEditAmount(row.type === 'income' ? row.income : row.expense);
+    const amt = row.type === 'income' ? row.income : row.expense;
+    setEditAmount(amt);
+    setEditAmountDisplay(formatIndianCurrencyInput(amt));
     setEditDate(row.date);
   };
 
@@ -779,13 +786,28 @@ export default function LedgerPage() {
                 <div className={styles.formGroup}>
                   <label className={styles.formLabel}>Amount (₹)</label>
                   <input
-                    type="number"
+                    type="text"
+                    inputMode="decimal"
                     className={styles.formInput}
-                    style={{ backgroundColor: '#ffffff', color: '#0f172a' }}
-                    value={editAmount}
-                    onChange={(e) => setEditAmount(Number(e.target.value))}
-                    min={0}
+                    style={{ backgroundColor: '#ffffff', color: '#0f172a', fontWeight: 600 }}
+                    value={editAmountDisplay}
+                    onChange={(e) => {
+                      const raw = e.target.value.replace(/[^0-9.]/g, '');
+                      const dotIndex = raw.indexOf('.');
+                      const sanitized =
+                        dotIndex !== -1
+                          ? raw.slice(0, dotIndex + 1) + raw.slice(dotIndex + 1).replace(/\./g, '')
+                          : raw;
+                      setEditAmountDisplay(formatIndianCurrencyInput(sanitized));
+                      setEditAmount(Number(sanitized) || 0);
+                    }}
+                    placeholder="0.00"
                   />
+                  {editAmount > 0 && (
+                    <div style={{ fontSize: '0.82rem', fontWeight: 600, color: '#1b6343', marginTop: 4 }}>
+                      ₹ {editAmountDisplay} <span style={{ color: '#64748b', fontWeight: 400 }}>({numberToIndianWords(editAmount)})</span>
+                    </div>
+                  )}
                 </div>
               </div>
 

@@ -719,6 +719,97 @@ svg {
   font-weight: 700;
 }
 
+/* ChoicePicker Search & Add Inline */
+.choice-picker-search-container {
+  padding: 6px 6px 8px;
+  border-bottom: 1.5px solid var(--border-subtle);
+  margin-bottom: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.choice-picker-search-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--primary-50);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 7px 10px;
+  transition: all 0.18s ease;
+}
+
+.choice-picker-search-box:focus-within {
+  background: #ffffff;
+  border-color: var(--primary-700);
+  box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.15);
+}
+
+.choice-picker-search-icon {
+  color: var(--primary-700);
+  flex-shrink: 0;
+}
+
+.choice-picker-search-input {
+  border: none;
+  background: transparent;
+  width: 100%;
+  font-size: 0.88rem;
+  color: var(--text-main);
+  outline: none;
+}
+
+.choice-picker-search-clear {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.choice-picker-search-clear:hover {
+  color: var(--text-main);
+}
+
+.choice-picker-create-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 9px 12px;
+  background: #dcfce7;
+  border: 1.5px dashed #40916c;
+  border-radius: var(--radius-sm);
+  color: #1b4332;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+}
+
+.choice-picker-create-btn:hover {
+  background: #b7e4c7;
+  border-color: #1b4332;
+  color: #0d2818;
+}
+
+.choice-picker-empty {
+  padding: 14px 10px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.choice-picker-options-list {
+  max-height: 220px;
+  overflow-y: auto;
+}
+
 .date-field {
   position: relative;
   width: 100%;
