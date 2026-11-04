@@ -72,13 +72,14 @@
   left: 0;
   right: 0;
   background: #ffffff;
-  border: 1px solid #d4e5d8;
+  border: 1.5px solid #d4e5d8;
   border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(12, 43, 29, 0.15);
-  max-height: 240px;
+  box-shadow: 0 12px 28px rgba(12, 43, 29, 0.16);
+  max-height: 280px;
   overflow-y: auto;
   z-index: 100;
   padding: 6px;
+  -webkit-overflow-scrolling: touch;
 }
 
 .filterOption {

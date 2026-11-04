@@ -283,15 +283,37 @@ export default function LedgerPage() {
     };
   }, []);
 
-  // Compute month choices
+  // Compute month choices: All Months + all 12 calendar months
   const monthOptions = useMemo(() => {
-    const set = new Set<string>();
-    set.add('October 2026'); // Always keep October 2026 available as shown in reference design
+    const currentYear = new Date().getFullYear() || 2026;
+    const years = new Set<number>([2026, currentYear]);
+
     rows.forEach((r) => {
-      const my = getMonthYear(r.date);
-      if (my) set.add(my);
+      if (r.date) {
+        if (/^\d{2}\.\d{2}\.\d{4}$/.test(r.date)) {
+          const parts = r.date.split('.');
+          const y = parseInt(parts[2], 10);
+          if (!isNaN(y)) years.add(y);
+        } else {
+          const parts = r.date.split('T')[0].split('-');
+          if (parts.length === 3) {
+            const y = parseInt(parts[0], 10);
+            if (!isNaN(y)) years.add(y);
+          }
+        }
+      }
     });
-    return ['All Months', ...Array.from(set)];
+
+    const months: string[] = ['All Months'];
+
+    const sortedYears = Array.from(years).sort((a, b) => b - a);
+    sortedYears.forEach((year) => {
+      MONTH_NAMES.forEach((m) => {
+        months.push(`${m} ${year}`);
+      });
+    });
+
+    return months;
   }, [rows]);
 
   // Compute crop choices
