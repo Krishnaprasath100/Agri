@@ -16,7 +16,6 @@ import {
 import { CropCycle, ExpenseRecord, IncomeRecord } from '@/types';
 import {
   formatIndianCurrencyInput,
-  numberToIndianWords,
 } from '@/lib/utils';
 import {
   ChevronDown,
@@ -546,9 +545,23 @@ export default function LedgerPage() {
             </div>
           ) : filteredRows.length === 0 ? (
             <div className={styles.emptyState}>
-              {rows.length === 0
-                ? 'No ledger entries recorded yet. Tap "+ New Entry" below to record your first transaction.'
-                : `No ledger entries found for ${selectedMonth} • ${selectedCrop}.`}
+              {rows.length === 0 ? (
+                <Link
+                  href="/entry"
+                  style={{
+                    color: '#1b6343',
+                    fontWeight: 650,
+                    fontSize: '1rem',
+                    textDecoration: 'none',
+                    display: 'inline-block',
+                    padding: '8px 12px',
+                  }}
+                >
+                  Tap to New Entry
+                </Link>
+              ) : (
+                `No ledger entries found for ${selectedMonth} • ${selectedCrop}.`
+              )}
             </div>
           ) : (
             filteredRows.map((row) => (
@@ -737,11 +750,6 @@ export default function LedgerPage() {
                     }}
                     placeholder="0.00"
                   />
-                  {editAmount > 0 && (
-                    <div style={{ fontSize: '0.82rem', fontWeight: 600, color: '#1b6343', marginTop: 4 }}>
-                      ₹ {editAmountDisplay} <span style={{ color: '#64748b', fontWeight: 400 }}>({numberToIndianWords(editAmount)})</span>
-                    </div>
-                  )}
                 </div>
               </div>
 

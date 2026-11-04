@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
   AlertCircle,
-  ArrowLeft,
   ArrowRight,
   Eye,
   EyeOff,
@@ -128,10 +127,6 @@ export default function RegisterPage() {
 
   return (
     <main className={styles.page}>
-      <Link href="/" className={styles.backHome}>
-        <ArrowLeft size={18} aria-hidden="true" />
-        <span>Back to home</span>
-      </Link>
       <section className={`${styles.card} ${styles.signupCard}`} aria-labelledby="signup-title">
         {/* Brand Header */}
         <Link href="/" className={styles.brand}>

@@ -819,6 +819,26 @@ svg {
   padding-right: 48px;
 }
 
+.date-field-placeholder {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  letter-spacing: 0.01em;
+  pointer-events: none;
+  user-select: none;
+}
+
+.date-field-input:not(.has-value)::-webkit-datetime-edit {
+  color: transparent;
+}
+
+.date-field-input.has-value::-webkit-datetime-edit {
+  color: inherit;
+}
+
 .date-field-button {
   position: absolute;
   right: 8px;

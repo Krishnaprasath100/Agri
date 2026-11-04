@@ -27,7 +27,6 @@ import {
 } from '@/types';
 import {
   formatIndianCurrencyInput,
-  numberToIndianWords,
 } from '@/lib/utils';
 import { ArrowDownCircle, ArrowUpCircle, Save } from 'lucide-react';
 
@@ -371,24 +370,6 @@ export default function EntryPage() {
                   letterSpacing: '0.02em',
                 }}
               />
-              {form.amount && Number(form.amount) > 0 && (
-                <div
-                  style={{
-                    fontSize: '0.84rem',
-                    fontWeight: 600,
-                    color: '#1b6343',
-                    marginTop: 6,
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 6,
-                  }}
-                >
-                  <span>₹ {displayAmount}</span>
-                  <span style={{ color: 'var(--text-muted)', fontWeight: 500 }}>
-                    ({numberToIndianWords(Number(form.amount))})
-                  </span>
-                </div>
-              )}
             </div>
           </div>
 

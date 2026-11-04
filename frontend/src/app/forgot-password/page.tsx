@@ -83,10 +83,6 @@ export default function ForgotPasswordPage() {
 
   return (
     <main className={styles.page}>
-      <Link href="/" className={styles.backHome}>
-        <ArrowLeft size={18} aria-hidden="true" />
-        <span>Back to home</span>
-      </Link>
       <section className={styles.card} aria-labelledby="forgot-title">
         {/* Brand Header */}
         <Link href="/" className={styles.brand}>
