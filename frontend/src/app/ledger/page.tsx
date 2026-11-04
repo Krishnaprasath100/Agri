@@ -58,58 +58,6 @@ const MONTH_NAMES = [
   'December',
 ];
 
-// Seed records that match the user reference design out of the box
-const DEFAULT_LEDGER_ENTRIES: LedgerRow[] = [
-  {
-    id: 'seed-1',
-    type: 'expense',
-    date: '2026-10-10',
-    crop: 'Paddy',
-    details: 'Fertilizer Purchase',
-    person: 'Murugan Fertilizer Store',
-    account: 'Axis ••1234',
-    accountPrefix: 'Paid from',
-    income: 0,
-    expense: 5000,
-  },
-  {
-    id: 'seed-2',
-    type: 'expense',
-    date: '2026-10-09',
-    crop: 'Paddy',
-    details: 'Labour Wages',
-    person: 'Ramasamy',
-    account: 'SBI ••5678',
-    accountPrefix: 'Paid from',
-    income: 0,
-    expense: 3500,
-  },
-  {
-    id: 'seed-3',
-    type: 'income',
-    date: '2026-10-08',
-    crop: 'Banana',
-    details: 'Crop Sales',
-    person: 'Kumar Trader',
-    account: 'Axis ••1234',
-    accountPrefix: 'Received in',
-    income: 45000,
-    expense: 0,
-  },
-  {
-    id: 'seed-4',
-    type: 'expense',
-    date: '2026-10-07',
-    crop: 'Banana',
-    details: 'Seedling Purchase',
-    person: 'Selvam Nursery',
-    account: 'HDFC ••9012',
-    accountPrefix: 'Paid from',
-    income: 0,
-    expense: 10000,
-  },
-];
-
 function formatDisplayDate(dateStr: string): string {
   if (!dateStr) return '—';
   if (/^\d{2}\.\d{2}\.\d{4}$/.test(dateStr)) return dateStr;
@@ -157,13 +105,13 @@ function getMonthYear(dateStr: string): string {
 
 export default function LedgerPage() {
   const { user } = useAuth();
-  const [rows, setRows] = useState<LedgerRow[]>(DEFAULT_LEDGER_ENTRIES);
+  const [rows, setRows] = useState<LedgerRow[]>([]);
   const [crops, setCrops] = useState<CropCycle[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  // Filters matching reference design: "October 2026" & "All Crops"
-  const [selectedMonth, setSelectedMonth] = useState<string>('October 2026');
+  // Defaults: "All Months" & "All Crops"
+  const [selectedMonth, setSelectedMonth] = useState<string>('All Months');
   const [selectedCrop, setSelectedCrop] = useState<string>('All Crops');
 
   const [monthDropdownOpen, setMonthDropdownOpen] = useState(false);
@@ -200,61 +148,45 @@ export default function LedgerPage() {
 
       setCrops(cropList);
 
-      const hasUserData = expenses.length > 0 || income.length > 0;
+      const expenseRows: LedgerRow[] = expenses.map((item: ExpenseRecord) => ({
+        id: `exp-${item.expenseId}`,
+        originalId: item.expenseId,
+        type: 'expense',
+        date: item.expenseDate,
+        crop:
+          item.cropName ||
+          cropList.find((c) => c.cropCycleId === item.cropCycleId)?.cropType ||
+          '—',
+        details: item.type,
+        person: item.payee || '—',
+        account: item.paidFromAccount || 'Cash in Hand',
+        accountPrefix: 'Paid from',
+        income: 0,
+        expense: Number(item.amount) || 0,
+      }));
 
-      if (!hasUserData) {
-        // Use default seed rows matching user reference screenshot
-        setRows(DEFAULT_LEDGER_ENTRIES);
-        setSelectedMonth('October 2026');
-      } else {
-        const expenseRows: LedgerRow[] = expenses.map((item: ExpenseRecord) => ({
-          id: `exp-${item.expenseId}`,
-          originalId: item.expenseId,
-          type: 'expense',
-          date: item.expenseDate,
-          crop:
-            item.cropName ||
-            cropList.find((c) => c.cropCycleId === item.cropCycleId)?.cropType ||
-            'Paddy',
-          details: item.type,
-          person: item.payee || '—',
-          account: item.paidFromAccount || 'Cash in Hand',
-          accountPrefix: 'Paid from',
-          income: 0,
-          expense: Number(item.amount) || 0,
-        }));
+      const incomeRows: LedgerRow[] = income.map((item: IncomeRecord) => ({
+        id: `inc-${item.incomeId}`,
+        originalId: item.incomeId,
+        type: 'income',
+        date: item.saleDate,
+        crop: item.cropType || '—',
+        details: item.notes || 'Crop Sales',
+        person: item.buyerName || '—',
+        account: 'Cash in Hand',
+        accountPrefix: 'Received in',
+        income: Number(item.totalAmount) || 0,
+        expense: 0,
+      }));
 
-        const incomeRows: LedgerRow[] = income.map((item: IncomeRecord) => ({
-          id: `inc-${item.incomeId}`,
-          originalId: item.incomeId,
-          type: 'income',
-          date: item.saleDate,
-          crop: item.cropType || 'Crop',
-          details: item.notes || 'Crop Sales',
-          person: item.buyerName || '—',
-          account: 'Axis ••1234',
-          accountPrefix: 'Received in',
-          income: Number(item.totalAmount) || 0,
-          expense: 0,
-        }));
+      const combined = [...expenseRows, ...incomeRows].sort((a, b) =>
+        b.date.localeCompare(a.date)
+      );
 
-        const combined = [...expenseRows, ...incomeRows].sort((a, b) =>
-          b.date.localeCompare(a.date)
-        );
-
-        setRows(combined);
-
-        // Auto-select latest month if current filter has no items
-        const availableMonths = Array.from(
-          new Set(combined.map((r) => getMonthYear(r.date)).filter(Boolean))
-        );
-        if (availableMonths.length > 0 && !availableMonths.includes(selectedMonth)) {
-          setSelectedMonth(availableMonths[0]);
-        }
-      }
+      setRows(combined);
     } catch (err) {
       console.error('Failed to load ledger data:', err);
-      setRows(DEFAULT_LEDGER_ENTRIES);
+      setRows([]);
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -614,7 +546,9 @@ export default function LedgerPage() {
             </div>
           ) : filteredRows.length === 0 ? (
             <div className={styles.emptyState}>
-              No ledger entries found for {selectedMonth} &bull; {selectedCrop}.
+              {rows.length === 0
+                ? 'No ledger entries recorded yet. Tap "+ New Entry" below to record your first transaction.'
+                : `No ledger entries found for ${selectedMonth} • ${selectedCrop}.`}
             </div>
           ) : (
             filteredRows.map((row) => (
