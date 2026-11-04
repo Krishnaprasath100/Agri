@@ -34,6 +34,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const pathname = usePathname();
   const { user, role, logout, isPostgresActive } = useAuth();
   const [mounted, setMounted] = useState(false);
+  const [showConfirmLogout, setShowConfirmLogout] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -343,9 +345,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
 
             {/* Professional Single-Line Logout Button */}
             <button
-              onClick={async () => {
-                await logout('/login');
-              }}
+              type="button"
+              onClick={() => setShowConfirmLogout(true)}
               title="Sign Out"
               aria-label="Sign Out"
               style={{
@@ -381,6 +382,131 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           </div>
         </div>
       </aside>
+
+      {/* Confirmation Modal for Sidebar Logout */}
+      {showConfirmLogout && (
+        <div
+          onClick={() => !loggingOut && setShowConfirmLogout(false)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(12, 43, 29, 0.65)',
+            backdropFilter: 'blur(4px)',
+            WebkitBackdropFilter: 'blur(4px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 99999,
+            padding: '16px',
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              width: '100%',
+              maxWidth: '400px',
+              backgroundColor: '#ffffff',
+              borderRadius: '20px',
+              padding: '24px',
+              boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.35)',
+              border: '1px solid #e2e8f0',
+              textAlign: 'center',
+              colorScheme: 'light',
+            }}
+          >
+            <div
+              style={{
+                width: '54px',
+                height: '54px',
+                borderRadius: '50%',
+                backgroundColor: '#fee2e2',
+                color: '#dc2626',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 16px',
+              }}
+            >
+              <LogOut size={26} strokeWidth={2.2} />
+            </div>
+
+            <h3
+              style={{
+                fontSize: '1.25rem',
+                fontWeight: 800,
+                color: '#0f172a',
+                marginBottom: '8px',
+                letterSpacing: '-0.02em',
+              }}
+            >
+              Confirm Logout
+            </h3>
+
+            <p
+              style={{
+                fontSize: '0.92rem',
+                color: '#64748b',
+                lineHeight: 1.5,
+                marginBottom: '24px',
+              }}
+            >
+              Are you sure you want to log out of your AgriTrack account?
+            </p>
+
+            <div style={{ display: 'flex', gap: '12px' }}>
+              <button
+                type="button"
+                className="btn btn-secondary"
+                disabled={loggingOut}
+                onClick={() => setShowConfirmLogout(false)}
+                style={{
+                  flex: 1,
+                  padding: '10px 16px',
+                  borderRadius: '10px',
+                  fontWeight: 650,
+                  fontSize: '0.92rem',
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={loggingOut}
+                onClick={async () => {
+                  setLoggingOut(true);
+                  try {
+                    await logout('/login');
+                  } finally {
+                    setLoggingOut(false);
+                    setShowConfirmLogout(false);
+                  }
+                }}
+                style={{
+                  flex: 1,
+                  padding: '10px 16px',
+                  borderRadius: '10px',
+                  backgroundColor: '#dc2626',
+                  color: '#ffffff',
+                  border: 'none',
+                  fontWeight: 750,
+                  fontSize: '0.92rem',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '6px',
+                  cursor: loggingOut ? 'not-allowed' : 'pointer',
+                  opacity: loggingOut ? 0.8 : 1,
+                  boxShadow: '0 4px 12px rgba(220, 38, 38, 0.3)',
+                  transition: 'all 0.15s ease',
+                }}
+              >
+                <LogOut size={15} />
+                <span>{loggingOut ? 'Logging out...' : 'Yes, Log Out'}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
