@@ -17,7 +17,6 @@ export default function PersonsPage() {
   const [form, setForm] = useState({
     name: '',
     phone: '',
-    email: '',
     address: '',
   });
   const [error, setError] = useState('');
@@ -42,11 +41,10 @@ export default function PersonsPage() {
       kind: 'person',
       name: form.name.trim(),
       phone: form.phone.trim() || undefined,
-      email: form.email.trim() || undefined,
       address: form.address.trim() || undefined,
     });
 
-    setForm({ name: '', phone: '', email: '', address: '' });
+    setForm({ name: '', phone: '', address: '' });
     setError('');
     load();
   };
@@ -77,27 +75,15 @@ export default function PersonsPage() {
               />
             </div>
 
-            <div className="grid-2" style={{ gap: 14 }}>
-              <div className="form-group">
-                <label className="form-label">Mobile number</label>
-                <input
-                  className="form-input"
-                  value={form.phone}
-                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                  placeholder="Enter mobile number"
-                />
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Email</label>
-                <input
-                  type="email"
-                  className="form-input"
-                  value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  placeholder="Enter email address"
-                />
-              </div>
+            <div className="form-group">
+              <label className="form-label">Mobile number</label>
+              <input
+                type="tel"
+                className="form-input"
+                value={form.phone}
+                onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                placeholder="Enter mobile number"
+              />
             </div>
 
             <div className="form-group">
@@ -149,7 +135,7 @@ export default function PersonsPage() {
                 >
                   <div>
                     <strong>{person.name}</strong>
-                    {(person.phone || person.email) && (
+                    {person.phone && (
                       <div
                         style={{
                           color: 'var(--text-muted)',
@@ -157,7 +143,18 @@ export default function PersonsPage() {
                           marginTop: 3,
                         }}
                       >
-                        {person.phone || person.email}
+                        {person.phone}
+                      </div>
+                    )}
+                    {person.address && (
+                      <div
+                        style={{
+                          color: 'var(--text-dim)',
+                          fontSize: '.76rem',
+                          marginTop: 2,
+                        }}
+                      >
+                        {person.address}
                       </div>
                     )}
                   </div>
