@@ -495,7 +495,7 @@ export default function LedgerPage() {
           {/* Header */}
           <div className={styles.tableHeader}>
             <div className={`${styles.tableHeaderCol} ${styles.detailsHeaderCol}`}>
-              <span>Details</span>
+              <span className={styles.detailsTitle}>{t('Details')}</span>
               <button
                 type="button"
                 className={`${styles.detailsFilterBtn}${
@@ -510,23 +510,23 @@ export default function LedgerPage() {
                 aria-label="Filter transactions"
                 title="Filter by Crop, Month, or Date"
               >
-                <Filter size={14} strokeWidth={2.4} className={styles.filterIcon} />
+                <Filter size={13} strokeWidth={2.4} className={styles.filterIcon} />
                 <span>{t('Filter')}</span>
                 {activeFilterCount > 0 && (
                   <span className={styles.filterBadgeCount}>{activeFilterCount}</span>
                 )}
-                <ChevronDown size={13} strokeWidth={2.4} className={styles.filterChevron} />
+                <ChevronDown size={12} strokeWidth={2.4} className={styles.filterChevron} />
               </button>
             </div>
             <div
               className={`${styles.tableHeaderCol} ${styles.tableHeaderColBorder}`}
             >
-              Income ₹
+              {t('Income')} ₹
             </div>
             <div
               className={`${styles.tableHeaderCol} ${styles.tableHeaderColBorder}`}
             >
-              Expense ₹
+              {t('Expenses')} ₹
             </div>
           </div>
 

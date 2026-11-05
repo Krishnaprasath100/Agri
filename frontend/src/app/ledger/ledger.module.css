@@ -15,6 +15,42 @@
   .pageWrapper {
     padding: 0 0 12px 0;
   }
+  .tableHeader {
+    grid-template-columns: 58% 21% 21% !important;
+  }
+  .tableRow {
+    grid-template-columns: 58% 21% 21% !important;
+  }
+  .tableTotalRow {
+    grid-template-columns: 58% 21% 21% !important;
+  }
+  .tableHeaderCol {
+    padding: 9px 6px;
+    font-size: 13px;
+  }
+  .detailsHeaderCol {
+    padding: 7px 6px;
+    gap: 4px;
+  }
+  .detailsTitle {
+    font-size: 13px;
+  }
+  .detailsFilterBtn {
+    padding: 4px 7px;
+    font-size: 11.5px;
+    gap: 4px;
+    border-radius: 6px;
+  }
+  .detailsCol {
+    padding: 10px 6px;
+  }
+  .amountCol {
+    padding: 10px 4px;
+  }
+  .incomeAmount,
+  .expenseAmount {
+    font-size: 14.5px;
+  }
 }
 
 /* 1. Top Filters Row */
@@ -193,7 +229,7 @@
 
 .tableHeader {
   display: grid;
-  grid-template-columns: 52% 24% 24%;
+  grid-template-columns: 56% 22% 22%;
   background: #f4f8f5;
   border-bottom: 1.5px solid #dcebe0;
   width: 100%;
@@ -206,8 +242,8 @@
 }
 
 .tableHeaderCol {
-  padding: 12px 14px;
-  font-size: 15px;
+  padding: 11px 12px;
+  font-size: 14.5px;
   font-weight: 800;
   color: #0c2b1d;
   display: flex;
@@ -220,17 +256,29 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.detailsTitle {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: #0c2b1d;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-shrink: 1;
 }
 
 .detailsFilterBtn {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
   background: #ffffff;
   color: #1b4332;
   border: 1.5px solid #2d6a4f;
   border-radius: 8px;
-  padding: 6px 13px;
+  padding: 5px 11px;
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.01em;
@@ -239,6 +287,8 @@
   box-shadow: 0 1px 3px rgba(12, 43, 29, 0.08);
   line-height: 1.2;
   user-select: none;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .detailsFilterBtn:hover {
@@ -419,7 +469,7 @@
 /* 4. Table Rows */
 .tableRow {
   display: grid;
-  grid-template-columns: 52% 24% 24%;
+  grid-template-columns: 56% 22% 22%;
   border-bottom: 1px solid #e2e8f0;
   transition: background 0.15s ease;
   width: 100%;
@@ -568,7 +618,7 @@
 /* 5. Total Row */
 .tableTotalRow {
   display: grid;
-  grid-template-columns: 52% 24% 24%;
+  grid-template-columns: 56% 22% 22%;
   background: #f4f8f5;
   border-top: 1.5px solid #dcebe0;
   width: 100%;
