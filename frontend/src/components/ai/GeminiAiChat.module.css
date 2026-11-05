@@ -687,7 +687,7 @@
 /* Responsive styles - Compact & Aligned for Mobile Phones */
 @media (max-width: 768px) {
   .floatingTrigger {
-    bottom: calc(var(--bottom-nav-height, 64px) + env(safe-area-inset-bottom, 0px) + 10px);
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 14px);
     right: 14px;
     width: 46px;
     height: 46px;
@@ -707,18 +707,18 @@
   }
 
   .chatModal {
-    bottom: calc(var(--bottom-nav-height, 64px) + env(safe-area-inset-bottom, 0px) + 62px);
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 68px);
     right: 10px;
     left: 10px;
     width: auto;
     max-width: calc(100vw - 20px);
-    height: min(490px, calc(100dvh - var(--bottom-nav-height, 64px) - env(safe-area-inset-top, 0px) - 95px));
+    height: min(490px, calc(100dvh - env(safe-area-inset-top, 0px) - 95px));
     border-radius: 18px;
   }
 
   .chatModal.expanded {
     width: auto;
-    height: min(540px, calc(100dvh - var(--bottom-nav-height, 64px) - env(safe-area-inset-top, 0px) - 80px));
+    height: min(540px, calc(100dvh - env(safe-area-inset-top, 0px) - 80px));
   }
 
   .modalHeader {

@@ -18,6 +18,12 @@ interface ChoicePickerProps {
   allowCreate?: boolean;
   createPlaceholder?: string;
   onCreate?: (newValue: string) => void;
+  className?: string;
+  isOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  onOpen?: () => void;
+  onSkip?: () => void;
+  skipLabel?: string;
 }
 
 /** A viewport-safe picker; native select menus can overflow mobile app frames. */
@@ -30,8 +36,27 @@ export function ChoicePicker({
   allowCreate = false,
   createPlaceholder = 'Search or type new...',
   onCreate,
+  className,
+  isOpen: controlledIsOpen,
+  onOpenChange,
+  onOpen,
+  onSkip,
+  skipLabel = 'Skip (Optional) →',
 }: ChoicePickerProps) {
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isControlled = typeof controlledIsOpen === 'boolean';
+  const open = isControlled ? controlledIsOpen : internalOpen;
+
+  const setOpen = (newVal: boolean | ((prev: boolean) => boolean)) => {
+    const nextVal = typeof newVal === 'function' ? newVal(open) : newVal;
+    if (!isControlled) {
+      setInternalOpen(nextVal);
+    }
+    if (onOpenChange) {
+      onOpenChange(nextVal);
+    }
+  };
+
   const [search, setSearch] = useState('');
   const rootRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -54,12 +79,25 @@ export function ChoicePicker({
   }, []);
 
   useEffect(() => {
-    if (open && allowCreate && searchInputRef.current) {
-      setTimeout(() => searchInputRef.current?.focus(), 50);
+    if (open) {
+      if (onOpen) onOpen();
+      // ONLY on mobile phones (<= 767px): scroll field smoothly to the top of viewport
+      // so options open downwards in open space and keyboard stays at the bottom.
+      // On Desktop and Tab (> 767px), do NOT scroll or alter page position!
+      if (typeof window !== 'undefined' && window.innerWidth <= 767 && rootRef.current) {
+        const rect = rootRef.current.getBoundingClientRect();
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const targetY = scrollTop + rect.top - 8;
+        window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+      }
+
+      if (allowCreate && searchInputRef.current) {
+        setTimeout(() => searchInputRef.current?.focus(), 80);
+      }
     } else {
       setSearch('');
     }
-  }, [open, allowCreate]);
+  }, [open, allowCreate, onOpen]);
 
   const trimmedSearch = search.trim();
   const filteredOptions = trimmedSearch
@@ -93,7 +131,7 @@ export function ChoicePicker({
   let previousGroup: string | undefined;
 
   return (
-    <div className="choice-picker" ref={rootRef}>
+    <div className={`choice-picker${className ? ` ${className}` : ''}`} ref={rootRef}>
       <button
         type="button"
         className={`choice-picker-trigger${open ? ' is-open' : ''}${
@@ -104,7 +142,7 @@ export function ChoicePicker({
         aria-expanded={open}
         onClick={() => setOpen((current) => !current)}
       >
-        <span>{selected?.label || value || placeholder}</span>
+        <span className="choice-picker-label">{selected?.label || value || placeholder}</span>
         <ChevronDown
           size={18}
           aria-hidden="true"
@@ -117,6 +155,30 @@ export function ChoicePicker({
 
       {open && (
         <div className="choice-picker-menu" role="listbox" aria-label={ariaLabel}>
+          {onSkip && (
+            <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '4px 8px 6px' }}>
+              <button
+                type="button"
+                className="btn btn-secondary"
+                style={{
+                  padding: '3px 10px',
+                  fontSize: '0.78rem',
+                  borderRadius: 6,
+                  fontWeight: 650,
+                  height: 28,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 4,
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onSkip();
+                }}
+              >
+                {skipLabel}
+              </button>
+            </div>
+          )}
           {allowCreate && (
             <div className="choice-picker-search-container">
               <div className="choice-picker-search-box">

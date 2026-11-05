@@ -85,14 +85,28 @@ export const GrowthTimeline: React.FC<GrowthTimelineProps> = ({ crop }) => {
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(4, 1fr)',
-          gap: '8px',
+          gap: '6px',
           position: 'relative',
         }}
       >
+        {/* Connecting timeline track */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            top: '14px',
+            left: '12%',
+            right: '12%',
+            height: '2px',
+            backgroundColor: '#d8e5dc',
+            zIndex: 0,
+          }}
+        />
+
         {stages.map((st, i) => {
           const Icon = st.icon;
           return (
-            <div key={i} style={{ textAlign: 'center' }}>
+            <div key={i} style={{ textAlign: 'center', position: 'relative', zIndex: 1, minWidth: 0 }}>
               <div
                 style={{
                   width: '28px',
@@ -102,21 +116,41 @@ export const GrowthTimeline: React.FC<GrowthTimelineProps> = ({ crop }) => {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  backgroundColor: st.isDone ? '#dcfce7' : '#f1f5f9',
-                  color: st.isDone ? '#15803d' : '#94a3b8',
-                  border: st.highlight ? '2px solid #ef4444' : '1px solid var(--border-subtle)',
+                  backgroundColor: st.isDone ? '#dcfce7' : '#ffffff',
+                  color: st.isDone ? '#15803d' : '#889a90',
+                  border: st.highlight
+                    ? '2px solid #ef4444'
+                    : st.isDone
+                    ? '1.5px solid #86efac'
+                    : '1.5px solid #d4dfd8',
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
                 }}
               >
                 <Icon size={14} />
               </div>
-              <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-main)' }}>
+              <div
+                style={{
+                  fontSize: '0.72rem',
+                  fontWeight: 600,
+                  color: 'var(--text-main)',
+                  lineHeight: 1.2,
+                  minHeight: '2.4em',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  wordBreak: 'break-word',
+                }}
+              >
                 {st.title}
               </div>
               <div
                 style={{
-                  fontSize: '0.7rem',
+                  fontSize: '0.68rem',
                   color: st.highlight ? '#dc2626' : 'var(--text-dim)',
-                  fontWeight: st.highlight ? 600 : 400,
+                  fontWeight: st.highlight ? 600 : 500,
+                  marginTop: '2px',
+                  lineHeight: 1.2,
+                  wordBreak: 'break-word',
                 }}
               >
                 {st.date}

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { AppShell } from '@/components/layout/AppShell';
@@ -17,8 +17,11 @@ import { CropCycle, ExpenseRecord, IncomeRecord } from '@/types';
 import {
   formatIndianCurrencyInput,
 } from '@/lib/utils';
+import { ChoicePicker } from '@/components/forms/ChoicePicker';
+import { DateField } from '@/components/forms/DateField';
 import {
   ChevronDown,
+  Filter,
   Landmark,
   Pencil,
   Plus,
@@ -77,6 +80,15 @@ function formatDisplayDate(dateStr: string): string {
   return dateStr;
 }
 
+function getIsoDate(dateStr: string): string {
+  if (!dateStr) return '';
+  if (/^\d{2}\.\d{2}\.\d{4}$/.test(dateStr)) {
+    const parts = dateStr.split('.');
+    return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+  }
+  return dateStr.split('T')[0];
+}
+
 function getMonthYear(dateStr: string): string {
   if (!dateStr) return '';
   try {
@@ -109,15 +121,16 @@ export default function LedgerPage() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  // Defaults: "All Months" & "All Crops"
+  // Filters: "All Months", "All Crops", and Specific Date ("")
   const [selectedMonth, setSelectedMonth] = useState<string>('All Months');
   const [selectedCrop, setSelectedCrop] = useState<string>('All Crops');
+  const [selectedDate, setSelectedDate] = useState<string>('');
 
-  const [monthDropdownOpen, setMonthDropdownOpen] = useState(false);
-  const [cropDropdownOpen, setCropDropdownOpen] = useState(false);
-
-  const monthDropdownRef = useRef<HTMLDivElement>(null);
-  const cropDropdownRef = useRef<HTMLDivElement>(null);
+  // Filter Modal State
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+  const [draftMonth, setDraftMonth] = useState<string>('All Months');
+  const [draftCrop, setDraftCrop] = useState<string>('All Crops');
+  const [draftDate, setDraftDate] = useState<string>('');
 
   // Edit Modal State
   const [editingRow, setEditingRow] = useState<LedgerRow | null>(null);
@@ -196,29 +209,6 @@ export default function LedgerPage() {
     loadLedgerData();
   }, [user]);
 
-  // Handle clicking outside of dropdowns to close them
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        monthDropdownRef.current &&
-        !monthDropdownRef.current.contains(event.target as Node)
-      ) {
-        setMonthDropdownOpen(false);
-      }
-      if (
-        cropDropdownRef.current &&
-        !cropDropdownRef.current.contains(event.target as Node)
-      ) {
-        setCropDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
   // Compute month choices: All Months + all 12 calendar months
   const monthOptions = useMemo(() => {
     const currentYear = new Date().getFullYear() || 2026;
@@ -264,7 +254,7 @@ export default function LedgerPage() {
     return ['All Crops', ...Array.from(set)];
   }, [rows, crops]);
 
-  // Filtered Rows
+  // Filtered Rows (supports Crop, Month, and Date separately)
   const filteredRows = useMemo(() => {
     return rows.filter((row) => {
       // Month filter
@@ -280,9 +270,24 @@ export default function LedgerPage() {
           return false;
         }
       }
+      // Specific Date filter
+      if (selectedDate && selectedDate.trim() !== '') {
+        const rowIso = getIsoDate(row.date);
+        if (rowIso !== selectedDate) {
+          return false;
+        }
+      }
       return true;
     });
-  }, [rows, selectedMonth, selectedCrop]);
+  }, [rows, selectedMonth, selectedCrop, selectedDate]);
+
+  const activeFilterCount = useMemo(() => {
+    let count = 0;
+    if (selectedMonth && selectedMonth !== 'All Months') count++;
+    if (selectedCrop && selectedCrop !== 'All Crops') count++;
+    if (selectedDate && selectedDate.trim() !== '') count++;
+    return count;
+  }, [selectedMonth, selectedCrop, selectedDate]);
 
   // Summary Totals
   const totalIncome = useMemo(
@@ -399,94 +404,7 @@ export default function LedgerPage() {
   return (
     <AppShell>
       <div className={styles.pageWrapper}>
-        {/* 1. Top Filters: [ October 2026 ∨ ] [ All Crops ∨ ] */}
-        <div className={styles.filterRow}>
-          {/* Month Filter Dropdown */}
-          <div className={styles.filterBox} ref={monthDropdownRef}>
-            <button
-              type="button"
-              className={styles.filterButton}
-              onClick={() => {
-                setMonthDropdownOpen(!monthDropdownOpen);
-                setCropDropdownOpen(false);
-              }}
-              aria-label="Filter by month"
-            >
-              <span>{selectedMonth}</span>
-              <ChevronDown
-                size={18}
-                style={{
-                  transform: monthDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                  transition: 'transform 0.2s ease',
-                  color: '#1b6343',
-                }}
-              />
-            </button>
-
-            {monthDropdownOpen && (
-              <div className={styles.filterMenu}>
-                {monthOptions.map((m) => (
-                  <div
-                    key={m}
-                    className={`${styles.filterOption} ${
-                      selectedMonth === m ? styles.filterOptionActive : ''
-                    }`}
-                    onClick={() => {
-                      setSelectedMonth(m);
-                      setMonthDropdownOpen(false);
-                    }}
-                  >
-                    {m}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Crop Filter Dropdown */}
-          <div className={styles.filterBox} ref={cropDropdownRef}>
-            <button
-              type="button"
-              className={styles.filterButton}
-              onClick={() => {
-                setCropDropdownOpen(!cropDropdownOpen);
-                setMonthDropdownOpen(false);
-              }}
-              aria-label="Filter by crop"
-            >
-              <span>{selectedCrop}</span>
-              <ChevronDown
-                size={18}
-                style={{
-                  transform: cropDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                  transition: 'transform 0.2s ease',
-                  color: '#1b6343',
-                }}
-              />
-            </button>
-
-            {cropDropdownOpen && (
-              <div className={styles.filterMenu}>
-                {cropOptions.map((c) => (
-                  <div
-                    key={c}
-                    className={`${styles.filterOption} ${
-                      selectedCrop === c ? styles.filterOptionActive : ''
-                    }`}
-                    onClick={() => {
-                      setSelectedCrop(c);
-                      setCropDropdownOpen(false);
-                    }}
-                  >
-                    {c}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* 2. Summary Card: Total Income, Total Expenses, Balance */}
+        {/* 1. Summary Card: Total Income, Total Expenses, Balance */}
         <div className={styles.summaryCard}>
           <div className={styles.summaryCol}>
             <span className={styles.summaryLabel}>Total Income</span>
@@ -516,11 +434,88 @@ export default function LedgerPage() {
           </div>
         </div>
 
-        {/* 3. Table Container */}
+        {/* Active Filters Bar */}
+        {activeFilterCount > 0 && (
+          <div className={styles.activeFiltersBar}>
+            <span className={styles.activeFiltersLabel}>Filters:</span>
+            {selectedMonth !== 'All Months' && (
+              <span className={styles.filterChip}>
+                Month: <strong>{selectedMonth}</strong>
+                <button
+                  type="button"
+                  onClick={() => setSelectedMonth('All Months')}
+                  aria-label="Clear month filter"
+                >
+                  ✕
+                </button>
+              </span>
+            )}
+            {selectedCrop !== 'All Crops' && (
+              <span className={styles.filterChip}>
+                Crop: <strong>{selectedCrop}</strong>
+                <button
+                  type="button"
+                  onClick={() => setSelectedCrop('All Crops')}
+                  aria-label="Clear crop filter"
+                >
+                  ✕
+                </button>
+              </span>
+            )}
+            {selectedDate && (
+              <span className={styles.filterChip}>
+                Date: <strong>{formatDisplayDate(selectedDate)}</strong>
+                <button
+                  type="button"
+                  onClick={() => setSelectedDate('')}
+                  aria-label="Clear date filter"
+                >
+                  ✕
+                </button>
+              </span>
+            )}
+            <button
+              type="button"
+              className={styles.clearAllFiltersBtn}
+              onClick={() => {
+                setSelectedMonth('All Months');
+                setSelectedCrop('All Crops');
+                setSelectedDate('');
+              }}
+            >
+              Clear All
+            </button>
+          </div>
+        )}
+
+        {/* 2. Table Container */}
         <div className={styles.tableContainer}>
           {/* Header */}
           <div className={styles.tableHeader}>
-            <div className={styles.tableHeaderCol}>Details</div>
+            <div className={`${styles.tableHeaderCol} ${styles.detailsHeaderCol}`}>
+              <span>Details</span>
+              <button
+                type="button"
+                className={`${styles.detailsFilterBtn}${
+                  activeFilterCount > 0 ? ` ${styles.detailsFilterBtnActive}` : ''
+                }`}
+                onClick={() => {
+                  setDraftMonth(selectedMonth);
+                  setDraftCrop(selectedCrop);
+                  setDraftDate(selectedDate);
+                  setIsFilterModalOpen(true);
+                }}
+                aria-label="Filter transactions"
+                title="Filter by Crop, Month, or Date"
+              >
+                <Filter size={12} strokeWidth={2.4} className={styles.filterIcon} />
+                <span>Filter</span>
+                {activeFilterCount > 0 && (
+                  <span className={styles.filterBadgeCount}>{activeFilterCount}</span>
+                )}
+                <ChevronDown size={11} strokeWidth={2.4} className={styles.filterChevron} />
+              </button>
+            </div>
             <div
               className={`${styles.tableHeaderCol} ${styles.tableHeaderColBorder}`}
             >
@@ -545,23 +540,11 @@ export default function LedgerPage() {
             </div>
           ) : filteredRows.length === 0 ? (
             <div className={styles.emptyState}>
-              {rows.length === 0 ? (
-                <Link
-                  href="/entry"
-                  style={{
-                    color: '#1b6343',
-                    fontWeight: 650,
-                    fontSize: '1rem',
-                    textDecoration: 'none',
-                    display: 'inline-block',
-                    padding: '8px 12px',
-                  }}
-                >
-                  Tap to New Entry
-                </Link>
-              ) : (
-                `No ledger entries found for ${selectedMonth} • ${selectedCrop}.`
-              )}
+              <div style={{ color: '#64748b', fontSize: '0.95rem', fontWeight: 600 }}>
+                {rows.length === 0
+                  ? 'No New Entry Found'
+                  : `No ledger entries found for ${selectedMonth} • ${selectedCrop}.`}
+              </div>
             </div>
           ) : (
             filteredRows.map((row) => (
@@ -771,6 +754,130 @@ export default function LedgerPage() {
                   disabled={savingEdit}
                 >
                   {savingEdit ? 'Saving...' : 'Save Changes'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+        {/* 6. Filter Modal */}
+        {isFilterModalOpen && (
+          <div
+            className={styles.modalOverlay}
+            onClick={() => setIsFilterModalOpen(false)}
+          >
+            <div
+              className={styles.modalCard}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className={styles.modalHeader}>
+                <div
+                  className={styles.modalTitle}
+                  style={{ display: 'flex', alignItems: 'center', gap: 8 }}
+                >
+                  <Filter size={18} style={{ color: '#1b6343' }} />
+                  <span>Filter Ledger</span>
+                </div>
+                <button
+                  type="button"
+                  className={styles.modalClose}
+                  onClick={() => setIsFilterModalOpen(false)}
+                  aria-label="Close filter dialog"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+
+              <div className={styles.modalBody}>
+                {/* Crop Filter */}
+                <div className={styles.formGroup}>
+                  <label className={styles.formLabel}>Crop</label>
+                  <ChoicePicker
+                    ariaLabel="Filter by crop"
+                    value={draftCrop}
+                    placeholder="All Crops"
+                    onChange={setDraftCrop}
+                    options={cropOptions.map((c) => ({ value: c, label: c }))}
+                  />
+                </div>
+
+                {/* Month Filter */}
+                <div className={styles.formGroup}>
+                  <label className={styles.formLabel}>Month</label>
+                  <ChoicePicker
+                    ariaLabel="Filter by month"
+                    value={draftMonth}
+                    placeholder="All Months"
+                    onChange={setDraftMonth}
+                    options={monthOptions.map((m) => ({ value: m, label: m }))}
+                  />
+                </div>
+
+                {/* Specific Date Filter */}
+                <div className={styles.formGroup}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      marginBottom: 2,
+                    }}
+                  >
+                    <label className={styles.formLabel} style={{ marginBottom: 0 }}>
+                      Specific Date (Optional)
+                    </label>
+                    {draftDate && (
+                      <button
+                        type="button"
+                        onClick={() => setDraftDate('')}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          color: '#dc2626',
+                          fontSize: '0.78rem',
+                          fontWeight: 700,
+                          cursor: 'pointer',
+                          padding: 0,
+                        }}
+                      >
+                        Clear date
+                      </button>
+                    )}
+                  </div>
+                  <DateField
+                    value={draftDate}
+                    onChange={(e) => setDraftDate(e.target.value)}
+                    placeholder="All Dates (dd-mm-yyyy)"
+                  />
+                  <div style={{ fontSize: '0.74rem', color: '#64748b', marginTop: 4 }}>
+                    Choose a date to view entries for that specific day, or leave blank for all dates.
+                  </div>
+                </div>
+              </div>
+
+              <div className={styles.modalActions}>
+                <button
+                  type="button"
+                  className={styles.resetFilterBtn}
+                  onClick={() => {
+                    setDraftMonth('All Months');
+                    setDraftCrop('All Crops');
+                    setDraftDate('');
+                  }}
+                >
+                  Reset
+                </button>
+
+                <button
+                  type="button"
+                  className={styles.saveBtn}
+                  onClick={() => {
+                    setSelectedMonth(draftMonth);
+                    setSelectedCrop(draftCrop);
+                    setSelectedDate(draftDate);
+                    setIsFilterModalOpen(false);
+                  }}
+                >
+                  Apply Filters
                 </button>
               </div>
             </div>

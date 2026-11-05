@@ -1,0 +1,429 @@
+/* Plantings (/crops) Professional Responsive Stylesheet */
+
+.toolbar {
+  padding: 14px 18px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  background: #ffffff;
+  border: 1px solid var(--border-subtle, #d8e5dc);
+  border-radius: var(--radius-lg, 14px);
+  box-shadow: 0 1px 4px rgba(15, 30, 20, 0.04);
+}
+
+.searchWrapper {
+  position: relative;
+  flex: 1 1 320px;
+  max-width: 440px;
+  min-width: 200px;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6c8877;
+  pointer-events: none;
+}
+
+.searchInput {
+  width: 100%;
+  height: 42px;
+  padding: 8px 36px 8px 38px;
+  font-size: 0.90rem;
+  border-radius: var(--radius-md, 10px);
+  border: 1.5px solid #8ea998;
+  background: #ffffff;
+  color: var(--text-main, #0c1c13);
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.searchInput:focus {
+  border-color: #1b4332;
+  box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.18);
+}
+
+.clearSearchBtn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #7b9485;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.clearSearchBtn:hover {
+  color: #0c1c13;
+  background: #eef4f0;
+}
+
+.controlsGroup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: nowrap;
+}
+
+.filterWrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 165px;
+}
+
+.sortGroup {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sortLabel {
+  font-size: 0.82rem;
+  color: var(--text-muted, #556f61);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.sortPickerWrapper {
+  width: 175px;
+}
+
+.sortOrderBtn {
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md, 10px);
+  border: 1.5px solid #8ea998;
+  background: #ffffff;
+  color: #1b4332;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+
+.sortOrderBtn:hover {
+  background: #f0f7f3;
+  border-color: #407559;
+}
+
+/* Summary / count bar */
+.resultsSummary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: -12px;
+  margin-bottom: 20px;
+  padding: 0 4px;
+  font-size: 0.82rem;
+  color: #557262;
+}
+
+.resetFiltersLink {
+  color: #2d6a4f;
+  background: none;
+  border: none;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+}
+
+.resetFiltersLink:hover {
+  color: #1b4332;
+}
+
+/* Grid of Planting Cards */
+.cropsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 350px), 1fr));
+  gap: 20px;
+}
+
+/* Individual Card */
+.cropCard {
+  background: #ffffff;
+  border: 1.5px solid #dce8df;
+  border-radius: 16px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 1px 4px rgba(15, 30, 20, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.cropCard:hover {
+  border-color: #9cbda7;
+  box-shadow: 0 8px 22px rgba(27, 67, 50, 0.08);
+  transform: translateY(-2px);
+}
+
+/* Card Header */
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.cropTitleGroup {
+  min-width: 0;
+  flex: 1;
+}
+
+.cropTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0b291a;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cropLocation {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  color: #4b6656;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+.cardActions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.actionBtn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: 1px solid #dce8df;
+  background: #ffffff;
+  color: #2d6a4f;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.actionBtn:hover {
+  background: #edf7f1;
+  border-color: #8ea998;
+  color: #1b4332;
+}
+
+.actionBtnDelete {
+  color: #dc2626;
+  border-color: #fee2e2;
+}
+
+.actionBtnDelete:hover {
+  background: #fef2f2;
+  border-color: #fca5a5;
+  color: #b91c1c;
+}
+
+/* Key Dates Box */
+.keyDatesGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: #f7faf8;
+  border: 1px solid #e1ebe3;
+  border-radius: 10px;
+  padding: 8px 14px;
+  margin-bottom: 14px;
+  gap: 8px;
+}
+
+.keyDateCell {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.keyDateCellRight {
+  border-left: 1px solid #e1ebe3;
+  padding-left: 12px;
+}
+
+.keyDateLabel {
+  font-size: 0.70rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #557262;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.keyDateValue {
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: #0c2b1d;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.keyDateValueOverdue {
+  color: #dc2626;
+}
+
+/* Notes callout */
+.notesCallout {
+  margin-top: 14px;
+  padding: 10px 12px;
+  background: #fcfdfc;
+  border: 1px dashed #c9ded0;
+  border-radius: 8px;
+  font-size: 0.80rem;
+  color: #3b5748;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+/* TABLET / TAB VIEW (641px - 1024px) */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 14px 16px;
+  }
+
+  .searchWrapper {
+    width: 100%;
+    max-width: 100%;
+    flex: 1 1 100%;
+  }
+
+  .controlsGroup {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    gap: 12px;
+  }
+
+  .filterWrapper {
+    flex: 0 0 190px;
+    width: 190px;
+  }
+
+  .sortGroup {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .sortLabel {
+    display: inline-block;
+  }
+
+  .sortPickerWrapper {
+    width: 180px;
+  }
+
+  .cropsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+}
+
+/* MOBILE PHONE VIEW (<= 640px) */
+@media (max-width: 640px) {
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px 12px;
+  }
+
+  .searchWrapper {
+    width: 100%;
+    max-width: 100%;
+    flex: 1 1 100%;
+  }
+
+  .controlsGroup {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .filterWrapper {
+    width: 100%;
+  }
+
+  .sortGroup {
+    width: 100%;
+  }
+
+  .sortLabel {
+    display: none; /* Hide 'Sort by:' label on narrow phones to avoid crowding */
+  }
+
+  .sortPickerWrapper {
+    flex: 1;
+    min-width: 0;
+    width: auto;
+  }
+
+  .cropsGrid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .cropCard {
+    padding: 14px 14px;
+    border-radius: 14px;
+  }
+
+  .cropTitle {
+    font-size: 1.15rem;
+  }
+
+  .keyDatesGrid {
+    padding: 8px 10px;
+  }
+
+  .keyDateCellRight {
+    padding-left: 8px;
+  }
+
+  .keyDateLabel {
+    font-size: 0.67rem;
+  }
+
+  .keyDateValue {
+    font-size: 0.82rem;
+  }
+}
+

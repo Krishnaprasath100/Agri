@@ -58,7 +58,7 @@
   /* Layout */
   --sidebar-width: 260px;
   --topnav-height: 64px;
-  --bottom-nav-height: 64px;
+  --bottom-nav-height: 0px;
 
   /* Fluid Type Scale — clamp(min, preferred, max) */
   --text-xs: clamp(0.7rem, 1.8vw, 0.75rem);
@@ -549,6 +549,12 @@ svg {
 /* ============================================================ */
 .form-group {
   margin-bottom: var(--space-5);
+  transition: transform 0.2s ease;
+}
+
+.form-group-active .form-label {
+  color: #1b4332;
+  font-weight: 700;
 }
 
 .form-label {
@@ -665,6 +671,21 @@ svg {
 .choice-picker-trigger svg {
   flex: 0 0 auto;
   color: var(--primary-800);
+}
+
+.choice-picker-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+}
+
+.choice-picker--compact .choice-picker-trigger {
+  min-height: 42px;
+  padding: 8px 12px;
+  font-size: 0.88rem;
 }
 
 .choice-picker-menu {
@@ -1048,7 +1069,7 @@ input::-ms-clear {
 /* BOTTOM NAVIGATION BAR (mobile)                               */
 /* ============================================================ */
 .bottom-nav {
-  display: none;
+  display: none !important;
   position: fixed;
   bottom: 0;
   left: 0;
@@ -1133,9 +1154,9 @@ input::-ms-clear {
 /* ============================================================ */
 @media (max-width: 992px) {
 
-  /* Show bottom nav */
+  /* Bottom nav hidden per user requirement */
   .bottom-nav {
-    display: flex;
+    display: none !important;
   }
 
   /* Remove sidebar space & fix topnav on mobile */
@@ -1158,9 +1179,9 @@ input::-ms-clear {
     transform: translateX(0) !important;
   }
 
-  /* Page body — account for bottom nav */
+  /* Page body */
   .page-body {
-    padding: var(--space-5) var(--space-5) calc(var(--bottom-nav-height) + var(--safe-bottom) + var(--space-5));
+    padding: var(--space-5) var(--space-5) calc(var(--safe-bottom) + var(--space-5));
   }
 
   /* Grids collapse */
@@ -1182,6 +1203,27 @@ input::-ms-clear {
 }
 
 /* ============================================================ */
+/* MOBILE APP & PHONES — ≤ 767px (Hide Upper Bar on New Entry)  */
+/* ============================================================ */
+@media (max-width: 767px) {
+  .main-content.hide-topnav-mobile .app-topnav {
+    display: none !important;
+  }
+
+  .main-content.hide-topnav-mobile {
+    padding-top: var(--safe-top, 0px) !important;
+  }
+
+  /* Keep choice picker menus visible in the middle area above the bottom keyboard */
+  .choice-picker-menu {
+    max-height: min(280px, calc(100dvh - 350px));
+    box-shadow: 0 8px 30px rgba(12, 43, 29, 0.22);
+    border: 1.5px solid #1b4332;
+    z-index: 100;
+  }
+}
+
+/* ============================================================ */
 /* SMALL PHONE — ≤ 640px                                        */
 /* ============================================================ */
 @media (max-width: 640px) {
@@ -1195,7 +1237,7 @@ input::-ms-clear {
   }
 
   .page-body {
-    padding: var(--space-4) var(--space-4) calc(var(--bottom-nav-height) + var(--safe-bottom) + var(--space-5));
+    padding: var(--space-4) var(--space-4) calc(var(--safe-bottom) + var(--space-5));
   }
 
   /* Page header stacks */
@@ -1283,7 +1325,7 @@ input::-ms-clear {
 
   .modal-content {
     border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-    max-height: calc(92vh - var(--bottom-nav-height) - var(--safe-bottom));
+    max-height: calc(92vh - var(--safe-bottom));
     max-width: 100%;
     animation: slideUpSheet 0.28s cubic-bezier(0.16, 1, 0.3, 1);
   }
@@ -1333,7 +1375,7 @@ input::-ms-clear {
 /* ============================================================ */
 @media (max-width: 390px) {
   .page-body {
-    padding: var(--space-3) var(--space-3) calc(var(--bottom-nav-height) + var(--safe-bottom) + var(--space-4));
+    padding: var(--space-3) var(--space-3) calc(var(--safe-bottom) + var(--space-4));
   }
 
   .card {

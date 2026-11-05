@@ -17,6 +17,7 @@ const STORAGE_KEY = 'agritrack_language';
 const tamil: Record<string, string> = {
   'Ledger': 'கணக்குப் புத்தகம்',
   'New Entry': 'புதிய பதிவு',
+  'No New Entry Found': 'புதிய பதிவுகள் எதுவும் இல்லை',
   'Plantings': 'நடவுகள்',
   'Expense Types': 'செலவு வகைகள்',
   'Payees': 'பணம் பெறுபவர்கள்',

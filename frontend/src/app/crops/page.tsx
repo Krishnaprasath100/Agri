@@ -26,7 +26,9 @@ import {
   MapPin,
   CheckCircle2,
   Clock,
+  X,
 } from 'lucide-react';
+import styles from './crops.module.css';
 
 const CROP_OPTIONS = [
   'Paddy (Rice)', 'Wheat', 'Maize', 'Cotton', 'Sugarcane', 'Banana', 'Tomato', 'Onion',
@@ -188,85 +190,95 @@ export default function CropsPage() {
         </div>
       </div>
 
-      {/* Filter and Search Bar */}
-      <div
-        className="card"
-        style={{
-          padding: '16px 20px',
-          marginBottom: '24px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: '16px',
-          flexWrap: 'wrap',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: '1', minWidth: '260px' }}>
-          <div style={{ position: 'relative', width: '100%', maxWidth: '340px' }}>
-            <Search
-              size={18}
-              style={{
-                position: 'absolute',
-                left: '12px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                color: 'var(--text-dim)',
-              }}
-            />
-            <input
-              type="text"
-              className="form-input"
-              style={{ paddingLeft: '38px' }}
-              placeholder="Search by crop, field, or notes..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Filter size={16} color="var(--text-dim)" />
-            <div style={{ width: '160px' }}>
-              <ChoicePicker ariaLabel="Crop status filter" value={statusFilter} placeholder="All statuses" onChange={setStatusFilter} options={['ALL', 'Planned', 'Growing', 'Ready to Harvest', 'Harvested'].map((value) => ({ value, label: value === 'ALL' ? 'All Statuses' : value }))} />
-            </div>
-            <select
-              className="form-select"
-              style={{ display: 'none' }}
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
+      {/* Professional Filter and Search Toolbar */}
+      <div className={styles.toolbar}>
+        <div className={styles.searchWrapper}>
+          <Search size={17} className={styles.searchIcon} />
+          <input
+            type="text"
+            className={styles.searchInput}
+            placeholder="Search plantings, crops, plots..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          {searchQuery && (
+            <button
+              type="button"
+              className={styles.clearSearchBtn}
+              onClick={() => setSearchQuery('')}
+              title="Clear search"
+              aria-label="Clear search"
             >
-              <option value="ALL">All Statuses</option>
-              <option value="Planned">Planned</option>
-              <option value="Growing">Growing</option>
-              <option value="Ready to Harvest">Ready to Harvest</option>
-              <option value="Harvested">Harvested</option>
-            </select>
-          </div>
+              <X size={15} />
+            </button>
+          )}
         </div>
 
-        {/* Sort Controls */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>Sort by:</span>
-          <div style={{ width: '170px' }}>
-            <ChoicePicker ariaLabel="Sort crop list" value={sortBy} placeholder="Choose sorting" onChange={(value) => setSortBy(value as 'seeding' | 'harvest')} options={[{ value: 'seeding', label: 'Seeding Date' }, { value: 'harvest', label: 'Expected Harvest' }]} />
+        {/* Filter and Sort Controls */}
+        <div className={styles.controlsGroup}>
+          <div className={styles.filterWrapper}>
+            <ChoicePicker
+              ariaLabel="Crop status filter"
+              value={statusFilter}
+              placeholder="All Statuses"
+              onChange={setStatusFilter}
+              options={[
+                { value: 'ALL', label: 'All Statuses' },
+                { value: 'Planned', label: 'Planned' },
+                { value: 'Growing', label: 'Growing' },
+                { value: 'Ready to Harvest', label: 'Ready to Harvest' },
+                { value: 'Harvested', label: 'Harvested' },
+              ]}
+              className="choice-picker--compact"
+            />
           </div>
-          <select
-            className="form-select"
-            style={{ display: 'none' }}
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as any)}
-          >
-            <option value="seeding">Seeding Date</option>
-            <option value="harvest">Expected Harvest</option>
-          </select>
-          <button
-            onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-            className="btn btn-secondary btn-icon"
-            title={`Toggle Sort Order (${sortOrder.toUpperCase()})`}
-          >
-            <ArrowUpDown size={16} />
-          </button>
+
+          <div className={styles.sortGroup}>
+            <span className={styles.sortLabel}>Sort by:</span>
+            <div className={styles.sortPickerWrapper}>
+              <ChoicePicker
+                ariaLabel="Sort crop list"
+                value={sortBy}
+                placeholder="Sort by"
+                onChange={(value) => setSortBy(value as 'seeding' | 'harvest')}
+                options={[
+                  { value: 'seeding', label: 'Seeding Date' },
+                  { value: 'harvest', label: 'Expected Harvest' },
+                ]}
+                className="choice-picker--compact"
+              />
+            </div>
+            <button
+              type="button"
+              onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+              className={styles.sortOrderBtn}
+              title={`Sort order: ${sortOrder === 'asc' ? 'Ascending (oldest first)' : 'Descending (newest first)'}`}
+              aria-label={`Toggle Sort Order (${sortOrder})`}
+            >
+              <ArrowUpDown size={16} />
+            </button>
+          </div>
         </div>
       </div>
+
+      {/* Active filters / results summary */}
+      {(searchQuery || statusFilter !== 'ALL') && (
+        <div className={styles.resultsSummary}>
+          <span>
+            Showing <strong>{filteredCrops.length}</strong> of {crops.length} plantings
+          </span>
+          <button
+            type="button"
+            className={styles.resetFiltersLink}
+            onClick={() => {
+              setSearchQuery('');
+              setStatusFilter('ALL');
+            }}
+          >
+            Reset filters
+          </button>
+        </div>
+      )}
 
       {/* Crop Cycles Cards Grid */}
       {filteredCrops.length === 0 ? (
@@ -287,69 +299,62 @@ export default function CropsPage() {
           </div>
         </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: '24px' }}>
+        <div className={styles.cropsGrid}>
           {filteredCrops.map((crop) => {
             const remaining = getDaysRemaining(crop.expectedHarvestDate);
 
             return (
-              <div key={crop.cropCycleId} className="card" style={{ display: 'flex', flexDirection: 'column' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
-                  <div>
-                    <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--primary-900)' }}>
+              <div key={crop.cropCycleId} className={styles.cropCard}>
+                {/* Header */}
+                <div className={styles.cardHeader}>
+                  <div className={styles.cropTitleGroup}>
+                    <h3 className={styles.cropTitle} title={crop.cropType}>
                       {crop.cropType}
                     </h3>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.82rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+                    <div className={styles.cropLocation}>
                       <MapPin size={13} color="var(--primary-600)" />
                       <span>{crop.farmName || 'General Land Plot'}</span>
-                      {crop.landArea && (
+                      {crop.landArea ? (
                         <span>• {crop.landArea} {crop.landAreaUnit}</span>
-                      )}
+                      ) : null}
                     </div>
                   </div>
 
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <div className={styles.cardActions}>
                     <CropStatusBadge status={crop.status} isOverdue={remaining.isOverdue} />
                     <button
+                      type="button"
                       onClick={() => openEditModal(crop)}
-                      className="btn-icon"
+                      className={styles.actionBtn}
                       title="Edit Crop Details"
+                      aria-label={`Edit ${crop.cropType}`}
                     >
-                      <Edit2 size={16} />
+                      <Edit2 size={15} />
                     </button>
                     <button
+                      type="button"
                       onClick={() => setDeleteId(crop.cropCycleId)}
-                      className="btn-icon"
+                      className={`${styles.actionBtn} ${styles.actionBtnDelete}`}
                       title="Delete Crop Cycle"
-                      style={{ color: '#ef4444' }}
+                      aria-label={`Delete ${crop.cropType}`}
                     >
-                      <Trash2 size={16} />
+                      <Trash2 size={15} />
                     </button>
                   </div>
                 </div>
 
-                {/* Key Dates Badge Row */}
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    padding: '10px 14px',
-                    borderRadius: '10px',
-                    backgroundColor: '#f7f9f6',
-                    fontSize: '0.82rem',
-                    marginBottom: '12px',
-                  }}
-                >
-                  <div>
-                    <span style={{ color: 'var(--text-dim)' }}>Seeding: </span>
-                    <span style={{ fontWeight: 600, color: 'var(--primary-900)' }}>{formatDate(crop.seedingDate)}</span>
+                {/* Key Dates 2-Column Grid */}
+                <div className={styles.keyDatesGrid}>
+                  <div className={styles.keyDateCell}>
+                    <span className={styles.keyDateLabel}>Seeding Date</span>
+                    <span className={styles.keyDateValue}>{formatDate(crop.seedingDate)}</span>
                   </div>
-                  <div>
-                    <span style={{ color: 'var(--text-dim)' }}>Expected Harvest: </span>
+                  <div className={`${styles.keyDateCell} ${styles.keyDateCellRight}`}>
+                    <span className={styles.keyDateLabel}>Expected Harvest</span>
                     <span
-                      style={{
-                        fontWeight: 700,
-                        color: remaining.isOverdue && crop.status !== 'Harvested' ? '#dc2626' : 'var(--primary-900)',
-                      }}
+                      className={`${styles.keyDateValue} ${
+                        remaining.isOverdue && crop.status !== 'Harvested' ? styles.keyDateValueOverdue : ''
+                      }`}
                     >
                       {formatDate(crop.expectedHarvestDate)}
                     </span>
@@ -361,17 +366,7 @@ export default function CropsPage() {
 
                 {/* Optional Notes */}
                 {crop.notes && (
-                  <div
-                    style={{
-                      marginTop: '14px',
-                      padding: '10px 12px',
-                      backgroundColor: '#fcfdfc',
-                      borderRadius: '8px',
-                      border: '1px dashed var(--border-subtle)',
-                      fontSize: '0.8rem',
-                      color: 'var(--text-muted)',
-                    }}
-                  >
+                  <div className={styles.notesCallout}>
                     <strong>Notes:</strong> {crop.notes}
                   </div>
                 )}

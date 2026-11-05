@@ -4,7 +4,6 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
-import { ArrowRight } from 'lucide-react';
 import styles from './splash.module.css';
 
 export default function AppIntroPage() {
@@ -88,23 +87,6 @@ export default function AppIntroPage() {
             <span className={styles.taglineDot} />
             <span>{language === 'ta' ? 'கணக்கு பதிவேடு' : 'Crop Lifecycle'}</span>
           </p>
-        </div>
-
-        {/* Progress Bar Animation */}
-        <div className={styles.progressContainer}>
-          <div className={styles.progressBar} />
-        </div>
-
-        {/* Interactive Tap Pill */}
-        <div
-          className={styles.actionPill}
-          onClick={(e) => {
-            e.stopPropagation();
-            navigateToApp();
-          }}
-        >
-          <span>{language === 'ta' ? 'தொடர தட்டவும்' : 'Tap to continue'}</span>
-          <ArrowRight size={14} />
         </div>
       </div>
     </main>
