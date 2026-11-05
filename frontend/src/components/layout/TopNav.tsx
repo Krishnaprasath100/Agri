@@ -84,7 +84,7 @@ export const TopNav: React.FC<TopNavProps> = ({
             aria-label="Open Navigation Menu"
             title="Menu"
           >
-            <Menu size={20} />
+            <Menu size={16} strokeWidth={2.2} />
           </button>
           <div className="mobile-dock-divider" />
           <button
@@ -95,16 +95,16 @@ export const TopNav: React.FC<TopNavProps> = ({
             title="Display upper bar (->)"
           >
             <span className="three-arrow-icon" aria-hidden="true">
-              <ChevronRight size={15} strokeWidth={2.8} />
-              <ChevronRight size={15} strokeWidth={2.8} style={{ marginLeft: -9 }} />
-              <ChevronRight size={15} strokeWidth={2.8} style={{ marginLeft: -9 }} />
+              <ChevronRight size={13} strokeWidth={2.4} />
+              <ChevronRight size={13} strokeWidth={2.4} style={{ marginLeft: -8 }} />
+              <ChevronRight size={13} strokeWidth={2.4} style={{ marginLeft: -8 }} />
             </span>
           </button>
         </div>
       )}
 
       <header className={`app-topnav${isMobileScreen && !mobileUpperBarOpen ? ' is-mobile-collapsed' : ''}`}>
-        <div className="app-topnav-left" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div className="app-topnav-left" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           {/* Three-arrow close button when upper bar is displayed on mobile (<-) */}
           {isMobileScreen && mobileUpperBarOpen && (
             <button
@@ -115,9 +115,9 @@ export const TopNav: React.FC<TopNavProps> = ({
               title="Close upper bar (<-)"
             >
               <span className="three-arrow-icon" aria-hidden="true">
-                <ChevronLeft size={15} strokeWidth={2.8} />
-                <ChevronLeft size={15} strokeWidth={2.8} style={{ marginLeft: -9 }} />
-                <ChevronLeft size={15} strokeWidth={2.8} style={{ marginLeft: -9 }} />
+                <ChevronLeft size={13} strokeWidth={2.4} />
+                <ChevronLeft size={13} strokeWidth={2.4} style={{ marginLeft: -8 }} />
+                <ChevronLeft size={13} strokeWidth={2.4} style={{ marginLeft: -8 }} />
               </span>
             </button>
           )}

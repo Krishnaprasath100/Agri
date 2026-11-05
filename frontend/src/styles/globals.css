@@ -1252,52 +1252,55 @@ input::-ms-clear {
   }
 
   /* Three-Arrow Mobile Upper Bar Toggle (-> open, <- close) */
-  /* ONLY for mobile app / phones (≤ 767px) */
+  /* ONLY for mobile app / phones (≤ 767px) - Ultra-sleek, compact & professional */
   .mobile-upperbar-closed-dock {
     position: fixed;
-    top: max(10px, var(--safe-top, 0px));
-    left: max(12px, var(--safe-left, 0px));
+    top: max(8px, var(--safe-top, 0px));
+    left: max(10px, var(--safe-left, 0px));
     z-index: 95;
     display: inline-flex !important;
     align-items: center;
-    gap: 6px;
+    gap: 3px;
     background: #ffffff;
-    padding: 4px 6px 4px 8px;
-    border-radius: 12px;
-    border: 1.5px solid #c8dcd0;
-    box-shadow: 0 4px 14px rgba(12, 43, 29, 0.12);
+    padding: 2px 3px 2px 4px;
+    border-radius: 9px;
+    border: 1px solid #c9ded0;
+    box-shadow: 0 2px 8px rgba(12, 43, 29, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
   }
 
   .mobile-dock-menu-btn {
     display: inline-flex !important;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
+    width: 26px;
+    height: 26px;
     background: transparent;
     border: none;
     color: #1b4332;
     cursor: pointer;
-    border-radius: 6px;
+    border-radius: 5px;
     padding: 0;
+    transition: background 0.15s ease;
+  }
+
+  .mobile-dock-menu-btn:active {
+    background: #eef5f1;
   }
 
   .mobile-dock-divider {
     width: 1px;
-    height: 18px;
-    background: #d4dfd8;
+    height: 14px;
+    background: #dbe7df;
+    margin: 0 1px;
   }
 
   .mobile-upperbar-toggle-btn {
     display: inline-flex !important;
     align-items: center;
     justify-content: center;
-    height: 32px;
-    padding: 0 10px;
-    border-radius: 8px;
     cursor: pointer;
     font-weight: 700;
-    transition: transform 0.12s ease, background 0.15s ease;
+    transition: transform 0.1s ease, background 0.15s ease;
   }
 
   .mobile-upperbar-toggle-btn:active {
@@ -1305,18 +1308,22 @@ input::-ms-clear {
   }
 
   .mobile-upperbar-toggle-btn.is-closed {
+    height: 26px;
+    padding: 0 7px;
+    border-radius: 5px;
     background: #1b4332;
     color: #ffffff;
     border: none;
-    box-shadow: 0 2px 6px rgba(27, 67, 50, 0.25);
+    box-shadow: 0 1px 3px rgba(27, 67, 50, 0.2);
   }
 
   .mobile-upperbar-toggle-btn.is-open {
-    background: #e8f5e9;
+    height: 28px;
+    padding: 0 7px;
+    border-radius: 6px;
+    background: #eef7f2;
     color: #1b4332;
-    border: 1.5px solid #a3d9bc;
-    height: 34px;
-    padding: 0 8px;
+    border: 1px solid #b7dfca;
     margin-right: 2px;
   }
 
@@ -1328,7 +1335,7 @@ input::-ms-clear {
   }
 
   .main-content.mobile-upperbar-closed {
-    padding-top: max(56px, calc(var(--safe-top, 0px) + 56px)) !important;
+    padding-top: max(44px, calc(var(--safe-top, 0px) + 44px)) !important;
   }
 
   .app-topnav.is-mobile-collapsed {
