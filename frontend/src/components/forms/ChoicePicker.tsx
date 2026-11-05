@@ -22,8 +22,6 @@ interface ChoicePickerProps {
   isOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
   onOpen?: () => void;
-  onSkip?: () => void;
-  skipLabel?: string;
 }
 
 /** A viewport-safe picker; native select menus can overflow mobile app frames. */
@@ -40,8 +38,6 @@ export function ChoicePicker({
   isOpen: controlledIsOpen,
   onOpenChange,
   onOpen,
-  onSkip,
-  skipLabel = 'Skip (Optional) →',
 }: ChoicePickerProps) {
   const [internalOpen, setInternalOpen] = useState(false);
   const isControlled = typeof controlledIsOpen === 'boolean';
@@ -81,9 +77,7 @@ export function ChoicePicker({
   useEffect(() => {
     if (open) {
       if (onOpen) onOpen();
-      // ONLY on mobile phones (<= 767px): scroll field smoothly to the top of viewport
-      // so options open downwards in open space and keyboard stays at the bottom.
-      // On Desktop and Tab (> 767px), do NOT scroll or alter page position!
+      // On mobile phones (<= 767px), scroll field smoothly so options are visible in open space
       if (typeof window !== 'undefined' && window.innerWidth <= 767 && rootRef.current) {
         const rect = rootRef.current.getBoundingClientRect();
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
@@ -131,7 +125,11 @@ export function ChoicePicker({
   let previousGroup: string | undefined;
 
   return (
-    <div className={`choice-picker${className ? ` ${className}` : ''}`} ref={rootRef}>
+    <div
+      className={`choice-picker${open ? ' is-open' : ''}${className ? ` ${className}` : ''}`}
+      ref={rootRef}
+      style={{ position: 'relative', zIndex: open ? 999 : 1 }}
+    >
       <button
         type="button"
         className={`choice-picker-trigger${open ? ' is-open' : ''}${
@@ -155,30 +153,6 @@ export function ChoicePicker({
 
       {open && (
         <div className="choice-picker-menu" role="listbox" aria-label={ariaLabel}>
-          {onSkip && (
-            <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '4px 8px 6px' }}>
-              <button
-                type="button"
-                className="btn btn-secondary"
-                style={{
-                  padding: '3px 10px',
-                  fontSize: '0.78rem',
-                  borderRadius: 6,
-                  fontWeight: 650,
-                  height: 28,
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: 4,
-                }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onSkip();
-                }}
-              >
-                {skipLabel}
-              </button>
-            </div>
-          )}
           {allowCreate && (
             <div className="choice-picker-search-container">
               <div className="choice-picker-search-box">

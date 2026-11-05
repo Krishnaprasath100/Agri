@@ -6,6 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import { AppShell } from '@/components/layout/AppShell';
 import { ChoicePicker } from '@/components/forms/ChoicePicker';
 import { DateField } from '@/components/forms/DateField';
+import { useLanguage } from '@/context/LanguageContext';
 import {
   getCropCycles,
   getExpenseTypeOptions,
@@ -74,6 +75,7 @@ const getTodayDate = () => {
 
 export default function EntryPage() {
   const { user } = useAuth();
+  const { language, t } = useLanguage();
   const router = useRouter();
 
   const [kind, setKind] = useState<'expense' | 'income'>('expense');
@@ -83,6 +85,9 @@ export default function EntryPage() {
   const [accounts, setAccounts] = useState<LedgerAccount[]>([]);
   const [types, setTypes] = useState<ExpenseTypeOption[]>([]);
   const [savedQuickCrops, setSavedQuickCrops] = useState<string[]>([]);
+
+  // Controlled open state for dropdowns: all closed by default when entering the page!
+  const [openPickerId, setOpenPickerId] = useState<string | null>(null);
 
   const [form, setForm] = useState({
     date: getTodayDate(),
@@ -132,6 +137,7 @@ export default function EntryPage() {
     const updated = saveQuickCropChoice(user.uid, cleanName);
     setSavedQuickCrops(updated);
     setForm((prev) => ({ ...prev, crop: `quick:${cleanName}` }));
+    setOpenPickerId(null);
     setError('');
   };
 
@@ -145,6 +151,7 @@ export default function EntryPage() {
         : [...current, saved]
     );
     setForm((prev) => ({ ...prev, expenseType: cleanName }));
+    setOpenPickerId(null);
     setError('');
   };
 
@@ -159,6 +166,7 @@ export default function EntryPage() {
       setPersons((prev) => [...prev, saved]);
     }
     setForm((prev) => ({ ...prev, counterparty: cleanName }));
+    setOpenPickerId(null);
     setError('');
   };
 
@@ -168,13 +176,13 @@ export default function EntryPage() {
     const saved = saveLedgerAccount({ userId: user.uid, displayName: cleanName, accountType: 'Savings', isDefault: false });
     setAccounts((prev) => [...prev, saved]);
     setForm((prev) => ({ ...prev, account: cleanName }));
+    setOpenPickerId(null);
     setError('');
   };
 
   // Live comma formatting for amount
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const raw = e.target.value;
-    // Allow digits and only one decimal point
     const cleaned = raw.replace(/[^0-9.]/g, '');
     const dotIndex = cleaned.indexOf('.');
     const sanitized =
@@ -231,134 +239,16 @@ export default function EntryPage() {
     router.push('/ledger');
   };
 
-  const [activeField, setActiveField] = useState<string>('field-crop');
-  const [isMobile, setIsMobile] = useState(false);
-
-  // Strictly enable mobile-specific workflow ONLY for mobile app / phones (<= 767px)
-  // Desktop and Tab view (website) remain in standard desktop mode.
-  useEffect(() => {
-    const check = () => {
-      setIsMobile(typeof window !== 'undefined' && window.innerWidth <= 767);
-    };
-    check();
-    window.addEventListener('resize', check);
-    return () => window.removeEventListener('resize', check);
-  }, []);
-
-  const getFieldsSequence = useCallback(() => {
-    return kind === 'expense'
-      ? [
-          'field-crop',
-          'field-expense-type',
-          'field-counterparty',
-          'field-account',
-          'field-amount',
-          'field-date',
-          'field-notes',
-        ]
-      : [
-          'field-crop',
-          'field-counterparty',
-          'field-account',
-          'field-amount',
-          'field-date',
-          'field-notes',
-        ];
-  }, [kind]);
-
-  // When user selects or taps a field on mobile:
-  // Scroll it smoothly to the top of the mobile viewport so options open downwards in open space
-  // and the keyboard stays docked at the bottom without hiding options.
-  // On Desktop and Tab (> 767px), do NOT scroll or alter page position!
-  const scrollToField = useCallback((fieldId: string) => {
-    setActiveField(fieldId);
-    if (typeof window === 'undefined' || window.innerWidth > 767) {
-      return;
-    }
-    setTimeout(() => {
-      const el = document.getElementById(fieldId);
-      if (el) {
-        const rect = el.getBoundingClientRect();
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        const targetY = scrollTop + rect.top - 8;
-        window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
-      }
-    }, 40);
-  }, []);
-
-  // Advance automatically to the next option after a selection (strictly for mobile app)
-  const moveToNextField = useCallback(
-    (currentFieldId: string) => {
-      const seq = getFieldsSequence();
-      const idx = seq.indexOf(currentFieldId);
-      if (idx !== -1 && idx < seq.length - 1) {
-        const nextId = seq[idx + 1];
-        scrollToField(nextId);
-        setTimeout(() => {
-          const nextEl = document.getElementById(nextId);
-          const focusable = nextEl?.querySelector<HTMLInputElement | HTMLTextAreaElement | HTMLButtonElement>(
-            'input:not([type="hidden"]), textarea, .choice-picker-trigger'
-          );
-          focusable?.focus();
-        }, 120);
-      }
-    },
-    [getFieldsSequence, scrollToField]
-  );
-
-  // Listen to keyboard Next/Prev buttons
-  useEffect(() => {
-    const handleNav = (e: Event) => {
-      const custom = e as CustomEvent<{ direction: 'next' | 'prev' }>;
-      const seq = getFieldsSequence();
-      const currentIdx = activeField ? seq.indexOf(activeField) : 0;
-
-      if (custom.detail?.direction === 'next') {
-        const nextIdx = currentIdx < seq.length - 1 ? currentIdx + 1 : 0;
-        const nextId = seq[nextIdx];
-        scrollToField(nextId);
-        setTimeout(() => {
-          const el = document.getElementById(nextId);
-          el?.querySelector<HTMLInputElement | HTMLTextAreaElement | HTMLButtonElement>(
-            'input:not([type="hidden"]), textarea, .choice-picker-trigger'
-          )?.focus();
-        }, 120);
-      } else {
-        const prevIdx = currentIdx > 0 ? currentIdx - 1 : seq.length - 1;
-        const prevId = seq[prevIdx];
-        scrollToField(prevId);
-        setTimeout(() => {
-          const el = document.getElementById(prevId);
-          el?.querySelector<HTMLInputElement | HTMLTextAreaElement | HTMLButtonElement>(
-            'input:not([type="hidden"]), textarea, .choice-picker-trigger'
-          )?.focus();
-        }, 120);
-      }
-    };
-
-    window.addEventListener('agri:navigate-field', handleNav);
-    return () => window.removeEventListener('agri:navigate-field', handleNav);
-  }, [activeField, getFieldsSequence, scrollToField]);
-
-  // Hide upper bar on mobile while entering details; display as soon as each required detail is filled
-  const isFormFilled = Boolean(
-    form.date.trim() &&
-    (form.crop.trim() || cropName.trim()) &&
-    (kind === 'expense' ? Boolean(form.expenseType.trim()) : true) &&
-    form.amount.trim() &&
-    Number(form.amount) > 0
-  );
-
   return (
-    <AppShell hideTopNavOnMobile={!isFormFilled}>
+    <AppShell>
       <div className="page-header">
         <div>
-          <h1 className="page-title">New {kind === 'expense' ? 'Expense' : 'Income'} Entry</h1>
-          <p className="page-subtitle">Record income or expenditure for your agricultural activities.</p>
+          <h1 className="page-title">{kind === 'expense' ? t('New Expense Entry') : t('New Income Entry')}</h1>
+          <p className="page-subtitle">{t('Record income or expenditure for your agricultural activities.')}</p>
         </div>
       </div>
 
-      <section className="card" style={{ maxWidth: 1100, paddingBottom: isMobile ? 360 : 24 }}>
+      <section className="card" style={{ maxWidth: 1100 }}>
         <div
           style={{
             display: 'flex',
@@ -373,123 +263,103 @@ export default function EntryPage() {
             type="button"
             onClick={() => setKind('income')}
           >
-            <ArrowUpCircle size={16} /> Income
+            <ArrowUpCircle size={16} /> {t('Income')}
           </button>
           <button
             className={`btn ${kind === 'expense' ? 'btn-primary' : 'btn-secondary'}`}
             type="button"
             onClick={() => setKind('expense')}
           >
-            <ArrowDownCircle size={16} /> Expense
+            <ArrowDownCircle size={16} /> {t('Expense')}
           </button>
         </div>
 
         <form onSubmit={save}>
           <div className="grid-2">
-            {/* Crop / Planting with in-box search and add */}
+            {/* Crop / Planting */}
             <div
               id="field-crop"
-              className={`form-group ${activeField === 'field-crop' ? 'form-group-active' : ''}`}
-              onClick={() => scrollToField('field-crop')}
+              className="form-group"
+              style={{ position: 'relative', zIndex: openPickerId === 'crop' ? 60 : 1 }}
             >
-              <label className="form-label">Crop / planting</label>
+              <label className="form-label">{t('Crop / planting')}</label>
               <ChoicePicker
-                ariaLabel="Crop or planting"
+                ariaLabel={t('Crop / planting')}
                 value={form.crop}
-                placeholder="Choose a crop"
-                isOpen={isMobile ? activeField === 'field-crop' : undefined}
-                onOpenChange={(open) => {
-                  if (open) scrollToField('field-crop');
-                  else if (isMobile && activeField === 'field-crop') setActiveField('');
-                }}
-                onOpen={() => scrollToField('field-crop')}
+                placeholder={t('Choose a crop')}
+                isOpen={openPickerId === 'crop'}
+                onOpenChange={(isOpen) => setOpenPickerId(isOpen ? 'crop' : null)}
                 onChange={(crop) => {
                   setForm((prev) => ({ ...prev, crop }));
-                  if (isMobile) {
-                    moveToNextField('field-crop');
-                  }
+                  setOpenPickerId(null);
                 }}
                 allowCreate
-                createPlaceholder="Type or search crop to add..."
+                createPlaceholder={language === 'ta' ? 'பயிர் பெயரை தட்டச்சு செய்யவும்...' : 'Type or search crop to add...'}
                 onCreate={handleCreateCrop}
                 options={[
                   ...crops.map((crop) => ({
                     value: crop.cropCycleId,
                     label: `${crop.cropType}${crop.farmName ? ` · ${crop.farmName}` : ''}`,
-                    group: 'Your plantings',
+                    group: t('Your plantings'),
                   })),
                   ...allQuickCrops.map((crop) => ({
                     value: `quick:${crop}`,
                     label: crop,
-                    group: 'Quick crop choices',
+                    group: t('Quick crop choices'),
                   })),
                 ]}
               />
             </div>
 
-            {/* Expense Type with in-box search and add */}
+            {/* Expense Type */}
             {kind === 'expense' && (
               <div
                 id="field-expense-type"
-                className={`form-group ${activeField === 'field-expense-type' ? 'form-group-active' : ''}`}
-                onClick={() => scrollToField('field-expense-type')}
+                className="form-group"
+                style={{ position: 'relative', zIndex: openPickerId === 'expenseType' ? 60 : 1 }}
               >
-                <label className="form-label">Expense type</label>
+                <label className="form-label">{t('Expense type')}</label>
                 <ChoicePicker
-                  ariaLabel="Expense type"
+                  ariaLabel={t('Expense type')}
                   value={form.expenseType}
-                  placeholder="Choose an expense type"
-                  isOpen={isMobile ? activeField === 'field-expense-type' : undefined}
-                  onOpenChange={(open) => {
-                    if (open) scrollToField('field-expense-type');
-                    else if (isMobile && activeField === 'field-expense-type') setActiveField('');
-                  }}
-                  onOpen={() => scrollToField('field-expense-type')}
+                  placeholder={t('Choose an expense type')}
+                  isOpen={openPickerId === 'expenseType'}
+                  onOpenChange={(isOpen) => setOpenPickerId(isOpen ? 'expenseType' : null)}
                   onChange={(expenseType) => {
                     setForm((prev) => ({ ...prev, expenseType }));
-                    if (isMobile) {
-                      moveToNextField('field-expense-type');
-                    }
+                    setOpenPickerId(null);
                   }}
                   allowCreate
-                  createPlaceholder="Type or search expense type..."
+                  createPlaceholder={language === 'ta' ? 'செலவு வகையை தட்டச்சு செய்யவும்...' : 'Type or search expense type...'}
                   onCreate={handleCreateExpenseType}
                   options={allTypes.map((type) => ({
                     value: type,
-                    label: type,
-                    group: 'Expense types',
+                    label: t(type),
+                    group: t('Expense types'),
                   }))}
                 />
               </div>
             )}
 
-            {/* Payee / Counterparty with in-box search and add */}
+            {/* Payee / Counterparty */}
             <div
               id="field-counterparty"
-              className={`form-group ${activeField === 'field-counterparty' ? 'form-group-active' : ''}`}
-              onClick={() => scrollToField('field-counterparty')}
+              className="form-group"
+              style={{ position: 'relative', zIndex: openPickerId === 'counterparty' ? 60 : 1 }}
             >
-              <label className="form-label">{kind === 'expense' ? 'Payee' : 'Received from'}</label>
+              <label className="form-label">{kind === 'expense' ? t('Payee') : t('Received from')}</label>
               <ChoicePicker
-                ariaLabel={kind === 'expense' ? 'Payee' : 'Person'}
+                ariaLabel={kind === 'expense' ? t('Payee') : t('Received from')}
                 value={form.counterparty}
-                placeholder={`Choose ${kind === 'expense' ? 'a payee' : 'a person'} (optional)`}
-                isOpen={isMobile ? activeField === 'field-counterparty' : undefined}
-                onOpenChange={(open) => {
-                  if (open) scrollToField('field-counterparty');
-                  else if (isMobile && activeField === 'field-counterparty') setActiveField('');
-                }}
-                onSkip={isMobile ? () => moveToNextField('field-counterparty') : undefined}
-                skipLabel="Skip (Optional) →"
-                onOpen={() => scrollToField('field-counterparty')}
+                placeholder={kind === 'expense' ? t('Choose a payee (optional)') : t('Choose a person (optional)')}
+                isOpen={openPickerId === 'counterparty'}
+                onOpenChange={(isOpen) => setOpenPickerId(isOpen ? 'counterparty' : null)}
                 onChange={(counterparty) => {
                   setForm((prev) => ({ ...prev, counterparty }));
-                  if (isMobile) {
-                    moveToNextField('field-counterparty');
-                  }
+                  setOpenPickerId(null);
                 }}
                 allowCreate
-                createPlaceholder={`Type or search ${kind === 'expense' ? 'payee' : 'person'}...`}
+                createPlaceholder={language === 'ta' ? 'பெயரை தட்டச்சு செய்யவும்...' : `Type or search ${kind === 'expense' ? 'payee' : 'person'}...`}
                 onCreate={handleCreatePayee}
                 options={contacts.map((contact) => ({
                   value: contact.name,
@@ -498,35 +368,27 @@ export default function EntryPage() {
               />
             </div>
 
-            {/* Account with in-box search and add */}
+            {/* Account */}
             <div
               id="field-account"
-              className={`form-group ${activeField === 'field-account' ? 'form-group-active' : ''}`}
-              onClick={() => scrollToField('field-account')}
+              className="form-group"
+              style={{ position: 'relative', zIndex: openPickerId === 'account' ? 60 : 1 }}
             >
               <label className="form-label">
-                {kind === 'expense' ? 'Paid from account' : 'Received into account'}
+                {kind === 'expense' ? t('Paid from account') : t('Received into account')}
               </label>
               <ChoicePicker
-                ariaLabel="Account"
+                ariaLabel={t('ACCOUNT')}
                 value={form.account}
-                placeholder="Choose an account"
-                isOpen={isMobile ? activeField === 'field-account' : undefined}
-                onOpenChange={(open) => {
-                  if (open) scrollToField('field-account');
-                  else if (isMobile && activeField === 'field-account') setActiveField('');
-                }}
-                onSkip={isMobile ? () => moveToNextField('field-account') : undefined}
-                skipLabel="Skip (Optional) →"
-                onOpen={() => scrollToField('field-account')}
+                placeholder={t('Choose an account')}
+                isOpen={openPickerId === 'account'}
+                onOpenChange={(isOpen) => setOpenPickerId(isOpen ? 'account' : null)}
                 onChange={(account) => {
                   setForm((prev) => ({ ...prev, account }));
-                  if (isMobile) {
-                    moveToNextField('field-account');
-                  }
+                  setOpenPickerId(null);
                 }}
                 allowCreate
-                createPlaceholder="Type or search bank account..."
+                createPlaceholder={language === 'ta' ? 'கணக்கு பெயரை தட்டச்சு செய்யவும்...' : 'Type or search bank account...'}
                 onCreate={handleCreateAccount}
                 options={accounts.map((account) => ({
                   value: account.displayName,
@@ -535,28 +397,18 @@ export default function EntryPage() {
               />
             </div>
 
-            {/* Amount with Indian comma formatting */}
+            {/* Amount */}
             <div
               id="field-amount"
-              className={`form-group ${activeField === 'field-amount' ? 'form-group-active' : ''}`}
-              onClick={() => scrollToField('field-amount')}
+              className="form-group"
             >
-              <label className="form-label">Amount (₹)</label>
+              <label className="form-label">{t('Amount (₹)')}</label>
               <input
                 type="text"
                 inputMode="decimal"
                 className="form-input"
                 value={displayAmount}
-                onFocus={() => scrollToField('field-amount')}
                 onChange={handleAmountChange}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault();
-                    if (isMobile) {
-                      moveToNextField('field-amount');
-                    }
-                  }
-                }}
                 placeholder="0.00"
                 style={{
                   fontWeight: 650,
@@ -571,45 +423,32 @@ export default function EntryPage() {
           <div className="grid-2" style={{ marginTop: 12 }}>
             <div
               id="field-date"
-              className={`form-group ${activeField === 'field-date' ? 'form-group-active' : ''}`}
-              onClick={() => scrollToField('field-date')}
+              className="form-group"
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
-                <label className="form-label" style={{ marginBottom: 0 }}>Date</label>
-                {isMobile && (
-                  <button
-                    type="button"
-                    className="btn btn-secondary"
-                    style={{ padding: '2px 8px', fontSize: '0.75rem', height: 24, borderRadius: 6, fontWeight: 650 }}
-                    onClick={() => moveToNextField('field-date')}
-                  >
-                    Next →
-                  </button>
-                )}
-              </div>
+              <label className="form-label">{t('Date')}</label>
               <DateField
                 value={form.date}
                 onChange={(e) => setForm({ ...form, date: e.target.value })}
                 placeholder="dd-mm-yyyy"
               />
               <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)', marginTop: 4 }}>
-                Defaulted to today's date. Click to change if needed.
+                {language === 'ta'
+                  ? 'இன்றைய தேதி இயல்பாக அமைக்கப்பட்டுள்ளது. தேவைப்பட்டால் மாற்றலாம்.'
+                  : "Defaulted to today's date. Click to change if needed."}
               </div>
             </div>
 
             <div
               id="field-notes"
-              className={`form-group ${activeField === 'field-notes' ? 'form-group-active' : ''}`}
-              onClick={() => scrollToField('field-notes')}
+              className="form-group"
             >
-              <label className="form-label">Notes</label>
+              <label className="form-label">{t('Notes')}</label>
               <textarea
                 rows={2}
                 className="form-textarea"
                 value={form.notes}
-                onFocus={() => scrollToField('field-notes')}
                 onChange={(e) => setForm({ ...form, notes: e.target.value })}
-                placeholder={kind === 'expense' ? 'What was this expense for?' : 'What income did you receive?'}
+                placeholder={kind === 'expense' ? t('What was this expense for?') : t('What income did you receive?')}
               />
             </div>
           </div>
@@ -622,10 +461,10 @@ export default function EntryPage() {
 
           <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end', marginTop: 8 }}>
             <button className="btn btn-secondary" type="button" onClick={() => router.push('/ledger')}>
-              Cancel
+              {t('Cancel')}
             </button>
             <button className="btn btn-primary" type="submit">
-              <Save size={16} /> Save {kind === 'expense' ? 'Expense' : 'Income'}
+              <Save size={16} /> {kind === 'expense' ? t('Save Expense') : t('Save Income')}
             </button>
           </div>
         </form>

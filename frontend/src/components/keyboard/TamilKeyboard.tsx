@@ -315,6 +315,9 @@ export function TamilKeyboard() {
           input.setAttribute('lang', 'ta');
         }
       });
+      if (isMobileDevice) {
+        setIsOpen(true);
+      }
     } else {
       document.documentElement.lang = 'en';
       const inputs = document.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input, textarea');
@@ -324,7 +327,7 @@ export function TamilKeyboard() {
       setIsOpen(false);
       setBuffer('');
     }
-  }, [language]);
+  }, [language, isMobileDevice]);
 
   // Track active input focus (strictly on mobile app/phones)
   useEffect(() => {
@@ -462,27 +465,9 @@ export function TamilKeyboard() {
     return null;
   }
 
-  // Minimized Floating Pill
+  // If closed, return null — do not render floating badge near chat bot
   if (!isOpen) {
-    return (
-      <button
-        type="button"
-        className={styles.floatingLaunchPill}
-        onClick={() => setIsOpen(true)}
-        title="Google தமிழ் விசைப்பலகை"
-        aria-label="Open Google Tamil Keyboard"
-      >
-        <span className={styles.googleLogo}>
-          <span className={styles.googleG_blue}>G</span>
-          <span className={styles.googleG_red}>o</span>
-          <span className={styles.googleG_yellow}>o</span>
-          <span className={styles.googleG_blue}>g</span>
-          <span className={styles.googleG_green}>l</span>
-          <span className={styles.googleG_red}>e</span>
-        </span>
-        <span className={styles.tamilTag}>தமிழ் ⌨️</span>
-      </button>
-    );
+    return null;
   }
 
   return (

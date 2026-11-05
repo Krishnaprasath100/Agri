@@ -1,12 +1,13 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 
 type Language = 'en' | 'ta';
 
 interface LanguageContextValue {
   language: Language;
   setLanguage: (language: Language) => void;
+  t: (key: string) => string;
 }
 
 const LanguageContext = createContext<LanguageContextValue | undefined>(undefined);
@@ -91,11 +92,11 @@ const tamil: Record<string, string> = {
   'Add account': 'கணக்கு சேர்க்கவும்',
   'Quick crop choices': 'விரைவு பயிர் தேர்வுகள்',
   'Expense types': 'செலவு வகைகள்',
-  'Choose a payee (optional)': 'பெறுபவரைத் தேர்ந்தெடுக்கவும் (விருப்பம்)',
-  'Choose a person (optional)': 'நபரைத் தேர்ந்தெடுக்கவும் (விருப்பம்)',
-  'Choose a crop': 'ஒரு பயிரைத் தேர்ந்தெடுக்கவும்',
-  'Choose an expense type': 'ஒரு செலவு வகையைத் தேர்ந்தெடுக்கவும்',
-  'Choose an account': 'ஒரு கணக்கைத் தேர்ந்தெடுக்கவும்',
+  'Choose a payee (optional)': 'பெறுபவர் தேர்வு (விருப்பம்)',
+  'Choose a person (optional)': 'நபர் தேர்வு (விருப்பம்)',
+  'Choose a crop': 'பயிரைத் தேர்ந்தெடுக்கவும்',
+  'Choose an expense type': 'செலவு வகையைத் தேர்ந்தெடுக்கவும்',
+  'Choose an account': 'கணக்கைத் தேர்ந்தெடுக்கவும்',
   'All crops': 'அனைத்து பயிர்கள்',
   'No ledger entries match this filter.': 'இந்த வடிப்பானுடன் பொருந்தும் கணக்குப் பதிவுகள் இல்லை.',
   'CROP': 'பயிர்',
@@ -288,7 +289,22 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     return () => observer.disconnect();
   }, [language]);
 
-  return <LanguageContext.Provider value={{ language, setLanguage: setLanguageState }}>{children}</LanguageContext.Provider>;
+  const t = useCallback(
+    (key: string) => {
+      const trimmed = key.trim();
+      if (language === 'ta') {
+        return tamil[trimmed] || key;
+      }
+      return english[trimmed] || key;
+    },
+    [language]
+  );
+
+  return (
+    <LanguageContext.Provider value={{ language, setLanguage: setLanguageState, t }}>
+      {children}
+    </LanguageContext.Provider>
+  );
 }
 
 export function useLanguage() {

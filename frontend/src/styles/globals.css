@@ -549,7 +549,11 @@ svg {
 /* ============================================================ */
 .form-group {
   margin-bottom: var(--space-5);
-  transition: transform 0.2s ease;
+  position: relative;
+}
+
+.form-group.has-open-picker {
+  z-index: 60;
 }
 
 .form-group-active .form-label {
@@ -680,6 +684,10 @@ svg {
   text-overflow: ellipsis;
   white-space: nowrap;
   text-align: left;
+  line-height: 1.35;
+  font-size: 0.94rem;
+  display: flex;
+  align-items: center;
 }
 
 .choice-picker--compact .choice-picker-trigger {
@@ -690,7 +698,7 @@ svg {
 
 .choice-picker-menu {
   position: absolute;
-  top: calc(100% + 6px);
+  top: calc(100% + 4px);
   left: 0;
   width: 100%;
   max-height: min(18rem, 42dvh);
@@ -699,9 +707,9 @@ svg {
   padding: 6px;
   border: 1.5px solid #8ea998;
   border-radius: var(--radius-md);
-  background: #ffffff;
-  box-shadow: var(--shadow-lg);
-  z-index: 30;
+  background: #ffffff !important;
+  box-shadow: 0 10px 30px rgba(12, 43, 29, 0.22);
+  z-index: 1000;
 }
 
 .choice-picker-group {
@@ -1216,10 +1224,11 @@ input::-ms-clear {
 
   /* Keep choice picker menus visible in the middle area above the bottom keyboard */
   .choice-picker-menu {
-    max-height: min(280px, calc(100dvh - 350px));
-    box-shadow: 0 8px 30px rgba(12, 43, 29, 0.22);
+    max-height: min(260px, calc(100dvh - 350px));
+    box-shadow: 0 10px 32px rgba(12, 43, 29, 0.28);
     border: 1.5px solid #1b4332;
-    z-index: 100;
+    background: #ffffff !important;
+    z-index: 1000;
   }
 }
 

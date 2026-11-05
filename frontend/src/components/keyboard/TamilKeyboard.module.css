@@ -240,33 +240,6 @@
   font-weight: 700;
 }
 
-/* Floating Launch Pill */
-.floatingLaunchPill {
-  position: fixed;
-  bottom: 24px;
-  right: 20px;
-  z-index: 9998;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  padding: 9px 15px;
-  border-radius: 24px;
-  background: #ffffff;
-  color: #202124;
-  border: 1.5px solid #dadce0;
-  box-shadow: 0 4px 16px rgba(60, 64, 67, 0.25);
-  cursor: pointer;
-  font-size: 0.85rem;
-  font-weight: 700;
-  transition: all 0.15s ease;
-}
-
-.floatingLaunchPill:hover {
-  transform: translateY(-2px);
-  border-color: #1a73e8;
-  box-shadow: 0 6px 20px rgba(26, 115, 232, 0.28);
-}
-
 @media (max-width: 600px) {
   .key {
     height: 40px;
@@ -286,8 +259,7 @@
 
 /* Strictly hide the keyboard on Desktop and Tablets (> 767px) - ONLY for mobile app / phone screens */
 @media (min-width: 768px) {
-  .keyboardOverlay,
-  .floatingLaunchPill {
+  .keyboardOverlay {
     display: none !important;
   }
 }
