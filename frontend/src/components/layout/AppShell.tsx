@@ -33,15 +33,11 @@ export const AppShell: React.FC<AppShellProps> = ({
     return () => window.removeEventListener('resize', check);
   }, []);
 
-  // On mobile, /entry or cornerMenuOnlyOnMobile starts with upper bar hidden by default
-  // so data entry has maximum space. Other pages show upper bar by default.
+  // On mobile app, the upper bar is closed as default on all pages.
+  // It ONLY opens when the customer explicitly clicks the open button (->).
   useEffect(() => {
-    if (cornerMenuOnlyOnMobile || pathname === '/entry') {
-      setMobileUpperBarOpen(false);
-    } else {
-      setMobileUpperBarOpen(true);
-    }
-  }, [pathname, cornerMenuOnlyOnMobile]);
+    setMobileUpperBarOpen(false);
+  }, [pathname]);
 
   const isUpperBarClosed = isMobileScreen && !mobileUpperBarOpen;
 

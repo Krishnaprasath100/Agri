@@ -122,21 +122,24 @@ export const TopNav: React.FC<TopNavProps> = ({
             </button>
           )}
 
-          <button
-            onClick={onToggleSidebar}
-            style={{
-              display: 'none',
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              padding: '6px',
-              color: 'var(--text-main)',
-            }}
-            className="mobile-toggle-btn"
-            aria-label="Toggle Navigation"
-          >
-            <Menu size={22} />
-          </button>
+          {/* Desktop/tablet sidebar toggle (hidden on mobile app upper bar per user request) */}
+          {!isMobileScreen && (
+            <button
+              onClick={onToggleSidebar}
+              style={{
+                display: 'none',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                padding: '6px',
+                color: 'var(--text-main)',
+              }}
+              className="mobile-toggle-btn"
+              aria-label="Toggle Navigation"
+            >
+              <Menu size={22} />
+            </button>
+          )}
 
           <div className="app-topnav-user-info">
             <div suppressHydrationWarning style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--primary-900)' }}>
