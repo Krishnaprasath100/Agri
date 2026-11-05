@@ -1339,6 +1339,11 @@ input::-ms-clear {
     animation: menuSlideDown 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
+  /* On mobile app, language toggle is placed upper to the AI chat bot */
+  .app-topnav .language-toggle {
+    display: none !important;
+  }
+
   /* Keep choice picker menus visible in the middle area above the bottom keyboard */
   .choice-picker-menu {
     max-height: min(260px, calc(100dvh - 350px));

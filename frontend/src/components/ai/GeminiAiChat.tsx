@@ -14,6 +14,7 @@ import {
   MicOff,
   Volume2,
   VolumeX,
+  Languages,
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
@@ -131,7 +132,7 @@ const GeminiSparkleIcon = ({
 export const GeminiAiChat: React.FC = () => {
   const pathname = usePathname();
   const { user } = useAuth();
-  const { language } = useLanguage();
+  const { language, setLanguage } = useLanguage();
 
   const [mounted, setMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -444,17 +445,33 @@ export const GeminiAiChat: React.FC = () => {
 
   return (
     <>
-      {/* Floating Trigger Button in Right Down Corner */}
+      {/* Floating Trigger Buttons in Right Down Corner */}
       {!isOpen && (
-        <button
-          className={styles.floatingTrigger}
-          onClick={() => setIsOpen(true)}
-          aria-label="Ask AgriTrack AI"
-          title="Ask AgriTrack AI"
-        >
-          <GeminiSparkleIcon className={styles.triggerSparkleIcon} />
-          <span className={styles.triggerText}>Ask AI</span>
-        </button>
+        <>
+          {/* Mobile-only Floating Language Button directly upper to AI Chat Bot */}
+          <button
+            type="button"
+            className={styles.floatingLanguageBtn}
+            onClick={() => setLanguage(language === 'en' ? 'ta' : 'en')}
+            aria-label={language === 'en' ? 'Switch to Tamil language' : 'Switch to English language'}
+            title={language === 'en' ? 'தமிழில் மாற்றவும்' : 'Switch to English'}
+          >
+            <Languages size={15} className={styles.floatingLanguageIcon} />
+            <span className={styles.floatingLanguageText}>
+              {language === 'en' ? 'தமிழ்' : 'English'}
+            </span>
+          </button>
+
+          <button
+            className={styles.floatingTrigger}
+            onClick={() => setIsOpen(true)}
+            aria-label="Ask AgriTrack AI"
+            title="Ask AgriTrack AI"
+          >
+            <GeminiSparkleIcon className={styles.triggerSparkleIcon} />
+            <span className={styles.triggerText}>Ask AI</span>
+          </button>
+        </>
       )}
 
       {/* Expandable Chat Modal Window in Right Down Corner */}
