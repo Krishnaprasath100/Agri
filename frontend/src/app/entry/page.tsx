@@ -100,18 +100,30 @@ export default function EntryPage() {
   const [displayAmount, setDisplayAmount] = useState('');
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    if (!user) return;
-
-    getCropCycles(user.uid).then(setCrops);
-    setPayees(getLedgerContacts(user.uid, 'payee'));
-    setPersons(getLedgerContacts(user.uid, 'person'));
-
-    const accountList = getLedgerAccounts(user.uid);
-    setAccounts(accountList);
-    setTypes(getExpenseTypeOptions(user.uid));
-    setSavedQuickCrops(getQuickCropChoices(user.uid));
+  const loadData = useCallback(() => {
+    const uid = user?.uid || 'demo-farmer';
+    getCropCycles(uid).then(setCrops);
+    setPayees(getLedgerContacts(uid, 'payee'));
+    setPersons(getLedgerContacts(uid, 'person'));
+    setAccounts(getLedgerAccounts(uid));
+    setTypes(getExpenseTypeOptions(uid));
+    setSavedQuickCrops(getQuickCropChoices(uid));
   }, [user]);
+
+  useEffect(() => {
+    loadData();
+
+    const handleUpdate = () => {
+      loadData();
+    };
+
+    window.addEventListener('agri:data-updated', handleUpdate);
+    window.addEventListener('storage', handleUpdate);
+    return () => {
+      window.removeEventListener('agri:data-updated', handleUpdate);
+      window.removeEventListener('storage', handleUpdate);
+    };
+  }, [loadData]);
 
   const selectedPlanting = crops.find((crop) => crop.cropCycleId === form.crop);
   const cropName =
@@ -131,18 +143,20 @@ export default function EntryPage() {
 
   // Unified inline creation inside the choose boxes
   const handleCreateCrop = (name: string) => {
-    if (!user || !name.trim()) return;
+    const uid = user?.uid || 'demo-farmer';
+    if (!name.trim()) return;
     const cleanName = name.trim().replace(/\s+/g, ' ');
-    const updated = saveQuickCropChoice(user.uid, cleanName);
+    const updated = saveQuickCropChoice(uid, cleanName);
     setSavedQuickCrops(updated);
     setForm((prev) => ({ ...prev, crop: `quick:${cleanName}` }));
     setError('');
   };
 
   const handleCreateExpenseType = (name: string) => {
-    if (!user || !name.trim()) return;
+    const uid = user?.uid || 'demo-farmer';
+    if (!name.trim()) return;
     const cleanName = name.trim().replace(/\s+/g, ' ');
-    const saved = saveExpenseTypeOption({ userId: user.uid, name: cleanName });
+    const saved = saveExpenseTypeOption({ userId: uid, name: cleanName });
     setTypes((current) =>
       current.some((type) => type.name.toLowerCase() === saved.name.toLowerCase())
         ? current
@@ -289,12 +303,12 @@ export default function EntryPage() {
                 options={[
                   ...crops.map((crop) => ({
                     value: crop.cropCycleId,
-                    label: `${crop.cropType}${crop.farmName ? ` · ${crop.farmName}` : ''}`,
+                    label: `${language === 'ta' ? t(crop.cropType) : crop.cropType}${crop.farmName ? ` · ${crop.farmName}` : ''}`,
                     group: t('Your plantings'),
                   })),
                   ...allQuickCrops.map((crop) => ({
                     value: `quick:${crop}`,
-                    label: crop,
+                    label: language === 'ta' ? t(crop) : crop,
                     group: t('Quick crop choices'),
                   })),
                 ]}

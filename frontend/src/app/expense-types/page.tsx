@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { useLanguage } from '@/context/LanguageContext';
 import { AppShell } from '@/components/layout/AppShell';
 import {
   deleteExpenseTypeOption,
@@ -28,54 +29,58 @@ const examples = [
 
 export default function ExpenseTypesPage() {
   const { user } = useAuth();
+  const { language, t } = useLanguage();
   const [types, setTypes] = useState<ExpenseTypeOption[]>([]);
   const [name, setName] = useState('');
   const [error, setError] = useState('');
 
   const load = () => {
-    if (user) {
-      setTypes(getExpenseTypeOptions(user.uid));
-    }
+    const uid = user?.uid || 'demo-farmer';
+    setTypes(getExpenseTypeOptions(uid));
   };
 
   useEffect(load, [user]);
 
   const save = (event: React.FormEvent) => {
     event.preventDefault();
-    if (!user || !name.trim()) {
-      setError('Expense type name is required.');
+    const uid = user?.uid || 'demo-farmer';
+    if (!name.trim()) {
+      setError(language === 'ta' ? 'செலவு வகை பெயர் தேவை.' : 'Expense type name is required.');
       return;
     }
 
-    saveExpenseTypeOption({ userId: user.uid, name: name.trim() });
+    saveExpenseTypeOption({ userId: uid, name: name.trim() });
     setName('');
     setError('');
     load();
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('agri:data-updated'));
+    }
   };
 
   return (
     <AppShell>
       <div className="page-header">
         <div>
-          <h1 className="page-title">Add Expense Type</h1>
-          <p className="page-subtitle">Create a category for your farming expenses.</p>
+          <h1 className="page-title">{t('Add Expense Type')}</h1>
+          <p className="page-subtitle">{t('Create a category for your farming expenses.')}</p>
         </div>
       </div>
 
       <div className="grid-2" style={{ alignItems: 'start' }}>
         <section className="card">
           <div className="card-title" style={{ marginBottom: 20 }}>
-            <Tag size={20} /> Expense type details
+            <Tag size={20} /> {t('Expense type details')}
           </div>
 
           <form onSubmit={save}>
             <div className="form-group">
-              <label className="form-label">Expense type name *</label>
+              <label className="form-label">{t('Expense type name *')}</label>
               <input
                 className="form-input"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Enter expense type name"
+                placeholder={language === 'ta' ? 'செலவு வகை பெயரை உள்ளிடவும்' : 'Enter expense type name'}
               />
             </div>
 
@@ -88,7 +93,7 @@ export default function ExpenseTypesPage() {
                 marginBottom: 18,
               }}
             >
-              <strong>Quick examples</strong>
+              <strong>{t('Quick examples')}</strong>
               <p
                 style={{
                   color: 'var(--text-muted)',
@@ -96,7 +101,7 @@ export default function ExpenseTypesPage() {
                   margin: '4px 0 12px',
                 }}
               >
-                Select an option to fill the name.
+                {t('Select an option to fill the name.')}
               </p>
               <div
                 style={{
@@ -105,26 +110,30 @@ export default function ExpenseTypesPage() {
                   gap: 8,
                 }}
               >
-                {examples.map((example) => (
-                  <button
-                    key={example}
-                    type="button"
-                    className="btn btn-secondary btn-sm"
-                    onClick={() => {
-                      setName(example);
-                      setError('');
-                    }}
-                    style={{
-                      justifyContent: 'flex-start',
-                      whiteSpace: 'normal',
-                      textAlign: 'left',
-                      borderColor: name === example ? 'var(--primary-600)' : undefined,
-                      backgroundColor: name === example ? '#e8f5ec' : undefined,
-                    }}
-                  >
-                    {example}
-                  </button>
-                ))}
+                {examples.map((example) => {
+                  const label = language === 'ta' ? t(example) : example;
+                  const isSelected = name === label;
+                  return (
+                    <button
+                      key={example}
+                      type="button"
+                      className="btn btn-secondary btn-sm"
+                      onClick={() => {
+                        setName(label);
+                        setError('');
+                      }}
+                      style={{
+                        justifyContent: 'flex-start',
+                        whiteSpace: 'normal',
+                        textAlign: 'left',
+                        borderColor: isSelected ? 'var(--primary-600)' : undefined,
+                        backgroundColor: isSelected ? '#e8f5ec' : undefined,
+                      }}
+                    >
+                      {label}
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
@@ -135,19 +144,19 @@ export default function ExpenseTypesPage() {
             )}
 
             <button className="btn btn-primary" type="submit">
-              <Plus size={16} /> Save Type
+              <Plus size={16} /> {t('Save Type')}
             </button>
           </form>
         </section>
 
         <section className="card" style={{ background: 'var(--primary-50)' }}>
           <div className="card-title" style={{ marginBottom: 16 }}>
-            Saved expense types
+            {t('Saved expense types')}
           </div>
 
           {types.length === 0 ? (
             <p style={{ color: 'var(--text-muted)', fontSize: '.9rem' }}>
-              Saved types will appear in the New Entry expense dropdown.
+              {t('Saved types will appear in the New Entry expense dropdown.')}
             </p>
           ) : (
             <div style={{ display: 'grid', gap: 10 }}>
@@ -164,16 +173,19 @@ export default function ExpenseTypesPage() {
                     borderRadius: 'var(--radius-sm)',
                   }}
                 >
-                  <strong>{type.name}</strong>
+                  <strong>{language === 'ta' ? t(type.name) : type.name}</strong>
                   <button
                     type="button"
                     className="btn-icon"
                     onClick={() => {
                       deleteExpenseTypeOption(type.id);
                       load();
+                      if (typeof window !== 'undefined') {
+                        window.dispatchEvent(new Event('agri:data-updated'));
+                      }
                     }}
                     style={{ color: 'var(--loss-red)' }}
-                    title="Delete expense type"
+                    title={language === 'ta' ? 'செலவு வகையை நீக்கு' : 'Delete expense type'}
                   >
                     <Trash2 size={16} />
                   </button>

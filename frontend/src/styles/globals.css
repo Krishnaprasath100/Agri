@@ -727,12 +727,10 @@ svg {
   top: calc(100% + 4px);
   left: 0;
   width: 100%;
-  max-height: min(18rem, 42dvh);
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  -webkit-overflow-scrolling: touch;
-  touch-action: pan-y;
-  scroll-behavior: smooth;
+  max-height: min(20rem, 48dvh);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
   padding: 6px;
   border: 1.5px solid #8ea998;
   border-radius: var(--radius-md);
@@ -743,11 +741,15 @@ svg {
 }
 
 .choice-picker-options-list {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: 240px;
   overflow-y: auto;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
   touch-action: pan-y;
   scroll-behavior: smooth;
+  padding-right: 2px;
 }
 
 .choice-picker-group {
@@ -870,11 +872,6 @@ svg {
   text-align: center;
   color: var(--text-muted);
   font-size: 0.85rem;
-}
-
-.choice-picker-options-list {
-  max-height: 220px;
-  overflow-y: auto;
 }
 
 .date-field {
@@ -1379,7 +1376,10 @@ input::-ms-clear {
 
   /* Keep choice picker menus visible in the middle area above the bottom keyboard */
   .choice-picker-menu {
-    max-height: min(260px, calc(100dvh - 350px));
+    max-height: min(280px, calc(100dvh - 350px));
+    overflow: hidden !important;
+    display: flex;
+    flex-direction: column;
     box-shadow: 0 10px 32px rgba(12, 43, 29, 0.28);
     border: 1.5px solid #1b4332;
     background: #ffffff !important;

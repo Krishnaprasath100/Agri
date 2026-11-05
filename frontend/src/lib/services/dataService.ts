@@ -140,13 +140,19 @@ export function saveExpenseTypeOption(option: Omit<ExpenseTypeOption, 'id' | 'cr
   const saved: ExpenseTypeOption = { ...option, id: option.id || generateId('expense-type'), createdAt: new Date().toISOString() };
   const index = records.findIndex((record) => record.id === saved.id);
   if (index >= 0) records[index] = { ...records[index], ...saved };
-  else records.unshift(saved);
+  else records.push(saved);
   setLocal(STORAGE_KEYS.EXPENSE_TYPES, records);
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new Event('agri:data-updated'));
+  }
   return saved;
 }
 
 export function deleteExpenseTypeOption(id: string): void {
   setLocal(STORAGE_KEYS.EXPENSE_TYPES, getLocal<ExpenseTypeOption[]>(STORAGE_KEYS.EXPENSE_TYPES, []).filter((record) => record.id !== id));
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new Event('agri:data-updated'));
+  }
 }
 
 export function getQuickCropChoices(userId: string): string[] {
@@ -163,6 +169,9 @@ export function saveQuickCropChoice(userId: string, cropName: string): string[] 
   const exists = current.some((crop) => crop.toLowerCase() === cleanedName.toLowerCase());
   const updated = exists ? current : [...current, cleanedName];
   setLocal(STORAGE_KEYS.QUICK_CROPS, { ...records, [userId]: updated });
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new Event('agri:data-updated'));
+  }
   return updated;
 }
 
