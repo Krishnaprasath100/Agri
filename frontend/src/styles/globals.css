@@ -637,6 +637,15 @@ svg {
   z-index: 1;
 }
 
+.choice-picker.is-open {
+  z-index: 1000 !important;
+}
+
+.form-group:has(.choice-picker.is-open) {
+  z-index: 1000 !important;
+  position: relative;
+}
+
 .choice-picker:focus-within {
   z-index: 20;
 }

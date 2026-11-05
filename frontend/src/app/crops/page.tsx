@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { useLanguage } from '@/context/LanguageContext';
 import { AppShell } from '@/components/layout/AppShell';
 import { ChoicePicker } from '@/components/forms/ChoicePicker';
 import { DateField } from '@/components/forms/DateField';
@@ -37,6 +38,7 @@ const CROP_OPTIONS = [
 
 export default function CropsPage() {
   const { user } = useAuth();
+  const { language, t } = useLanguage();
   const [crops, setCrops] = useState<CropCycle[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -177,15 +179,15 @@ export default function CropsPage() {
       {/* Header */}
       <div className="page-header">
         <div>
-          <h1 className="page-title">Plantings</h1>
+          <h1 className="page-title">{t('Plantings')}</h1>
           <p className="page-subtitle">
-            Keep each planting's income and expenses separate from sowing to harvest.
+            {t("Keep each planting's income and expenses separate from sowing to harvest.")}
           </p>
         </div>
 
         <div className="header-actions">
           <button onClick={openCreateModal} className="btn btn-primary">
-            <Plus size={16} /> Add Planting
+            <Plus size={16} /> {t('Add Planting')}
           </button>
         </div>
       </div>
@@ -197,7 +199,7 @@ export default function CropsPage() {
           <input
             type="text"
             className={styles.searchInput}
-            placeholder="Search plantings, crops, plots..."
+            placeholder={language === 'ta' ? 'நடவுகள், பயிர்கள், நிலங்களை தேடவும்...' : 'Search plantings, crops, plots...'}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -220,30 +222,30 @@ export default function CropsPage() {
             <ChoicePicker
               ariaLabel="Crop status filter"
               value={statusFilter}
-              placeholder="All Statuses"
+              placeholder={t('All Statuses')}
               onChange={setStatusFilter}
               options={[
-                { value: 'ALL', label: 'All Statuses' },
-                { value: 'Planned', label: 'Planned' },
-                { value: 'Growing', label: 'Growing' },
-                { value: 'Ready to Harvest', label: 'Ready to Harvest' },
-                { value: 'Harvested', label: 'Harvested' },
+                { value: 'ALL', label: t('All Statuses') },
+                { value: 'Planned', label: t('Planned') },
+                { value: 'Growing', label: t('Growing') },
+                { value: 'Ready to Harvest', label: t('Ready to Harvest') },
+                { value: 'Harvested', label: t('Harvested') },
               ]}
               className="choice-picker--compact"
             />
           </div>
 
           <div className={styles.sortGroup}>
-            <span className={styles.sortLabel}>Sort by:</span>
+            <span className={styles.sortLabel}>{t('Sort by:')}</span>
             <div className={styles.sortPickerWrapper}>
               <ChoicePicker
                 ariaLabel="Sort crop list"
                 value={sortBy}
-                placeholder="Sort by"
+                placeholder={t('Sort by:')}
                 onChange={(value) => setSortBy(value as 'seeding' | 'harvest')}
                 options={[
-                  { value: 'seeding', label: 'Seeding Date' },
-                  { value: 'harvest', label: 'Expected Harvest' },
+                  { value: 'seeding', label: t('Seeding Date') },
+                  { value: 'harvest', label: t('Expected Harvest') },
                 ]}
                 className="choice-picker--compact"
               />
@@ -346,11 +348,11 @@ export default function CropsPage() {
                 {/* Key Dates 2-Column Grid */}
                 <div className={styles.keyDatesGrid}>
                   <div className={styles.keyDateCell}>
-                    <span className={styles.keyDateLabel}>Seeding Date</span>
+                    <span className={styles.keyDateLabel}>{t('Seeding Date')}</span>
                     <span className={styles.keyDateValue}>{formatDate(crop.seedingDate)}</span>
                   </div>
                   <div className={`${styles.keyDateCell} ${styles.keyDateCellRight}`}>
-                    <span className={styles.keyDateLabel}>Expected Harvest</span>
+                    <span className={styles.keyDateLabel}>{t('Expected Harvest')}</span>
                     <span
                       className={`${styles.keyDateValue} ${
                         remaining.isOverdue && crop.status !== 'Harvested' ? styles.keyDateValueOverdue : ''

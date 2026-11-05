@@ -134,6 +134,20 @@ const DEFAULT_SUGGESTIONS = [
   'ரூ.',
 ];
 
+const DEFAULT_SUGGESTIONS_EN = [
+  'Seeds',
+  'Fertilizer',
+  'Pesticide',
+  'Cotton',
+  'Paddy',
+  'Wheat',
+  'Irrigation',
+  'Labour',
+  'Tractor',
+  'Diesel',
+  'Cash',
+];
+
 // Phonetic Rules
 const VOWELS_MAP: Record<string, string> = {
   a: 'அ',
@@ -286,9 +300,9 @@ const TAMIL99_ROW_3 = ['ய', 'ர', 'ல', 'வ', 'ழ', 'ள', 'ற', 'ன', '
 const TAMIL99_ROW_4 = ['்', 'ா', 'ி', 'ீ', 'ு', 'ூ', 'ெ', 'ே', 'ை', 'ொ', 'ோ', 'ௌ'];
 
 export function TamilKeyboard() {
-  const { language } = useLanguage();
+  const { language, setLanguage } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
-  const [mode, setMode] = useState<'phonetic' | 'tamil99'>('phonetic');
+  const [mode, setMode] = useState<'phonetic' | 'tamil99' | 'english'>('phonetic');
   const [buffer, setBuffer] = useState('');
   const [candidates, setCandidates] = useState<string[]>(DEFAULT_SUGGESTIONS);
   const [isMobileDevice, setIsMobileDevice] = useState(false);
@@ -305,7 +319,7 @@ export function TamilKeyboard() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Sync document & inputs language attribute
+  // Sync document & inputs language attribute, and switch keyboard mode accordingly
   useEffect(() => {
     if (language === 'ta') {
       document.documentElement.lang = 'ta';
@@ -315,6 +329,9 @@ export function TamilKeyboard() {
           input.setAttribute('lang', 'ta');
         }
       });
+      setMode('phonetic');
+      setBuffer('');
+      setCandidates(DEFAULT_SUGGESTIONS);
       if (isMobileDevice) {
         setIsOpen(true);
       }
@@ -324,14 +341,18 @@ export function TamilKeyboard() {
       inputs.forEach((input) => {
         input.setAttribute('lang', 'en');
       });
-      setIsOpen(false);
+      setMode('english');
       setBuffer('');
+      setCandidates(DEFAULT_SUGGESTIONS_EN);
+      if (isMobileDevice) {
+        setIsOpen(true);
+      }
     }
   }, [language, isMobileDevice]);
 
   // Track active input focus (strictly on mobile app/phones)
   useEffect(() => {
-    if (language !== 'ta' || !isMobileDevice) return;
+    if (!isMobileDevice) return;
 
     const handleFocus = (e: FocusEvent) => {
       const target = e.target as HTMLElement;
@@ -348,22 +369,30 @@ export function TamilKeyboard() {
 
     document.addEventListener('focusin', handleFocus);
     return () => document.removeEventListener('focusin', handleFocus);
-  }, [language]);
+  }, [isMobileDevice]);
 
   // Recompute candidates whenever buffer changes
   useEffect(() => {
-    if (!buffer.trim()) {
-      setCandidates(DEFAULT_SUGGESTIONS);
-      return;
+    if (language === 'ta') {
+      if (!buffer.trim()) {
+        setCandidates(DEFAULT_SUGGESTIONS);
+        return;
+      }
+      const lower = buffer.toLowerCase().trim();
+      const dictMatches = DICTIONARY[lower] || [];
+      const generated = transliterateWord(lower);
+      const merged = Array.from(new Set([...dictMatches, generated, buffer]));
+      setCandidates(merged);
+    } else {
+      if (!buffer.trim()) {
+        setCandidates(DEFAULT_SUGGESTIONS_EN);
+        return;
+      }
+      const lower = buffer.toLowerCase().trim();
+      const matches = DEFAULT_SUGGESTIONS_EN.filter((w) => w.toLowerCase().startsWith(lower));
+      setCandidates(matches.length > 0 ? matches : DEFAULT_SUGGESTIONS_EN);
     }
-
-    const lower = buffer.toLowerCase().trim();
-    const dictMatches = DICTIONARY[lower] || [];
-    const generated = transliterateWord(lower);
-
-    const merged = Array.from(new Set([...dictMatches, generated, buffer]));
-    setCandidates(merged);
-  }, [buffer]);
+  }, [buffer, language]);
 
   // Insert text into active input
   const commitText = useCallback((text: string) => {
@@ -448,30 +477,30 @@ export function TamilKeyboard() {
 
   // Spacebar handling
   const handleSpace = useCallback(() => {
+    if (mode === 'english') {
+      commitText(' ');
+      setBuffer('');
+      return;
+    }
     if (buffer.trim() && candidates.length > 0) {
       commitText(candidates[0] + ' ');
     } else {
       commitText(' ');
     }
     setBuffer('');
-  }, [buffer, candidates, commitText]);
+  }, [buffer, candidates, commitText, mode]);
 
   // Dispatch field navigation (Next / Prev)
   const navigateField = useCallback((direction: 'next' | 'prev') => {
     window.dispatchEvent(new CustomEvent('agri:navigate-field', { detail: { direction } }));
   }, []);
 
-  if (language !== 'ta' || !isMobileDevice) {
-    return null;
-  }
-
-  // If closed, return null — do not render floating badge near chat bot
-  if (!isOpen) {
+  if (!isMobileDevice || !isOpen) {
     return null;
   }
 
   return (
-    <aside className={styles.keyboardOverlay} aria-label="Google தமிழ் விசைப்பலகை">
+    <aside className={styles.keyboardOverlay} aria-label="Google விசைப்பலகை">
       {/* Google Header */}
       <div className={styles.googleHeader}>
         <div className={styles.googleBrand}>
@@ -483,34 +512,58 @@ export function TamilKeyboard() {
             <span className={styles.googleG_green}>l</span>
             <span className={styles.googleG_red}>e</span>
           </span>
-          <span className={styles.tamilTag}>தமிழ்</span>
+          <span className={styles.tamilTag}>
+            {language === 'ta' ? 'தமிழ்' : 'English'}
+          </span>
         </div>
 
         <div className={styles.headerControls}>
-          <button
-            type="button"
-            className={`${styles.modeToggleBtn} ${mode === 'phonetic' ? styles.modeToggleBtnActive : ''}`}
-            onClick={() => setMode('phonetic')}
-            title="Google Phonetic (abc ➔ தமிழ்)"
-          >
-            <Sparkles size={12} style={{ display: 'inline', marginRight: 4 }} />
-            abc ➔ தமிழ்
-          </button>
+          {language === 'ta' ? (
+            <>
+              <button
+                type="button"
+                className={`${styles.modeToggleBtn} ${mode === 'phonetic' ? styles.modeToggleBtnActive : ''}`}
+                onClick={() => setMode('phonetic')}
+                title="Google Phonetic (abc ➔ தமிழ்)"
+              >
+                <Sparkles size={12} style={{ display: 'inline', marginRight: 4 }} />
+                abc ➔ தமிழ்
+              </button>
+
+              <button
+                type="button"
+                className={`${styles.modeToggleBtn} ${mode === 'tamil99' ? styles.modeToggleBtnActive : ''}`}
+                onClick={() => setMode('tamil99')}
+                title="Tamil 99 Direct Layout"
+              >
+                தமிழ் 99
+              </button>
+            </>
+          ) : (
+            <button
+              type="button"
+              className={`${styles.modeToggleBtn} ${styles.modeToggleBtnActive}`}
+              title="English QWERTY Layout"
+            >
+              English QWERTY
+            </button>
+          )}
 
           <button
             type="button"
-            className={`${styles.modeToggleBtn} ${mode === 'tamil99' ? styles.modeToggleBtnActive : ''}`}
-            onClick={() => setMode('tamil99')}
-            title="Tamil 99 Direct Layout"
+            className={styles.modeToggleBtn}
+            onClick={() => setLanguage(language === 'ta' ? 'en' : 'ta')}
+            title={language === 'ta' ? 'Switch to English' : 'தமிழுக்கு மாறவும்'}
           >
-            தமிழ் 99
+            <Globe size={12} style={{ display: 'inline', marginRight: 4 }} />
+            {language === 'ta' ? 'EN' : 'தமிழ்'}
           </button>
 
           <button
             type="button"
             className={styles.navArrowBtn}
             onClick={() => navigateField('prev')}
-            title="முந்தைய புலம் (Previous Field)"
+            title={language === 'ta' ? 'முந்தைய புலம் (Previous Field)' : 'Previous Field'}
             aria-label="Previous Field"
           >
             <ChevronUp size={16} />
@@ -520,7 +573,7 @@ export function TamilKeyboard() {
             type="button"
             className={styles.navArrowBtn}
             onClick={() => navigateField('next')}
-            title="அடுத்த புலம் (Next Field)"
+            title={language === 'ta' ? 'அடுத்த புலம் (Next Field)' : 'Next Field'}
             aria-label="Next Field"
           >
             <ChevronDown size={16} />
@@ -530,7 +583,7 @@ export function TamilKeyboard() {
             type="button"
             className={styles.closeBtn}
             onClick={() => setIsOpen(false)}
-            title="மூடு (Close Keyboard)"
+            title={language === 'ta' ? 'மூடு (Close Keyboard)' : 'Close Keyboard'}
             aria-label="Close Keyboard"
           >
             <X size={17} />
@@ -659,6 +712,119 @@ export function TamilKeyboard() {
                 }}
               >
                 அடுத்தது <ArrowRight size={14} style={{ display: 'inline', marginLeft: 4 }} />
+              </button>
+            </div>
+          </>
+        ) : mode === 'english' ? (
+          <>
+            {/* English QWERTY Row 1 */}
+            <div className={styles.keyRow}>
+              {QWERTY_ROW_1.map((ch) => (
+                <button
+                  key={ch}
+                  type="button"
+                  className={styles.key}
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    commitText(ch);
+                  }}
+                >
+                  {ch}
+                </button>
+              ))}
+            </div>
+
+            {/* English QWERTY Row 2 */}
+            <div className={styles.keyRow}>
+              {QWERTY_ROW_2.map((ch) => (
+                <button
+                  key={ch}
+                  type="button"
+                  className={styles.key}
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    commitText(ch);
+                  }}
+                >
+                  {ch}
+                </button>
+              ))}
+            </div>
+
+            {/* English QWERTY Row 3 */}
+            <div className={styles.keyRow}>
+              {QWERTY_ROW_3.map((ch) => (
+                <button
+                  key={ch}
+                  type="button"
+                  className={styles.key}
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    commitText(ch);
+                  }}
+                >
+                  {ch}
+                </button>
+              ))}
+              <button
+                type="button"
+                className={`${styles.key} ${styles.keySpecial}`}
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  handleBackspace();
+                }}
+                title="Backspace"
+                aria-label="Backspace"
+              >
+                <Delete size={16} />
+              </button>
+            </div>
+
+            {/* English QWERTY Row 4 */}
+            <div className={styles.keyRow}>
+              <button
+                type="button"
+                className={`${styles.key} ${styles.keySpecial}`}
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  const target = activeInputRef.current;
+                  if (target) {
+                    const proto = target.tagName === 'INPUT' ? window.HTMLInputElement.prototype : window.HTMLTextAreaElement.prototype;
+                    const nativeSetter = Object.getOwnPropertyDescriptor(proto, 'value')?.set;
+                    if (nativeSetter) {
+                      nativeSetter.call(target, '');
+                      target.dispatchEvent(new Event('input', { bubbles: true }));
+                    } else {
+                      target.value = '';
+                    }
+                  }
+                  setBuffer('');
+                }}
+                title="Clear"
+              >
+                Clear
+              </button>
+
+              <button
+                type="button"
+                className={`${styles.key} ${styles.keySpace}`}
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  handleSpace();
+                }}
+              >
+                Space
+              </button>
+
+              <button
+                type="button"
+                className={`${styles.key} ${styles.keyNext}`}
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  navigateField('next');
+                }}
+              >
+                Next <ArrowRight size={14} style={{ display: 'inline', marginLeft: 4 }} />
               </button>
             </div>
           </>

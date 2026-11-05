@@ -87,7 +87,6 @@ export default function EntryPage() {
   const [savedQuickCrops, setSavedQuickCrops] = useState<string[]>([]);
 
   // Controlled open state for dropdowns: all closed by default when entering the page!
-  const [openPickerId, setOpenPickerId] = useState<string | null>(null);
 
   const [form, setForm] = useState({
     date: getTodayDate(),
@@ -137,7 +136,6 @@ export default function EntryPage() {
     const updated = saveQuickCropChoice(user.uid, cleanName);
     setSavedQuickCrops(updated);
     setForm((prev) => ({ ...prev, crop: `quick:${cleanName}` }));
-    setOpenPickerId(null);
     setError('');
   };
 
@@ -151,7 +149,6 @@ export default function EntryPage() {
         : [...current, saved]
     );
     setForm((prev) => ({ ...prev, expenseType: cleanName }));
-    setOpenPickerId(null);
     setError('');
   };
 
@@ -166,7 +163,6 @@ export default function EntryPage() {
       setPersons((prev) => [...prev, saved]);
     }
     setForm((prev) => ({ ...prev, counterparty: cleanName }));
-    setOpenPickerId(null);
     setError('');
   };
 
@@ -176,7 +172,6 @@ export default function EntryPage() {
     const saved = saveLedgerAccount({ userId: user.uid, displayName: cleanName, accountType: 'Savings', isDefault: false });
     setAccounts((prev) => [...prev, saved]);
     setForm((prev) => ({ ...prev, account: cleanName }));
-    setOpenPickerId(null);
     setError('');
   };
 
@@ -280,19 +275,14 @@ export default function EntryPage() {
             <div
               id="field-crop"
               className="form-group"
-              style={{ position: 'relative', zIndex: openPickerId === 'crop' ? 60 : 1 }}
+              style={{ position: 'relative' }}
             >
               <label className="form-label">{t('Crop / planting')}</label>
               <ChoicePicker
                 ariaLabel={t('Crop / planting')}
                 value={form.crop}
                 placeholder={t('Choose a crop')}
-                isOpen={openPickerId === 'crop'}
-                onOpenChange={(isOpen) => setOpenPickerId(isOpen ? 'crop' : null)}
-                onChange={(crop) => {
-                  setForm((prev) => ({ ...prev, crop }));
-                  setOpenPickerId(null);
-                }}
+                onChange={(crop) => setForm((prev) => ({ ...prev, crop }))}
                 allowCreate
                 createPlaceholder={language === 'ta' ? 'பயிர் பெயரை தட்டச்சு செய்யவும்...' : 'Type or search crop to add...'}
                 onCreate={handleCreateCrop}
@@ -316,19 +306,14 @@ export default function EntryPage() {
               <div
                 id="field-expense-type"
                 className="form-group"
-                style={{ position: 'relative', zIndex: openPickerId === 'expenseType' ? 60 : 1 }}
+                style={{ position: 'relative' }}
               >
                 <label className="form-label">{t('Expense type')}</label>
                 <ChoicePicker
                   ariaLabel={t('Expense type')}
                   value={form.expenseType}
                   placeholder={t('Choose an expense type')}
-                  isOpen={openPickerId === 'expenseType'}
-                  onOpenChange={(isOpen) => setOpenPickerId(isOpen ? 'expenseType' : null)}
-                  onChange={(expenseType) => {
-                    setForm((prev) => ({ ...prev, expenseType }));
-                    setOpenPickerId(null);
-                  }}
+                  onChange={(expenseType) => setForm((prev) => ({ ...prev, expenseType }))}
                   allowCreate
                   createPlaceholder={language === 'ta' ? 'செலவு வகையை தட்டச்சு செய்யவும்...' : 'Type or search expense type...'}
                   onCreate={handleCreateExpenseType}
@@ -345,19 +330,14 @@ export default function EntryPage() {
             <div
               id="field-counterparty"
               className="form-group"
-              style={{ position: 'relative', zIndex: openPickerId === 'counterparty' ? 60 : 1 }}
+              style={{ position: 'relative' }}
             >
               <label className="form-label">{kind === 'expense' ? t('Payee') : t('Received from')}</label>
               <ChoicePicker
                 ariaLabel={kind === 'expense' ? t('Payee') : t('Received from')}
                 value={form.counterparty}
                 placeholder={kind === 'expense' ? t('Choose a payee (optional)') : t('Choose a person (optional)')}
-                isOpen={openPickerId === 'counterparty'}
-                onOpenChange={(isOpen) => setOpenPickerId(isOpen ? 'counterparty' : null)}
-                onChange={(counterparty) => {
-                  setForm((prev) => ({ ...prev, counterparty }));
-                  setOpenPickerId(null);
-                }}
+                onChange={(counterparty) => setForm((prev) => ({ ...prev, counterparty }))}
                 allowCreate
                 createPlaceholder={language === 'ta' ? 'பெயரை தட்டச்சு செய்யவும்...' : `Type or search ${kind === 'expense' ? 'payee' : 'person'}...`}
                 onCreate={handleCreatePayee}
@@ -372,7 +352,7 @@ export default function EntryPage() {
             <div
               id="field-account"
               className="form-group"
-              style={{ position: 'relative', zIndex: openPickerId === 'account' ? 60 : 1 }}
+              style={{ position: 'relative' }}
             >
               <label className="form-label">
                 {kind === 'expense' ? t('Paid from account') : t('Received into account')}
@@ -381,12 +361,7 @@ export default function EntryPage() {
                 ariaLabel={t('ACCOUNT')}
                 value={form.account}
                 placeholder={t('Choose an account')}
-                isOpen={openPickerId === 'account'}
-                onOpenChange={(isOpen) => setOpenPickerId(isOpen ? 'account' : null)}
-                onChange={(account) => {
-                  setForm((prev) => ({ ...prev, account }));
-                  setOpenPickerId(null);
-                }}
+                onChange={(account) => setForm((prev) => ({ ...prev, account }))}
                 allowCreate
                 createPlaceholder={language === 'ta' ? 'கணக்கு பெயரை தட்டச்சு செய்யவும்...' : 'Type or search bank account...'}
                 onCreate={handleCreateAccount}

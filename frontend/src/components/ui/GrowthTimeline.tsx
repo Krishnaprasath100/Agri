@@ -3,6 +3,7 @@
 import React from 'react';
 import { CropCycle } from '@/types';
 import { formatDate, getDaysRemaining, calculateCropProgress } from '@/lib/utils';
+import { useLanguage } from '@/context/LanguageContext';
 import { Calendar, CheckCircle2, Clock, Sprout } from 'lucide-react';
 
 interface GrowthTimelineProps {
@@ -10,32 +11,33 @@ interface GrowthTimelineProps {
 }
 
 export const GrowthTimeline: React.FC<GrowthTimelineProps> = ({ crop }) => {
+  const { language, t } = useLanguage();
   const progress = crop.status === 'Harvested' ? 100 : calculateCropProgress(crop.seedingDate, crop.expectedHarvestDate);
   const remaining = getDaysRemaining(crop.expectedHarvestDate);
 
   const stages = [
     {
-      title: 'Seeding',
+      title: language === 'ta' ? 'விதைப்பு' : 'Seeding',
       date: formatDate(crop.seedingDate),
       isDone: true,
       icon: Sprout,
     },
     {
-      title: 'Growth & Care',
-      date: crop.status === 'Planned' ? 'Pending' : 'In Progress',
+      title: language === 'ta' ? 'பராமரிப்பு' : 'Growth & Care',
+      date: crop.status === 'Planned' ? t('Pending') : t('In Progress'),
       isDone: crop.status !== 'Planned',
       icon: Clock,
     },
     {
-      title: 'Expected Harvest',
+      title: language === 'ta' ? 'அறுவடை தேதி' : 'Expected Harvest',
       date: formatDate(crop.expectedHarvestDate),
       isDone: crop.status === 'Harvested' || crop.status === 'Ready to Harvest',
       icon: Calendar,
       highlight: remaining.isOverdue && crop.status !== 'Harvested',
     },
     {
-      title: 'Harvested',
-      date: crop.actualHarvestDate ? formatDate(crop.actualHarvestDate) : (crop.status === 'Harvested' ? 'Completed' : 'Pending'),
+      title: language === 'ta' ? 'அறுவடை' : 'Harvested',
+      date: crop.actualHarvestDate ? formatDate(crop.actualHarvestDate) : (crop.status === 'Harvested' ? t('Completed') : t('Pending')),
       isDone: crop.status === 'Harvested',
       icon: CheckCircle2,
     },
@@ -45,14 +47,14 @@ export const GrowthTimeline: React.FC<GrowthTimelineProps> = ({ crop }) => {
     <div style={{ marginTop: '16px', padding: '14px', backgroundColor: '#f9fbf9', borderRadius: '12px', border: '1px solid var(--border-subtle)' }}>
       {/* Progress header & bar */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', fontSize: '0.82rem' }}>
-        <span style={{ fontWeight: 600, color: 'var(--primary-900)' }}>Cycle Progress</span>
+        <span style={{ fontWeight: 600, color: 'var(--primary-900)' }}>{t('Cycle Progress')}</span>
         <span
           style={{
             fontWeight: 700,
             color: remaining.isOverdue && crop.status !== 'Harvested' ? '#dc2626' : 'var(--primary-700)',
           }}
         >
-          {crop.status === 'Harvested' ? 'Harvest Completed (100%)' : `${progress}% • ${remaining.label}`}
+          {crop.status === 'Harvested' ? `${t('Completed')} (100%)` : `${progress}% • ${remaining.label}`}
         </span>
       </div>
 
@@ -133,12 +135,14 @@ export const GrowthTimeline: React.FC<GrowthTimelineProps> = ({ crop }) => {
                   fontSize: '0.72rem',
                   fontWeight: 600,
                   color: 'var(--text-main)',
-                  lineHeight: 1.2,
+                  lineHeight: 1.25,
                   minHeight: '2.4em',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  wordBreak: 'break-word',
+                  wordBreak: 'keep-all',
+                  overflowWrap: 'break-word',
+                  hyphens: 'none',
                 }}
               >
                 {st.title}
@@ -150,7 +154,8 @@ export const GrowthTimeline: React.FC<GrowthTimelineProps> = ({ crop }) => {
                   fontWeight: st.highlight ? 600 : 500,
                   marginTop: '2px',
                   lineHeight: 1.2,
-                  wordBreak: 'break-word',
+                  wordBreak: 'keep-all',
+                  overflowWrap: 'break-word',
                 }}
               >
                 {st.date}

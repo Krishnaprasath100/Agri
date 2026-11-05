@@ -3,6 +3,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
+import { useLanguage } from '@/context/LanguageContext';
 import { AppShell } from '@/components/layout/AppShell';
 import {
   getCropCycles,
@@ -116,6 +117,7 @@ function getMonthYear(dateStr: string): string {
 
 export default function LedgerPage() {
   const { user } = useAuth();
+  const { t, language } = useLanguage();
   const [rows, setRows] = useState<LedgerRow[]>([]);
   const [crops, setCrops] = useState<CropCycle[]>([]);
   const [loading, setLoading] = useState(true);
@@ -508,12 +510,12 @@ export default function LedgerPage() {
                 aria-label="Filter transactions"
                 title="Filter by Crop, Month, or Date"
               >
-                <Filter size={12} strokeWidth={2.4} className={styles.filterIcon} />
-                <span>Filter</span>
+                <Filter size={14} strokeWidth={2.4} className={styles.filterIcon} />
+                <span>{t('Filter')}</span>
                 {activeFilterCount > 0 && (
                   <span className={styles.filterBadgeCount}>{activeFilterCount}</span>
                 )}
-                <ChevronDown size={11} strokeWidth={2.4} className={styles.filterChevron} />
+                <ChevronDown size={13} strokeWidth={2.4} className={styles.filterChevron} />
               </button>
             </div>
             <div

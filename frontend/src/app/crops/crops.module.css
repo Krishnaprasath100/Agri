@@ -276,9 +276,8 @@
   letter-spacing: 0.04em;
   color: #557262;
   margin-bottom: 2px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
+  line-height: 1.25;
 }
 
 .keyDateValue {
@@ -373,8 +372,8 @@
 
   .controlsGroup {
     width: 100%;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 8px;
   }
 
@@ -384,6 +383,9 @@
 
   .sortGroup {
     width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
 
   .sortLabel {
@@ -393,7 +395,10 @@
   .sortPickerWrapper {
     flex: 1;
     min-width: 0;
-    width: auto;
+  }
+
+  .sortOrderBtn {
+    flex-shrink: 0;
   }
 
   .cropsGrid {

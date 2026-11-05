@@ -143,18 +143,14 @@ export function ChoicePicker({
         <span className="choice-picker-label">{selected?.label || value || placeholder}</span>
         <span
           className="choice-picker-arrow-btn"
-          aria-label={open ? 'Scroll up options' : 'Display options'}
+          aria-hidden="true"
           style={{
             display: 'inline-flex',
             alignItems: 'center',
             justifyContent: 'center',
             padding: '4px',
             marginRight: '-4px',
-            cursor: 'pointer',
-          }}
-          onClick={(e) => {
-            e.stopPropagation();
-            setOpen((current) => !current);
+            pointerEvents: 'none',
           }}
         >
           <ChevronDown

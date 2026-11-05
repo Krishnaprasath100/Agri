@@ -225,18 +225,18 @@
 .detailsFilterBtn {
   display: inline-flex;
   align-items: center;
-  gap: 5.5px;
+  gap: 7px;
   background: #ffffff;
-  color: #0f2a1d;
-  border: 1.5px solid #cbdcd1;
-  border-radius: 7px;
-  padding: 4px 9px;
-  font-size: 12px;
-  font-weight: 650;
+  color: #1b4332;
+  border: 1.5px solid #2d6a4f;
+  border-radius: 8px;
+  padding: 6px 13px;
+  font-size: 13px;
+  font-weight: 700;
   letter-spacing: 0.01em;
   cursor: pointer;
   transition: all 0.16s ease;
-  box-shadow: 0 1px 2px rgba(12, 43, 29, 0.05);
+  box-shadow: 0 1px 3px rgba(12, 43, 29, 0.08);
   line-height: 1.2;
   user-select: none;
 }
