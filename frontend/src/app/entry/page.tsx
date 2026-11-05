@@ -240,7 +240,7 @@ export default function EntryPage() {
   };
 
   return (
-    <AppShell>
+    <AppShell cornerMenuOnlyOnMobile>
       <div className="page-header">
         <div>
           <h1 className="page-title">{kind === 'expense' ? t('New Expense Entry') : t('New Income Entry')}</h1>

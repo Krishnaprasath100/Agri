@@ -8,11 +8,13 @@ import { TamilKeyboard } from '@/components/keyboard/TamilKeyboard';
 interface AppShellProps {
   children: React.ReactNode;
   hideTopNavOnMobile?: boolean;
+  cornerMenuOnlyOnMobile?: boolean;
 }
 
 export const AppShell: React.FC<AppShellProps> = ({
   children,
   hideTopNavOnMobile = false,
+  cornerMenuOnlyOnMobile = false,
 }) => {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [isMobileScreen, setIsMobileScreen] = useState(false);
@@ -31,7 +33,11 @@ export const AppShell: React.FC<AppShellProps> = ({
   return (
     <div className="app-container">
       <Sidebar isOpen={mobileSidebarOpen} onClose={() => setMobileSidebarOpen(false)} />
-      <div className={`main-content${hideTopNavOnMobile ? ' hide-topnav-mobile' : ''}`}>
+      <div
+        className={`main-content${
+          hideTopNavOnMobile ? ' hide-topnav-mobile' : ''
+        }${cornerMenuOnlyOnMobile ? ' corner-menu-only' : ''}`}
+      >
         <TopNav onToggleSidebar={() => setMobileSidebarOpen(!mobileSidebarOpen)} />
         <main className="page-body">{children}</main>
         {isMobileScreen && <TamilKeyboard />}

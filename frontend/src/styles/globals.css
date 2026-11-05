@@ -696,6 +696,17 @@ svg {
   font-size: 0.88rem;
 }
 
+@keyframes menuSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .choice-picker-menu {
   position: absolute;
   top: calc(100% + 4px);
@@ -704,12 +715,24 @@ svg {
   max-height: min(18rem, 42dvh);
   overflow-y: auto;
   overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  scroll-behavior: smooth;
   padding: 6px;
   border: 1.5px solid #8ea998;
   border-radius: var(--radius-md);
   background: #ffffff !important;
   box-shadow: 0 10px 30px rgba(12, 43, 29, 0.22);
   z-index: 1000;
+  animation: menuSlideDown 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.choice-picker-options-list {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  scroll-behavior: smooth;
 }
 
 .choice-picker-group {
@@ -1219,6 +1242,40 @@ input::-ms-clear {
   }
 
   .main-content.hide-topnav-mobile {
+    padding-top: var(--safe-top, 0px) !important;
+  }
+
+  /* Corner Menu Only on Mobile (New Entry page): hide full upper bar, keep only the menu button in the corner */
+  .main-content.corner-menu-only .app-topnav {
+    background: transparent !important;
+    border-bottom: none !important;
+    box-shadow: none !important;
+    padding: 10px 14px 2px !important;
+    min-height: auto !important;
+    height: auto !important;
+    justify-content: flex-start !important;
+  }
+
+  .main-content.corner-menu-only .app-topnav-user-info,
+  .main-content.corner-menu-only .app-topnav-actions {
+    display: none !important;
+  }
+
+  .main-content.corner-menu-only .mobile-toggle-btn {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: #ffffff !important;
+    border: 1.5px solid #d4dfd8 !important;
+    border-radius: 10px !important;
+    box-shadow: 0 1px 3px rgba(12, 43, 29, 0.08) !important;
+    color: #1b4332 !important;
+    cursor: pointer;
+  }
+
+  .main-content.corner-menu-only {
     padding-top: var(--safe-top, 0px) !important;
   }
 

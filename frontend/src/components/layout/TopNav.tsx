@@ -65,7 +65,7 @@ export const TopNav: React.FC<TopNavProps> = ({ onToggleSidebar }) => {
   return (
     <>
       <header className="app-topnav">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+        <div className="app-topnav-left" style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <button
             onClick={onToggleSidebar}
             style={{
@@ -82,7 +82,7 @@ export const TopNav: React.FC<TopNavProps> = ({ onToggleSidebar }) => {
             <Menu size={22} />
           </button>
 
-          <div>
+          <div className="app-topnav-user-info">
             <div suppressHydrationWarning style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--primary-900)' }}>
               {mounted && user?.fullName ? user.fullName : 'AgriTrack Farm Suite'}
             </div>
@@ -101,7 +101,7 @@ export const TopNav: React.FC<TopNavProps> = ({ onToggleSidebar }) => {
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div className="app-topnav-actions" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <button
             type="button"
             onClick={() => setLanguage(language === 'en' ? 'ta' : 'en')}

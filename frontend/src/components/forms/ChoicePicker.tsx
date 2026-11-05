@@ -141,14 +141,31 @@ export function ChoicePicker({
         onClick={() => setOpen((current) => !current)}
       >
         <span className="choice-picker-label">{selected?.label || value || placeholder}</span>
-        <ChevronDown
-          size={18}
-          aria-hidden="true"
+        <span
+          className="choice-picker-arrow-btn"
+          aria-label={open ? 'Scroll up options' : 'Display options'}
           style={{
-            transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
-            transition: 'transform 0.2s ease',
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '4px',
+            marginRight: '-4px',
+            cursor: 'pointer',
           }}
-        />
+          onClick={(e) => {
+            e.stopPropagation();
+            setOpen((current) => !current);
+          }}
+        >
+          <ChevronDown
+            size={18}
+            aria-hidden="true"
+            style={{
+              transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
+              transition: 'transform 0.22s cubic-bezier(0.16, 1, 0.3, 1)',
+            }}
+          />
+        </span>
       </button>
 
       {open && (
