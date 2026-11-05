@@ -848,7 +848,7 @@ export default function LedgerPage() {
                   <DateField
                     value={draftDate}
                     onChange={(e) => setDraftDate(e.target.value)}
-                    placeholder="All Dates (dd-mm-yyyy)"
+                    placeholder="dd-mm-yyyy"
                   />
                   <div style={{ fontSize: '0.74rem', color: '#64748b', marginTop: 4 }}>
                     Choose a date to view entries for that specific day, or leave blank for all dates.

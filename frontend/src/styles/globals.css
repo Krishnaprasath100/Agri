@@ -906,6 +906,23 @@ svg {
   color: inherit;
 }
 
+/* Hide native browser calendar picker indicator so only one custom calendar icon displays */
+.date-field-input::-webkit-calendar-picker-indicator {
+  display: none !important;
+  -webkit-appearance: none;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  cursor: pointer;
+  pointer-events: none;
+}
+
+.date-field-input::-webkit-inner-spin-button,
+.date-field-input::-webkit-clear-button {
+  display: none !important;
+  -webkit-appearance: none;
+}
+
 .date-field-button {
   position: absolute;
   right: 8px;
