@@ -188,6 +188,12 @@ svg {
   transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* Mobile upper bar toggle is strictly hidden on desktop & tablet (website) */
+.mobile-upperbar-closed-dock,
+.mobile-upperbar-toggle-btn {
+  display: none !important;
+}
+
 /* Desktop page body */
 .page-body {
   padding: var(--space-8) var(--space-8) var(--space-10);
@@ -1245,38 +1251,92 @@ input::-ms-clear {
     padding-top: var(--safe-top, 0px) !important;
   }
 
-  /* Corner Menu Only on Mobile (New Entry page): hide full upper bar, keep only the menu button in the corner */
-  .main-content.corner-menu-only .app-topnav {
-    background: transparent !important;
-    border-bottom: none !important;
-    box-shadow: none !important;
-    padding: 10px 14px 2px !important;
-    min-height: auto !important;
-    height: auto !important;
-    justify-content: flex-start !important;
+  /* Three-Arrow Mobile Upper Bar Toggle (-> open, <- close) */
+  /* ONLY for mobile app / phones (≤ 767px) */
+  .mobile-upperbar-closed-dock {
+    position: fixed;
+    top: max(10px, var(--safe-top, 0px));
+    left: max(12px, var(--safe-left, 0px));
+    z-index: 95;
+    display: inline-flex !important;
+    align-items: center;
+    gap: 6px;
+    background: #ffffff;
+    padding: 4px 6px 4px 8px;
+    border-radius: 12px;
+    border: 1.5px solid #c8dcd0;
+    box-shadow: 0 4px 14px rgba(12, 43, 29, 0.12);
   }
 
-  .main-content.corner-menu-only .app-topnav-user-info,
-  .main-content.corner-menu-only .app-topnav-actions {
-    display: none !important;
-  }
-
-  .main-content.corner-menu-only .mobile-toggle-btn {
+  .mobile-dock-menu-btn {
     display: inline-flex !important;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
-    background: #ffffff !important;
-    border: 1.5px solid #d4dfd8 !important;
-    border-radius: 10px !important;
-    box-shadow: 0 1px 3px rgba(12, 43, 29, 0.08) !important;
-    color: #1b4332 !important;
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border: none;
+    color: #1b4332;
     cursor: pointer;
+    border-radius: 6px;
+    padding: 0;
   }
 
-  .main-content.corner-menu-only {
-    padding-top: var(--safe-top, 0px) !important;
+  .mobile-dock-divider {
+    width: 1px;
+    height: 18px;
+    background: #d4dfd8;
+  }
+
+  .mobile-upperbar-toggle-btn {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    padding: 0 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: transform 0.12s ease, background 0.15s ease;
+  }
+
+  .mobile-upperbar-toggle-btn:active {
+    transform: scale(0.95);
+  }
+
+  .mobile-upperbar-toggle-btn.is-closed {
+    background: #1b4332;
+    color: #ffffff;
+    border: none;
+    box-shadow: 0 2px 6px rgba(27, 67, 50, 0.25);
+  }
+
+  .mobile-upperbar-toggle-btn.is-open {
+    background: #e8f5e9;
+    color: #1b4332;
+    border: 1.5px solid #a3d9bc;
+    height: 34px;
+    padding: 0 8px;
+    margin-right: 2px;
+  }
+
+  .three-arrow-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+
+  .main-content.mobile-upperbar-closed {
+    padding-top: max(56px, calc(var(--safe-top, 0px) + 56px)) !important;
+  }
+
+  .app-topnav.is-mobile-collapsed {
+    display: none !important;
+  }
+
+  .app-topnav:not(.is-mobile-collapsed) {
+    animation: menuSlideDown 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   /* Keep choice picker menus visible in the middle area above the bottom keyboard */

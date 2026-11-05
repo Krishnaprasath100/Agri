@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { Sidebar } from './Sidebar';
 import { TopNav } from './TopNav';
 import { TamilKeyboard } from '@/components/keyboard/TamilKeyboard';
@@ -16,8 +17,10 @@ export const AppShell: React.FC<AppShellProps> = ({
   hideTopNavOnMobile = false,
   cornerMenuOnlyOnMobile = false,
 }) => {
+  const pathname = usePathname();
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [isMobileScreen, setIsMobileScreen] = useState(false);
+  const [mobileUpperBarOpen, setMobileUpperBarOpen] = useState(false);
 
   // Strictly enable keyboard and mobile-specific controls only on mobile app / phones (<= 767px)
   // Desktop and Tab view (website) are completely excluded.
@@ -30,15 +33,32 @@ export const AppShell: React.FC<AppShellProps> = ({
     return () => window.removeEventListener('resize', check);
   }, []);
 
+  // On mobile, /entry or cornerMenuOnlyOnMobile starts with upper bar hidden by default
+  // so data entry has maximum space. Other pages show upper bar by default.
+  useEffect(() => {
+    if (cornerMenuOnlyOnMobile || pathname === '/entry') {
+      setMobileUpperBarOpen(false);
+    } else {
+      setMobileUpperBarOpen(true);
+    }
+  }, [pathname, cornerMenuOnlyOnMobile]);
+
+  const isUpperBarClosed = isMobileScreen && !mobileUpperBarOpen;
+
   return (
     <div className="app-container">
       <Sidebar isOpen={mobileSidebarOpen} onClose={() => setMobileSidebarOpen(false)} />
       <div
         className={`main-content${
           hideTopNavOnMobile ? ' hide-topnav-mobile' : ''
-        }${cornerMenuOnlyOnMobile ? ' corner-menu-only' : ''}`}
+        }${isUpperBarClosed ? ' mobile-upperbar-closed' : ''}`}
       >
-        <TopNav onToggleSidebar={() => setMobileSidebarOpen(!mobileSidebarOpen)} />
+        <TopNav
+          onToggleSidebar={() => setMobileSidebarOpen(!mobileSidebarOpen)}
+          isMobileScreen={isMobileScreen}
+          mobileUpperBarOpen={mobileUpperBarOpen}
+          onToggleUpperBar={setMobileUpperBarOpen}
+        />
         <main className="page-body">{children}</main>
         {isMobileScreen && <TamilKeyboard />}
       </div>

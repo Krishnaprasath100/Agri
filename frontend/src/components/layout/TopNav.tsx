@@ -13,13 +13,23 @@ import {
   LogOut,
   X,
   AlertTriangle,
+  ChevronRight,
+  ChevronLeft,
 } from 'lucide-react';
 
 interface TopNavProps {
   onToggleSidebar?: () => void;
+  isMobileScreen?: boolean;
+  mobileUpperBarOpen?: boolean;
+  onToggleUpperBar?: (open: boolean) => void;
 }
 
-export const TopNav: React.FC<TopNavProps> = ({ onToggleSidebar }) => {
+export const TopNav: React.FC<TopNavProps> = ({
+  onToggleSidebar,
+  isMobileScreen = false,
+  mobileUpperBarOpen = true,
+  onToggleUpperBar,
+}) => {
   const router = useRouter();
   const { user, role, logout } = useAuth();
   const { language, setLanguage } = useLanguage();
@@ -64,8 +74,54 @@ export const TopNav: React.FC<TopNavProps> = ({ onToggleSidebar }) => {
 
   return (
     <>
-      <header className="app-topnav">
-        <div className="app-topnav-left" style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+      {/* Three-arrow toggle button when upper bar is hidden on mobile (->) */}
+      {isMobileScreen && !mobileUpperBarOpen && (
+        <div className="mobile-upperbar-closed-dock">
+          <button
+            type="button"
+            onClick={onToggleSidebar}
+            className="mobile-dock-menu-btn"
+            aria-label="Open Navigation Menu"
+            title="Menu"
+          >
+            <Menu size={20} />
+          </button>
+          <div className="mobile-dock-divider" />
+          <button
+            type="button"
+            className="mobile-upperbar-toggle-btn is-closed"
+            onClick={() => onToggleUpperBar?.(true)}
+            aria-label="Display upper bar (->)"
+            title="Display upper bar (->)"
+          >
+            <span className="three-arrow-icon" aria-hidden="true">
+              <ChevronRight size={15} strokeWidth={2.8} />
+              <ChevronRight size={15} strokeWidth={2.8} style={{ marginLeft: -9 }} />
+              <ChevronRight size={15} strokeWidth={2.8} style={{ marginLeft: -9 }} />
+            </span>
+          </button>
+        </div>
+      )}
+
+      <header className={`app-topnav${isMobileScreen && !mobileUpperBarOpen ? ' is-mobile-collapsed' : ''}`}>
+        <div className="app-topnav-left" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          {/* Three-arrow close button when upper bar is displayed on mobile (<-) */}
+          {isMobileScreen && mobileUpperBarOpen && (
+            <button
+              type="button"
+              className="mobile-upperbar-toggle-btn is-open"
+              onClick={() => onToggleUpperBar?.(false)}
+              aria-label="Close upper bar (<-)"
+              title="Close upper bar (<-)"
+            >
+              <span className="three-arrow-icon" aria-hidden="true">
+                <ChevronLeft size={15} strokeWidth={2.8} />
+                <ChevronLeft size={15} strokeWidth={2.8} style={{ marginLeft: -9 }} />
+                <ChevronLeft size={15} strokeWidth={2.8} style={{ marginLeft: -9 }} />
+              </span>
+            </button>
+          )}
+
           <button
             onClick={onToggleSidebar}
             style={{
