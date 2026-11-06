@@ -77,7 +77,7 @@ function formatDisplayDate(dateStr: string): string {
       const year = d.getFullYear();
       return `${day}.${month}.${year}`;
     }
-  } catch {}
+  } catch { }
   return dateStr;
 }
 
@@ -111,7 +111,7 @@ function getMonthYear(dateStr: string): string {
     if (!isNaN(d.getTime())) {
       return `${MONTH_NAMES[d.getMonth()]} ${d.getFullYear()}`;
     }
-  } catch {}
+  } catch { }
   return '';
 }
 
@@ -498,9 +498,8 @@ export default function LedgerPage() {
               <span className={styles.detailsTitle}>{t('Details')}</span>
               <button
                 type="button"
-                className={`${styles.detailsFilterBtn}${
-                  activeFilterCount > 0 ? ` ${styles.detailsFilterBtnActive}` : ''
-                }`}
+                className={`${styles.detailsFilterBtn}${activeFilterCount > 0 ? ` ${styles.detailsFilterBtnActive}` : ''
+                  }`}
                 onClick={() => {
                   setDraftMonth(selectedMonth);
                   setDraftCrop(selectedCrop);
