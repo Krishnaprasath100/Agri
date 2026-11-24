@@ -90,26 +90,26 @@ function getIsoDate(dateStr: string): string {
   return dateStr.split('T')[0];
 }
 
-function getMonthYear(dateStr: string): string {
+function getMonthName(dateStr: string): string {
   if (!dateStr) return '';
   try {
     if (/^\d{2}\.\d{2}\.\d{4}$/.test(dateStr)) {
       const parts = dateStr.split('.');
       const monthIdx = parseInt(parts[1], 10) - 1;
       if (monthIdx >= 0 && monthIdx < 12) {
-        return `${MONTH_NAMES[monthIdx]} ${parts[2]}`;
+        return MONTH_NAMES[monthIdx];
       }
     }
     const parts = dateStr.split('T')[0].split('-');
     if (parts.length === 3) {
       const monthIdx = parseInt(parts[1], 10) - 1;
       if (monthIdx >= 0 && monthIdx < 12) {
-        return `${MONTH_NAMES[monthIdx]} ${parts[0]}`;
+        return MONTH_NAMES[monthIdx];
       }
     }
     const d = new Date(dateStr);
     if (!isNaN(d.getTime())) {
-      return `${MONTH_NAMES[d.getMonth()]} ${d.getFullYear()}`;
+      return MONTH_NAMES[d.getMonth()];
     }
   } catch { }
   return '';
@@ -211,38 +211,10 @@ export default function LedgerPage() {
     loadLedgerData();
   }, [user]);
 
-  // Compute month choices: All Months + all 12 calendar months
+  // Compute month choices: All Months + all 12 calendar months (display only months without year)
   const monthOptions = useMemo(() => {
-    const currentYear = new Date().getFullYear() || 2026;
-    const years = new Set<number>([2026, currentYear]);
-
-    rows.forEach((r) => {
-      if (r.date) {
-        if (/^\d{2}\.\d{2}\.\d{4}$/.test(r.date)) {
-          const parts = r.date.split('.');
-          const y = parseInt(parts[2], 10);
-          if (!isNaN(y)) years.add(y);
-        } else {
-          const parts = r.date.split('T')[0].split('-');
-          if (parts.length === 3) {
-            const y = parseInt(parts[0], 10);
-            if (!isNaN(y)) years.add(y);
-          }
-        }
-      }
-    });
-
-    const months: string[] = ['All Months'];
-
-    const sortedYears = Array.from(years).sort((a, b) => b - a);
-    sortedYears.forEach((year) => {
-      MONTH_NAMES.forEach((m) => {
-        months.push(`${m} ${year}`);
-      });
-    });
-
-    return months;
-  }, [rows]);
+    return ['All Months', ...MONTH_NAMES];
+  }, []);
 
   // Compute crop choices
   const cropOptions = useMemo(() => {
@@ -261,7 +233,7 @@ export default function LedgerPage() {
     return rows.filter((row) => {
       // Month filter
       if (selectedMonth && selectedMonth !== 'All Months') {
-        const rowMonth = getMonthYear(row.date);
+        const rowMonth = getMonthName(row.date);
         if (rowMonth !== selectedMonth) {
           return false;
         }
