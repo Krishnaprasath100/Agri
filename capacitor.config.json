@@ -15,7 +15,7 @@
   },
   "ios": {
     "contentInset": "always",
-    "backgroundColor": "#0c2b1d",
+    "backgroundColor": "#ffffff",
     "preferredContentMode": "mobile"
   }
 }

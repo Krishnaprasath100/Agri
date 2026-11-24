@@ -4,8 +4,8 @@
   "description": "Complete farm management suite for tracking crop cycles, farming expenses, agricultural income, net profit, and historical records.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0c2b1d",
-  "theme_color": "#1b4332",
+  "background_color": "#ffffff",
+  "theme_color": "#0a7dda",
   "orientation": "portrait-primary",
   "icons": [
     {

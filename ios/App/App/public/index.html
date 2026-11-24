@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta name="theme-color" content="#1b4332" />
+  <meta name="theme-color" content="#0a7dda" />
   <title>AgriTrack</title>
   <style>
     * {
@@ -12,8 +12,8 @@
       padding: 0;
     }
     body {
-      background: radial-gradient(circle at 50% 40%, #154e35 0%, #0c2b1d 60%, #06170f 100%);
-      color: #ffffff;
+      background: #ffffff;
+      color: #0f172a;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       display: flex;
       flex-direction: column;
@@ -25,33 +25,34 @@
       padding: 24px;
     }
     .logo-container {
-      width: 88px;
-      height: 88px;
-      background: linear-gradient(135deg, #1b6343 0%, #0c2b1d 100%);
-      border: 2px solid rgba(82, 183, 136, 0.55);
-      border-radius: 24px;
+      width: 96px;
+      height: 96px;
+      background: #eff6ff;
+      border: 2px solid #bfdbfe;
+      border-radius: 26px;
       display: flex;
       align-items: center;
       justify-content: center;
       margin-bottom: 20px;
-      box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.6), 0 0 28px rgba(82, 183, 136, 0.35);
+      box-shadow: 0 14px 30px -4px rgba(10, 125, 218, 0.18);
     }
     .logo-icon {
-      width: 50px;
-      height: 50px;
+      width: 60px;
+      height: 60px;
     }
     .title {
       font-size: 32px;
       font-weight: 800;
       letter-spacing: -0.5px;
       margin-bottom: 6px;
+      color: #0f172a;
     }
     .title .track {
-      color: #52b788;
+      color: #0a7dda;
     }
     .subtitle {
       font-size: 14px;
-      color: #b7e4c7;
+      color: #64748b;
       font-weight: 500;
       margin-bottom: 24px;
       letter-spacing: 0.5px;
@@ -59,7 +60,7 @@
     .progress-bar {
       width: 120px;
       height: 3.5px;
-      background: rgba(255, 255, 255, 0.15);
+      background: #e2e8f0;
       border-radius: 99px;
       overflow: hidden;
       margin: 0 auto;
@@ -67,7 +68,7 @@
     .progress-fill {
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, #2d6a4f 0%, #52b788 100%);
+      background: linear-gradient(90deg, #0284c7 0%, #0a7dda 100%);
       animation: fill 1.2s infinite ease-in-out;
       border-radius: 99px;
     }
@@ -79,13 +80,9 @@
 </head>
 <body>
   <div class="logo-container">
-    <svg class="logo-icon" viewBox="0 0 512 512" fill="none">
-      <g transform="translate(256, 266)" stroke="#FFFFFF" stroke-width="24" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="0" y1="95" x2="0" y2="-20" />
-        <line x1="-55" y1="95" x2="55" y2="95" />
-        <path d="M0,-20 C0,-95 -75,-125 -75,-125 C-75,-125 -50,-45 0,-20" />
-        <path d="M0,-20 C0,-95 75,-125 75,-125 C75,-125 50,-45 0,-20" />
-      </g>
+    <svg class="logo-icon" viewBox="0 0 1024 1024" fill="none">
+      <path d="M 147,289 L 163,313 L 180,352 L 198,416 L 216,465 L 237,503 L 267,538 L 296,560 L 329,576 L 370,587 L 412,591 L 411,567 L 405,530 L 386,473 L 372,446 L 356,422 L 334,397 L 309,376 L 311,375 L 349,403 L 372,427 L 395,459 L 411,489 L 423,518 L 436,564 L 438,579 L 437,538 L 441,499 L 448,466 L 460,429 L 451,405 L 440,385 L 413,353 L 385,332 L 355,316 L 327,305 L 298,297 L 258,290 L 224,287 Z" fill="#0a7dda" fill-rule="evenodd"/>
+      <path d="M 876,287 L 839,283 L 765,284 L 721,289 L 667,300 L 617,317 L 577,337 L 544,360 L 519,384 L 499,411 L 486,435 L 468,491 L 463,530 L 463,577 L 473,639 L 455,740 L 485,738 L 518,591 L 536,545 L 561,499 L 589,461 L 618,431 L 669,394 L 675,393 L 645,416 L 612,451 L 592,479 L 571,518 L 559,547 L 545,596 L 537,643 L 536,672 L 592,667 L 648,651 L 702,621 L 737,589 L 767,549 L 788,509 L 809,452 L 839,351 L 860,308 Z" fill="#0a7dda" fill-rule="evenodd"/>
     </svg>
   </div>
   <h1 class="title">Agri<span class="track">Track</span></h1>
