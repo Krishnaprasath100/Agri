@@ -492,12 +492,14 @@ export default function LedgerPage() {
             <div
               className={`${styles.tableHeaderCol} ${styles.tableHeaderColBorder}`}
             >
-              {t('Income')} ₹
+              <span>{t('Income')}</span>
+              <span>₹</span>
             </div>
             <div
               className={`${styles.tableHeaderCol} ${styles.tableHeaderColBorder}`}
             >
-              {t('Expenses')} ₹
+              <span>{t('Expenses')}</span>
+              <span>₹</span>
             </div>
           </div>
 
