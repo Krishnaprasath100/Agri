@@ -214,7 +214,7 @@ export default function ReportsPage() {
       <div className="card">
         <div className="card-header">
           <h2 className="card-title">
-            <FileText size={20} color="#2d6a4f" /> Consolidated Profit & Loss Summary
+            <FileText size={20} color="#2563eb" /> Consolidated Profit & Loss Summary
           </h2>
           <span style={{ fontSize: '0.82rem', color: 'var(--text-dim)' }}>
             Total Cycles Analyzed: {cropProfits.length}

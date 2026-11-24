@@ -223,18 +223,18 @@ export default function ProfilePage() {
                   width: '40px',
                   height: '40px',
                   borderRadius: '12px',
-                  background: 'linear-gradient(135deg, #2d6a4f, #1b4332)',
+                  background: 'linear-gradient(135deg, #2563eb, #1e40af)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   color: '#ffffff',
-                  boxShadow: '0 4px 12px rgba(45, 106, 79, 0.25)',
+                  boxShadow: '0 4px 12px rgba(37, 99, 235, 0.25)',
                 }}
               >
                 <User size={20} />
               </div>
               <div>
-                <h2 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#0d2818', margin: 0 }}>
+                <h2 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#0f172a', margin: 0 }}>
                   Personal Details
                 </h2>
                 <span style={{ fontSize: '0.82rem', color: '#64748b' }}>
@@ -289,7 +289,7 @@ export default function ProfilePage() {
               {/* Name */}
               <div style={{ marginBottom: '18px' }}>
                 <label style={labelStyle}>
-                  <User size={15} color="#2d6a4f" /> Name *
+                  <User size={15} color="#2563eb" /> Name *
                 </label>
                 <input
                   type="text"
@@ -305,7 +305,7 @@ export default function ProfilePage() {
               <div style={{ marginBottom: '18px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
                   <label style={{ ...labelStyle, marginBottom: 0 }}>
-                    <Phone size={15} color="#2d6a4f" /> Mobile Number
+                    <Phone size={15} color="#2563eb" /> Mobile Number
                   </label>
                   {user?.phoneVerified ? (
                     <span
@@ -372,7 +372,7 @@ export default function ProfilePage() {
               {/* Mail ID */}
               <div style={{ marginBottom: '22px' }}>
                 <label style={labelStyle}>
-                  <Mail size={15} color="#2d6a4f" /> Mail ID (Optional)
+                  <Mail size={15} color="#2563eb" /> Mail ID (Optional)
                 </label>
                 <input
                   type="email"
@@ -393,13 +393,13 @@ export default function ProfilePage() {
                     gap: '8px',
                     padding: '11px 24px',
                     borderRadius: '10px',
-                    background: 'linear-gradient(135deg, #2d6a4f, #1b4332)',
+                    background: 'linear-gradient(135deg, #2563eb, #1e40af)',
                     border: 'none',
                     color: '#ffffff',
                     fontWeight: 700,
                     fontSize: '0.9rem',
                     cursor: profileLoading ? 'not-allowed' : 'pointer',
-                    boxShadow: '0 4px 14px rgba(45, 106, 79, 0.3)',
+                    boxShadow: '0 4px 14px rgba(37, 99, 235, 0.3)',
                     transition: 'all 0.2s ease',
                   }}
                 >
@@ -674,9 +674,9 @@ export default function ProfilePage() {
                 width: '72px',
                 height: '72px',
                 borderRadius: '20px',
-                background: 'linear-gradient(135deg, #2d6a4f, #1b4332)',
-                border: '3px solid #86efac',
-                boxShadow: '0 6px 20px rgba(45, 106, 79, 0.35)',
+                background: 'linear-gradient(135deg, #2563eb, #1e40af)',
+                border: '3px solid #93c5fd',
+                boxShadow: '0 6px 20px rgba(37, 99, 235, 0.35)',
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -736,7 +736,7 @@ export default function ProfilePage() {
                 gap: '8px',
               }}
             >
-              <ShieldCheck size={20} color="#2d6a4f" /> Account Status
+              <ShieldCheck size={20} color="#2563eb" /> Account Status
             </h3>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', fontSize: '0.88rem' }}>

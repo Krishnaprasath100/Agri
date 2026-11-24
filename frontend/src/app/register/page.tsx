@@ -9,9 +9,9 @@ import {
   EyeOff,
   Loader2,
   LogIn,
-  Sprout,
   UserPlus,
 } from 'lucide-react';
+import { AppLogoIcon } from '@/components/ui/AppLogo';
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
 import styles from '@/components/auth/AuthPage.module.css';
@@ -131,7 +131,7 @@ export default function RegisterPage() {
         {/* Brand Header */}
         <Link href="/" className={styles.brand}>
           <span className={styles.brandMark}>
-            <Sprout size={29} />
+            <AppLogoIcon size={32} />
           </span>
           AgriTrack
         </Link>

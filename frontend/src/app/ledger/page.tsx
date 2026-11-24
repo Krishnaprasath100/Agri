@@ -535,7 +535,7 @@ export default function LedgerPage() {
               <RefreshCw
                 size={22}
                 className="animate-spin"
-                style={{ color: '#1b6343', marginBottom: 8, display: 'inline-block' }}
+                style={{ color: '#2563eb', marginBottom: 8, display: 'inline-block' }}
               />
               <div>Loading records...</div>
             </div>
@@ -775,7 +775,7 @@ export default function LedgerPage() {
                   className={styles.modalTitle}
                   style={{ display: 'flex', alignItems: 'center', gap: 8 }}
                 >
-                  <Filter size={18} style={{ color: '#1b6343' }} />
+                  <Filter size={18} style={{ color: '#2563eb' }} />
                   <span>Filter Ledger</span>
                 </div>
                 <button

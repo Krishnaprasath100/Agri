@@ -493,7 +493,7 @@ export function ExpenseModal({
                   top: '50%',
                   transform: 'translateY(-50%)',
                   pointerEvents: 'none',
-                  color: '#2d6a4f',
+                  color: '#2563eb',
                   display: 'flex',
                   alignItems: 'center',
                 }}

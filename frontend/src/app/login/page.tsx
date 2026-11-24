@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { AlertCircle, CheckCircle2, ArrowRight, Eye, EyeOff, LogIn, Sprout, UserPlus } from 'lucide-react';
+import { AlertCircle, CheckCircle2, ArrowRight, Eye, EyeOff, LogIn, UserPlus } from 'lucide-react';
+import { AppLogoIcon } from '@/components/ui/AppLogo';
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
 import styles from '@/components/auth/AuthPage.module.css';
@@ -70,7 +71,7 @@ export default function LoginPage() {
     <main className={styles.page}>
       <section className={styles.card} aria-labelledby="login-title">
         <Link href="/" className={styles.brand}>
-          <span className={styles.brandMark}><Sprout size={29} /></span>
+          <span className={styles.brandMark}><AppLogoIcon size={32} /></span>
           AgriTrack
         </Link>
         <h2 id="login-title" className={styles.heading}>Welcome Back</h2>

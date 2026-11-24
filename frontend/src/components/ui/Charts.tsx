@@ -44,7 +44,7 @@ export const IncomeVsExpenseChart: React.FC<IncomeVsExpenseChartProps> = ({ inco
               style={{
                 height: '100%',
                 width: `${incomePct}%`,
-                background: 'linear-gradient(90deg, #52b788, #2d6a4f)',
+                background: 'linear-gradient(90deg, #38bdf8, #2563eb)',
                 borderRadius: '8px',
                 transition: 'width 0.5s ease',
               }}
@@ -116,9 +116,9 @@ export const ExpenseCategoryChart: React.FC<ExpenseCategoryChartProps> = ({ expe
     .sort((a, b) => b.amount - a.amount);
 
   const colors = [
-    '#2d6a4f',
-    '#52b788',
-    '#74c69d',
+    '#2563eb',
+    '#38bdf8',
+    '#60a5fa',
     '#d97706',
     '#3b82f6',
     '#8b5cf6',

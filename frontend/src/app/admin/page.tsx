@@ -326,7 +326,7 @@ export default function AdminDashboardPage() {
         <div className="card-header" style={{ flexWrap: 'wrap', gap: '12px' }}>
           <div>
             <h2 className="card-title">
-              <Users size={20} color="#2d6a4f" /> Registered Farmer Accounts
+              <Users size={20} color="#2563eb" /> Registered Farmer Accounts
             </h2>
             <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>
               Manage accounts and enforce authorization security

@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { Sprout, ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
+import { AppLogoIcon } from '@/components/ui/AppLogo';
 
 export default function NotFound() {
   return (
@@ -9,7 +10,7 @@ export default function NotFound() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#f7f9f6',
+        backgroundColor: '#f8fafc',
         padding: '24px',
         textAlign: 'center',
       }}
@@ -37,7 +38,7 @@ export default function NotFound() {
             margin: '0 auto 20px',
           }}
         >
-          <Sprout size={32} />
+          <AppLogoIcon size={36} />
         </div>
 
         <h1

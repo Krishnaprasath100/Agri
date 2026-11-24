@@ -52,26 +52,21 @@ export default function AppIntroPage() {
           <div className={styles.logoBadge}>
             <svg
               className={styles.sproutSvg}
-              viewBox="0 0 512 512"
+              viewBox="0 0 1024 1024"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <g
-                transform="translate(256, 266)"
-                stroke="#FFFFFF"
-                strokeWidth="24"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                {/* Vertical Stem */}
-                <line x1="0" y1="95" x2="0" y2="-20" />
-                {/* Ground Line */}
-                <line x1="-55" y1="95" x2="55" y2="95" />
-                {/* Left Leaf */}
-                <path d="M0,-20 C0,-95 -75,-125 -75,-125 C-75,-125 -50,-45 0,-20" />
-                {/* Right Leaf */}
-                <path d="M0,-20 C0,-95 75,-125 75,-125 C75,-125 50,-45 0,-20" />
-              </g>
+              {/* Blue Leaves App Logo */}
+              <path
+                d="M 147,289 L 163,313 L 180,352 L 198,416 L 216,465 L 237,503 L 267,538 L 296,560 L 329,576 L 370,587 L 412,591 L 411,567 L 405,530 L 386,473 L 372,446 L 356,422 L 334,397 L 309,376 L 311,375 L 349,403 L 372,427 L 395,459 L 411,489 L 423,518 L 436,564 L 438,579 L 437,538 L 441,499 L 448,466 L 460,429 L 451,405 L 440,385 L 413,353 L 385,332 L 355,316 L 327,305 L 298,297 L 258,290 L 224,287 Z"
+                fill="#0a7dda"
+                fillRule="evenodd"
+              />
+              <path
+                d="M 876,287 L 839,283 L 765,284 L 721,289 L 667,300 L 617,317 L 577,337 L 544,360 L 519,384 L 499,411 L 486,435 L 468,491 L 463,530 L 463,577 L 473,639 L 455,740 L 485,738 L 518,591 L 536,545 L 561,499 L 589,461 L 618,431 L 669,394 L 675,393 L 645,416 L 612,451 L 592,479 L 571,518 L 559,547 L 545,596 L 537,643 L 536,672 L 592,667 L 648,651 L 702,621 L 737,589 L 767,549 L 788,509 L 809,452 L 839,351 L 860,308 Z"
+                fill="#0a7dda"
+                fillRule="evenodd"
+              />
             </svg>
           </div>
         </div>

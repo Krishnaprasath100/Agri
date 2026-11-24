@@ -75,7 +75,7 @@ export const GrowthTimeline: React.FC<GrowthTimelineProps> = ({ crop }) => {
             background:
               remaining.isOverdue && crop.status !== 'Harvested'
                 ? 'linear-gradient(90deg, #f59e0b, #ef4444)'
-                : 'linear-gradient(90deg, #52b788, #2d6a4f)',
+                : 'linear-gradient(90deg, #38bdf8, #2563eb)',
             borderRadius: '999px',
             transition: 'width 0.4s ease',
           }}

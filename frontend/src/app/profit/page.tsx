@@ -214,7 +214,7 @@ export default function ProfitAnalysisPage() {
           className="card"
           style={{
             marginBottom: '28px',
-            background: 'linear-gradient(135deg, #1b4332 0%, #2d6a4f 100%)',
+            background: 'linear-gradient(135deg, #1e40af 0%, #2563eb 100%)',
             color: '#ffffff',
             display: 'flex',
             alignItems: 'center',
@@ -265,7 +265,7 @@ export default function ProfitAnalysisPage() {
       <div className="card" style={{ marginBottom: '28px' }}>
         <div className="card-header">
           <h2 className="card-title">
-            <BarChart2 size={20} color="#2d6a4f" /> Visual Income vs. Expense Comparison
+            <BarChart2 size={20} color="#2563eb" /> Visual Income vs. Expense Comparison
           </h2>
           <span style={{ fontSize: '0.82rem', color: 'var(--text-dim)' }}>
             Formula: Net Profit = Total Income − Total Expenses
@@ -279,7 +279,7 @@ export default function ProfitAnalysisPage() {
         <div className="card-header">
           <div>
             <h2 className="card-title">
-              <PieChart size={20} color="#2d6a4f" /> Crop-Wise Profit Analysis
+              <PieChart size={20} color="#2563eb" /> Crop-Wise Profit Analysis
             </h2>
             <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>
               Individual performance breakdown for each linked crop cycle

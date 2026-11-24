@@ -349,11 +349,11 @@ export default function ExpensesPage() {
                             alignItems: 'center',
                             gap: '5px',
                             fontSize: '0.86rem',
-                            color: '#1b4332',
+                            color: '#0f172a',
                             fontWeight: 600,
                           }}
                         >
-                          <Sprout size={14} color="#2d6a4f" />
+                          <Sprout size={14} color="#2563eb" />
                           {displayCrop}
                         </span>
                       </td>

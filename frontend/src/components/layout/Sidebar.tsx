@@ -109,15 +109,18 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                 width: '38px',
                 height: '38px',
                 borderRadius: '10px',
-                background: 'linear-gradient(135deg, #52b788, #2d6a4f)',
+                background: '#ffffff',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: '#ffffff',
-                boxShadow: '0 4px 12px rgba(82, 183, 136, 0.3)',
+                padding: '4px',
+                boxShadow: '0 4px 12px rgba(10, 125, 218, 0.35)',
               }}
             >
-              <Sprout size={22} />
+              <svg viewBox="0 0 1024 1024" fill="none" style={{ width: '28px', height: '28px' }}>
+                <path d="M 147,289 L 163,313 L 180,352 L 198,416 L 216,465 L 237,503 L 267,538 L 296,560 L 329,576 L 370,587 L 412,591 L 411,567 L 405,530 L 386,473 L 372,446 L 356,422 L 334,397 L 309,376 L 311,375 L 349,403 L 372,427 L 395,459 L 411,489 L 423,518 L 436,564 L 438,579 L 437,538 L 441,499 L 448,466 L 460,429 L 451,405 L 440,385 L 413,353 L 385,332 L 355,316 L 327,305 L 298,297 L 258,290 L 224,287 Z" fill="#0a7dda" fillRule="evenodd"/>
+                <path d="M 876,287 L 839,283 L 765,284 L 721,289 L 667,300 L 617,317 L 577,337 L 544,360 L 519,384 L 499,411 L 486,435 L 468,491 L 463,530 L 463,577 L 473,639 L 455,740 L 485,738 L 518,591 L 536,545 L 561,499 L 589,461 L 618,431 L 669,394 L 675,393 L 645,416 L 612,451 L 592,479 L 571,518 L 559,547 L 545,596 L 537,643 L 536,672 L 592,667 L 648,651 L 702,621 L 737,589 L 767,549 L 788,509 L 809,452 L 839,351 L 860,308 Z" fill="#0a7dda" fillRule="evenodd"/>
+              </svg>
             </div>
             <div>
               <div
@@ -131,7 +134,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
               >
                 AgriTrack
               </div>
-              <div style={{ fontSize: '0.72rem', color: '#95d5b2' }}>Smart Farm Suite</div>
+              <div style={{ fontSize: '0.72rem', color: '#93c5fd' }}>Smart Farm Suite</div>
             </div>
           </Link>
         </div>
@@ -177,12 +180,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                   fontSize: '0.88rem',
                   fontWeight: isActive ? 600 : 500,
                   color: isActive ? '#ffffff' : 'rgba(255, 255, 255, 0.72)',
-                  backgroundColor: isActive ? 'rgba(82, 183, 136, 0.22)' : 'transparent',
-                  border: isActive ? '1px solid rgba(82, 183, 136, 0.35)' : '1px solid transparent',
+                  backgroundColor: isActive ? 'rgba(37, 99, 235, 0.22)' : 'transparent',
+                  border: isActive ? '1px solid rgba(56, 189, 248, 0.35)' : '1px solid transparent',
                   transition: 'all 0.15s ease',
                 }}
               >
-                <Icon size={18} color={isActive ? '#74c69d' : 'rgba(255,255,255,0.6)'} />
+                <Icon size={18} color={isActive ? '#38bdf8' : 'rgba(255,255,255,0.6)'} />
                 <span>{item.label}</span>
               </Link>
             );
@@ -292,8 +295,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                   height: '36px',
                   minWidth: '36px',
                   borderRadius: '10px',
-                  background: 'linear-gradient(135deg, #2d6a4f, #1b4332)',
-                  border: '1px solid rgba(82, 183, 136, 0.35)',
+                  background: 'linear-gradient(135deg, #1d4ed8, #1e40af)',
+                  border: '1px solid rgba(147, 197, 253, 0.35)',
                   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.25)',
                   display: 'flex',
                   alignItems: 'center',
@@ -330,7 +333,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                   title={user?.email || ''}
                   style={{
                     fontSize: '0.72rem',
-                    color: '#8fa998',
+                    color: '#94a3b8',
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
@@ -390,7 +393,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           style={{
             position: 'fixed',
             inset: 0,
-            backgroundColor: 'rgba(12, 43, 29, 0.65)',
+            backgroundColor: 'rgba(15, 23, 42, 0.65)',
             backdropFilter: 'blur(4px)',
             WebkitBackdropFilter: 'blur(4px)',
             display: 'flex',

@@ -11,8 +11,8 @@ import {
   EyeOff,
   KeyRound,
   Loader2,
-  Sprout,
 } from 'lucide-react';
+import { AppLogoIcon } from '@/components/ui/AppLogo';
 import { useLanguage } from '@/context/LanguageContext';
 import styles from '@/components/auth/AuthPage.module.css';
 
@@ -87,7 +87,7 @@ export default function ForgotPasswordPage() {
         {/* Brand Header */}
         <Link href="/" className={styles.brand}>
           <span className={styles.brandMark}>
-            <Sprout size={29} />
+            <AppLogoIcon size={32} />
           </span>
           AgriTrack
         </Link>
@@ -98,13 +98,13 @@ export default function ForgotPasswordPage() {
               width: '54px',
               height: '54px',
               borderRadius: '16px',
-              background: '#ecfdf5',
-              color: '#047857',
+              background: '#eff6ff',
+              color: '#1d4ed8',
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
               marginBottom: '14px',
-              border: '1px solid #a7f3d0',
+              border: '1px solid #bfdbfe',
             }}
           >
             <KeyRound size={26} />
@@ -112,7 +112,7 @@ export default function ForgotPasswordPage() {
           <h1 id="forgot-title" className={styles.heading} style={{ marginBottom: '8px' }}>
             Forgot Password?
           </h1>
-          <p style={{ color: '#586d62', fontSize: '0.94rem', margin: 0, lineHeight: 1.5 }}>
+          <p style={{ color: '#475569', fontSize: '0.94rem', margin: 0, lineHeight: 1.5 }}>
             Enter your registered email address or mobile number to set a new password.
           </p>
         </div>
@@ -126,15 +126,15 @@ export default function ForgotPasswordPage() {
               gap: '10px',
               padding: '12px 14px',
               borderRadius: '10px',
-              backgroundColor: '#ecfdf5',
-              color: '#065f46',
-              border: '1px solid #a7f3d0',
+              backgroundColor: '#eff6ff',
+              color: '#1e40af',
+              border: '1px solid #bfdbfe',
               marginBottom: '18px',
               fontSize: '0.88rem',
               fontWeight: 500,
             }}
           >
-            <CheckCircle2 size={18} color="#059669" style={{ flexShrink: 0 }} />
+            <CheckCircle2 size={18} color="#2563eb" style={{ flexShrink: 0 }} />
             <span>{successMsg} Redirecting to sign in...</span>
           </div>
         )}
