@@ -265,6 +265,20 @@
   text-underline-offset: 3px;
 }
 
+.forgotLink {
+  font-size: 0.86rem;
+  color: #2563eb;
+  font-weight: 650;
+  text-decoration: none;
+  transition: color 150ms ease;
+}
+
+.forgotLink:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .footer a:hover {
   text-decoration: underline;
   text-underline-offset: 3px;

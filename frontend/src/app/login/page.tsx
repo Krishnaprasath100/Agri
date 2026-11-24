@@ -90,15 +90,15 @@ export default function LoginPage() {
               gap: '10px',
               padding: '12px 14px',
               borderRadius: '8px',
-              backgroundColor: '#ecfdf5',
-              color: '#065f46',
-              border: '1px solid #a7f3d0',
+              backgroundColor: '#eff6ff',
+              color: '#1e40af',
+              border: '1px solid #bfdbfe',
               marginBottom: '16px',
               fontSize: '0.88rem',
               fontWeight: 500,
             }}
           >
-            <CheckCircle2 size={18} color="#059669" style={{ flexShrink: 0 }} />
+            <CheckCircle2 size={18} color="#2563eb" style={{ flexShrink: 0 }} />
             <span>{successMsg}</span>
           </div>
         )}
@@ -119,12 +119,7 @@ export default function LoginPage() {
               <label className={styles.label} htmlFor="password" style={{ margin: 0 }}>Password</label>
               <Link
                 href="/forgot-password"
-                style={{
-                  fontSize: '0.85rem',
-                  color: '#1d5a42',
-                  fontWeight: 600,
-                  textDecoration: 'none',
-                }}
+                className={styles.forgotLink}
               >
                 Forgot Password?
               </Link>
