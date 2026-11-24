@@ -508,7 +508,7 @@ export const GeminiAiChat: React.FC = () => {
                 }}
                 title={autoSpeak ? 'Auto-Voice Enabled' : 'Auto-Voice Disabled'}
                 aria-label="Toggle Auto Voice"
-                style={{ color: autoSpeak ? '#16a34a' : '#64748b' }}
+                style={{ color: autoSpeak ? '#2563eb' : '#64748b' }}
               >
                 {autoSpeak ? <Volume2 size={15} /> : <VolumeX size={15} />}
               </button>
@@ -538,7 +538,7 @@ export const GeminiAiChat: React.FC = () => {
 
           {/* Welcome Alert / Info Notice */}
           <div className={styles.welcomeBanner}>
-            <Sparkles size={16} style={{ color: '#16a34a', flexShrink: 0, marginTop: 2 }} />
+            <Sparkles size={16} style={{ color: '#2563eb', flexShrink: 0, marginTop: 2 }} />
             <div className={styles.welcomeText}>
               {isTamilMode ? (
                 <>
@@ -606,7 +606,7 @@ export const GeminiAiChat: React.FC = () => {
                           {renderFormattedContent(msg.content)}
                           <div className={styles.messageActions}>
                             <div className={styles.sourceBadge}>
-                              <Sparkles size={11} style={{ color: '#16a34a' }} />
+                              <Sparkles size={11} style={{ color: '#2563eb' }} />
                               <span>
                                 {msg.source === 'gemini'
                                   ? 'Gemini 3.8 Flash'

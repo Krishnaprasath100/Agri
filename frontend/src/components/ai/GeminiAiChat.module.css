@@ -1,7 +1,7 @@
 /* ============================================================ */
 /* AGRITRACK GEMINI AI ASSISTANT STYLING                        */
-/* Themed with the AgriTrack App Logo Forest Green Palette       */
-/* (#0c2b1d, #1b4332, #1b6343, #2d6a4f, #52b788)                */
+/* Themed with Modern Royal Blue Palette                        */
+/* (#1e3a8a, #1e40af, #2563eb, #3b82f6, #93c5fd)                */
 /* Includes Draggable Trigger & Tamil/English Voice Features    */
 /* ============================================================ */
 
@@ -17,10 +17,10 @@
   right: 24px;
   width: 62px;
   height: 62px;
-  background: linear-gradient(135deg, #1b6343 0%, #0c2b1d 100%);
-  border: 1.5px solid rgba(82, 183, 136, 0.45);
+  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+  border: 1.5px solid rgba(147, 197, 253, 0.45);
   border-radius: 18px;
-  box-shadow: 0 10px 28px -3px rgba(12, 43, 29, 0.45), 0 3px 10px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 10px 28px -3px rgba(30, 64, 175, 0.45), 0 3px 10px rgba(0, 0, 0, 0.18);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -37,7 +37,7 @@
 
 .floatingTrigger:hover {
   transform: translateY(-3px) scale(1.04);
-  box-shadow: 0 14px 34px -3px rgba(12, 43, 29, 0.65), 0 5px 14px rgba(82, 183, 136, 0.32);
+  box-shadow: 0 14px 34px -3px rgba(30, 64, 175, 0.65), 0 5px 14px rgba(96, 165, 250, 0.35);
 }
 
 .floatingTrigger:active {
@@ -70,7 +70,7 @@
   background: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 20px;
-  box-shadow: 0 24px 60px -10px rgba(12, 43, 29, 0.22), 0 8px 24px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 24px 60px -10px rgba(30, 64, 175, 0.22), 0 8px 24px rgba(15, 23, 42, 0.08);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -114,13 +114,13 @@
 .headerLogoBadge {
   width: 38px;
   height: 38px;
-  background: linear-gradient(135deg, #1b6343 0%, #0c2b1d 100%);
+  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
   border-radius: 11px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #ffffff;
-  box-shadow: 0 4px 12px rgba(12, 43, 29, 0.28);
+  box-shadow: 0 4px 12px rgba(30, 64, 175, 0.28);
 }
 
 .headerTitles {
@@ -132,7 +132,7 @@
 .headerTitle {
   font-size: 15px;
   font-weight: 700;
-  color: #0c2b1d;
+  color: #1e3a8a;
   letter-spacing: -0.01em;
   margin: 0;
 }
@@ -140,7 +140,7 @@
 .headerSubtitle {
   font-size: 11.5px;
   font-weight: 600;
-  color: #1b6343;
+  color: #2563eb;
   display: flex;
   align-items: center;
   gap: 5px;
@@ -150,7 +150,7 @@
 .subtitleDot {
   width: 6px;
   height: 6px;
-  background: #52b788;
+  background: #3b82f6;
   border-radius: 50%;
   display: inline-block;
 }
@@ -177,17 +177,17 @@
 
 .actionButton:hover {
   background: #f8fafc;
-  color: #0c2b1d;
+  color: #1e40af;
   border-color: #cbd5e1;
 }
 
 /* Welcome Announcement Banner */
 .welcomeBanner {
-  background: #f0fdf4;
-  border-bottom: 1px solid #dcfce7;
+  background: #eff6ff;
+  border-bottom: 1px solid #dbeafe;
   padding: 10px 16px;
   font-size: 12.5px;
-  color: #14532d;
+  color: #1e40af;
   line-height: 1.45;
   display: flex;
   align-items: flex-start;
@@ -240,10 +240,10 @@
 }
 
 .suggestedCard:hover {
-  border-color: #86efac;
-  background: #f0fdf4;
+  border-color: #93c5fd;
+  background: #eff6ff;
   transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(22, 101, 52, 0.1);
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.1);
 }
 
 .suggestedCardLeft {
@@ -257,8 +257,8 @@
   font-size: 18px;
   width: 34px;
   height: 34px;
-  background: #f0fdf4;
-  border: 1px solid #dcfce7;
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
   border-radius: 9px;
   display: flex;
   align-items: center;
@@ -304,7 +304,7 @@
 }
 
 .userBubble {
-  background: linear-gradient(135deg, #1b6343 0%, #0c2b1d 100%);
+  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
   color: #ffffff;
   border-radius: 16px 16px 4px 16px;
   padding: 10px 14px;
@@ -312,7 +312,7 @@
   line-height: 1.45;
   max-width: 85%;
   word-break: break-word;
-  box-shadow: 0 4px 12px rgba(12, 43, 29, 0.25);
+  box-shadow: 0 4px 12px rgba(30, 64, 175, 0.25);
 }
 
 .messageRowAssistant {
@@ -324,7 +324,7 @@
 .assistantAvatar {
   width: 30px;
   height: 30px;
-  background: #0c2b1d;
+  background: #1e40af;
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -332,7 +332,7 @@
   color: #ffffff;
   flex-shrink: 0;
   margin-top: 2px;
-  box-shadow: 0 2px 6px rgba(12, 43, 29, 0.2);
+  box-shadow: 0 2px 6px rgba(30, 64, 175, 0.2);
 }
 
 .assistantBubble {
@@ -356,16 +356,16 @@
 }
 
 .assistantBubble strong {
-  color: #0c2b1d;
+  color: #1e3a8a;
   font-weight: 700;
 }
 
 /* Inline Button / Key Token Style */
 .buttonBadge {
   display: inline-block;
-  background: #ecfdf5;
-  color: #065f46;
-  border: 1px solid #a7f3d0;
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
   font-weight: 600;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   padding: 1px 6px;
@@ -397,9 +397,9 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  background: #f0fdf4;
-  border: 1px solid #bbf7d0;
-  color: #166534;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1d4ed8;
   font-size: 11.5px;
   font-weight: 600;
   padding: 3px 8px;
@@ -410,9 +410,9 @@
 }
 
 .speakButton:hover {
-  background: #dcfce7;
-  color: #14532d;
-  border-color: #86efac;
+  background: #dbeafe;
+  color: #1e40af;
+  border-color: #93c5fd;
 }
 
 .speakButton.isSpeaking {
@@ -431,7 +431,7 @@
 
 .waveBar {
   width: 2px;
-  background: #16a34a;
+  background: #2563eb;
   border-radius: 1px;
   animation: waveMotion 0.8s infinite ease-in-out;
 }
@@ -467,7 +467,7 @@
 .typingDot {
   width: 7px;
   height: 7px;
-  background: #1b6343;
+  background: #2563eb;
   border-radius: 50%;
   animation: dotPulse 1.4s infinite ease-in-out;
 }
@@ -512,9 +512,9 @@
 }
 
 .topicChip:hover {
-  background: #dcfce7;
-  color: #14532d;
-  border-color: #86efac;
+  background: #eff6ff;
+  color: #1e40af;
+  border-color: #93c5fd;
 }
 
 /* Voice Input Banner when recording */
@@ -570,7 +570,7 @@
 
 .langOption.active {
   background: #ffffff;
-  color: #0c2b1d;
+  color: #1e40af;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
@@ -598,9 +598,9 @@
 }
 
 .inputWrapper:focus-within {
-  border-color: #1b6343;
+  border-color: #2563eb;
   background: #ffffff;
-  box-shadow: 0 0 0 3px rgba(27, 99, 67, 0.15);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
 .chatInput {
@@ -654,7 +654,7 @@
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #1b6343 0%, #0c2b1d 100%);
+  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
   color: #ffffff;
   border: none;
   display: flex;
@@ -667,7 +667,7 @@
 
 .sendButton:hover:not(:disabled) {
   transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(12, 43, 29, 0.4);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
 }
 
 .sendButton:disabled {
@@ -686,7 +686,7 @@
 }
 
 .modalFooter strong {
-  color: #1b6343;
+  color: #2563eb;
 }
 
 /* Responsive styles - Compact & Aligned for Mobile Phones */
@@ -742,7 +742,7 @@
     height: 46px;
     border-radius: 13px;
     gap: 1px;
-    box-shadow: 0 6px 18px rgba(12, 43, 29, 0.4), 0 2px 6px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 6px 18px rgba(30, 64, 175, 0.4), 0 2px 6px rgba(0, 0, 0, 0.15);
   }
 
   .triggerSparkleIcon {
