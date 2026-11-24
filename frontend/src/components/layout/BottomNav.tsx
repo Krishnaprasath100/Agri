@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useLanguage } from '@/context/LanguageContext';
 import {
   BookOpen,
   PlusCircle,
@@ -21,6 +22,7 @@ const bottomNavItems = [
 
 export const BottomNav: React.FC = () => {
   const pathname = usePathname();
+  const { t } = useLanguage();
 
   return (
     <nav className="bottom-nav">
@@ -34,7 +36,7 @@ export const BottomNav: React.FC = () => {
               key={item.href}
               href={item.href}
               className="bottom-nav-fab"
-              aria-label={item.label}
+              aria-label={t(item.label)}
             >
               <Icon size={26} />
             </Link>
@@ -46,10 +48,10 @@ export const BottomNav: React.FC = () => {
             key={item.href}
             href={item.href}
             className={`bottom-nav-item${isActive ? ' active' : ''}`}
-            aria-label={item.label}
+            aria-label={t(item.label)}
           >
             <Icon size={22} />
-            <span>{item.label}</span>
+            <span>{t(item.label)}</span>
           </Link>
         );
       })}

@@ -32,7 +32,7 @@ export const TopNav: React.FC<TopNavProps> = ({
 }) => {
   const router = useRouter();
   const { user, role, logout } = useAuth();
-  const { language, setLanguage } = useLanguage();
+  const { language, setLanguage, t } = useLanguage();
   const [mounted, setMounted] = useState(false);
   const [showConfirmLogout, setShowConfirmLogout] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
@@ -194,7 +194,7 @@ export const TopNav: React.FC<TopNavProps> = ({
                 }}
                 title="Sign Out of Account"
               >
-                <LogOut size={14} /> Log Out
+                <LogOut size={14} /> {t('Log Out')}
               </button>
             ) : (
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -210,7 +210,7 @@ export const TopNav: React.FC<TopNavProps> = ({
                     fontWeight: 600,
                   }}
                 >
-                  <LogIn size={13} /> Login
+                  <LogIn size={13} /> {t('Login')}
                 </Link>
                 <Link
                   href="/register"
@@ -224,7 +224,7 @@ export const TopNav: React.FC<TopNavProps> = ({
                     fontWeight: 600,
                   }}
                 >
-                  <UserPlus size={13} /> Sign Up
+                  <UserPlus size={13} /> {t('Sign Up')}
                 </Link>
               </div>
             )}
@@ -297,7 +297,7 @@ export const TopNav: React.FC<TopNavProps> = ({
                 letterSpacing: '-0.02em',
               }}
             >
-              Confirm Logout
+              {t('Confirm Logout')}
             </h3>
 
             <p
@@ -308,7 +308,7 @@ export const TopNav: React.FC<TopNavProps> = ({
                 marginBottom: '24px',
               }}
             >
-              Are you sure you want to log out of your AgriTrack account?
+              {t('Are you sure you want to log out of your AgriTrack account?')}
             </p>
 
             <div style={{ display: 'flex', gap: '12px' }}>
@@ -325,7 +325,7 @@ export const TopNav: React.FC<TopNavProps> = ({
                   fontSize: '0.92rem',
                 }}
               >
-                Cancel
+                {t('Cancel')}
               </button>
               <button
                 type="button"
@@ -351,7 +351,7 @@ export const TopNav: React.FC<TopNavProps> = ({
                 }}
               >
                 <LogOut size={15} />
-                <span>{loggingOut ? 'Logging out...' : 'Yes, Log Out'}</span>
+                <span>{loggingOut ? t('Logging out...') : t('Yes, Log Out')}</span>
               </button>
             </div>
           </div>

@@ -381,21 +381,21 @@ export default function LedgerPage() {
         {/* 1. Summary Card: Total Income, Total Expenses, Balance */}
         <div className={styles.summaryCard}>
           <div className={styles.summaryCol}>
-            <span className={styles.summaryLabel}>Total Income</span>
+            <span className={styles.summaryLabel}>{t('Total Income')}</span>
             <span className={styles.summaryIncome}>
               ₹{totalIncome.toLocaleString('en-IN')}
             </span>
           </div>
 
           <div className={styles.summaryCol}>
-            <span className={styles.summaryLabel}>Total Expenses</span>
+            <span className={styles.summaryLabel}>{t('Total Expenses')}</span>
             <span className={styles.summaryExpense}>
               ₹{totalExpense.toLocaleString('en-IN')}
             </span>
           </div>
 
           <div className={styles.summaryCol}>
-            <span className={styles.summaryLabel}>Balance</span>
+            <span className={styles.summaryLabel}>{t('Balance')}</span>
             <span
               className={
                 balance >= 0 ? styles.summaryBalance : styles.summaryExpense
@@ -411,14 +411,14 @@ export default function LedgerPage() {
         {/* Active Filters Bar */}
         {activeFilterCount > 0 && (
           <div className={styles.activeFiltersBar}>
-            <span className={styles.activeFiltersLabel}>Filters:</span>
+            <span className={styles.activeFiltersLabel}>{t('Filters:')}</span>
             {selectedMonth !== 'All Months' && (
               <span className={styles.filterChip}>
-                Month: <strong>{selectedMonth}</strong>
+                {t('Month')}: <strong>{t(selectedMonth)}</strong>
                 <button
                   type="button"
                   onClick={() => setSelectedMonth('All Months')}
-                  aria-label="Clear month filter"
+                  aria-label={t('Clear month filter')}
                 >
                   ✕
                 </button>
@@ -426,11 +426,11 @@ export default function LedgerPage() {
             )}
             {selectedCrop !== 'All Crops' && (
               <span className={styles.filterChip}>
-                Crop: <strong>{selectedCrop}</strong>
+                {t('Crop')}: <strong>{t(selectedCrop) !== selectedCrop ? t(selectedCrop) : selectedCrop}</strong>
                 <button
                   type="button"
                   onClick={() => setSelectedCrop('All Crops')}
-                  aria-label="Clear crop filter"
+                  aria-label={t('Clear crop filter')}
                 >
                   ✕
                 </button>
@@ -438,11 +438,11 @@ export default function LedgerPage() {
             )}
             {selectedDate && (
               <span className={styles.filterChip}>
-                Date: <strong>{formatDisplayDate(selectedDate)}</strong>
+                {t('Date')}: <strong>{formatDisplayDate(selectedDate)}</strong>
                 <button
                   type="button"
                   onClick={() => setSelectedDate('')}
-                  aria-label="Clear date filter"
+                  aria-label={t('Clear date filter')}
                 >
                   ✕
                 </button>
@@ -457,7 +457,7 @@ export default function LedgerPage() {
                 setSelectedDate('');
               }}
             >
-              Clear All
+              {t('Clear All')}
             </button>
           </div>
         )}
@@ -509,14 +509,14 @@ export default function LedgerPage() {
                 className="animate-spin"
                 style={{ color: '#2563eb', marginBottom: 8, display: 'inline-block' }}
               />
-              <div>Loading records...</div>
+              <div>{t('Loading records...')}</div>
             </div>
           ) : filteredRows.length === 0 ? (
             <div className={styles.emptyState}>
               <div style={{ color: '#64748b', fontSize: '0.95rem', fontWeight: 600 }}>
                 {rows.length === 0
-                  ? 'No New Entry Found'
-                  : `No ledger entries found for ${selectedMonth} • ${selectedCrop}.`}
+                  ? t('No New Entry Found')
+                  : `${t('No ledger entries found for')} ${t(selectedMonth)} • ${t(selectedCrop) !== selectedCrop ? t(selectedCrop) : selectedCrop}.`}
               </div>
             </div>
           ) : (
@@ -527,8 +527,8 @@ export default function LedgerPage() {
                   <span className={styles.rowDate}>
                     {formatDisplayDate(row.date)}
                   </span>
-                  <span className={styles.rowCrop}>{row.crop}</span>
-                  <span className={styles.rowCategory}>{row.details}</span>
+                  <span className={styles.rowCrop}>{t(row.crop) !== row.crop ? t(row.crop) : row.crop}</span>
+                  <span className={styles.rowCategory}>{t(row.details) !== row.details ? t(row.details) : row.details}</span>
                   {row.person && row.person !== '—' && (
                     <span className={styles.rowPerson}>{row.person}</span>
                   )}
@@ -536,8 +536,8 @@ export default function LedgerPage() {
                     <div className={styles.rowAccount}>
                       <Landmark className={styles.bankIcon} />
                       <span>
-                        {(row.accountPrefix ||
-                          (row.type === 'income' ? 'Received in' : 'Paid from')) +
+                        {(row.accountPrefix ? t(row.accountPrefix) :
+                          (row.type === 'income' ? t('Received in') : t('Paid from'))) +
                           ': ' +
                           row.account}
                       </span>
@@ -548,7 +548,7 @@ export default function LedgerPage() {
                       onClick={() => openEditModal(row)}
                     >
                       <Pencil size={11} strokeWidth={2.5} />
-                      <span>Edit</span>
+                      <span>{t('Edit')}</span>
                     </button>
                   </div>
                 </div>
@@ -581,7 +581,7 @@ export default function LedgerPage() {
           {/* 4. Total Row */}
           {!loading && filteredRows.length > 0 && (
             <div className={styles.tableTotalRow}>
-              <div className={styles.totalLabel}>Total</div>
+              <div className={styles.totalLabel}>{t('Total')}</div>
               <div className={styles.totalIncome}>
                 {totalIncome > 0 ? totalIncome.toLocaleString('en-IN') : '—'}
               </div>
@@ -596,7 +596,7 @@ export default function LedgerPage() {
         <div className={styles.lowerMiddleBar}>
           <Link href="/entry" className={styles.newEntryButton}>
             <Plus size={20} strokeWidth={2.8} />
-            <span>New Entry</span>
+            <span>{t('New Entry')}</span>
           </Link>
         </div>
 
@@ -609,7 +609,7 @@ export default function LedgerPage() {
             >
               <div className={styles.modalHeader}>
                 <h3 className={styles.modalTitle}>
-                  Edit {editingRow.type === 'income' ? 'Income' : 'Expense'} Entry
+                  {editingRow.type === 'income' ? t('Edit Income Entry') : t('Edit Expense Entry')}
                 </h3>
                 <button
                   type="button"
@@ -622,7 +622,7 @@ export default function LedgerPage() {
 
               <div className={styles.modalBody}>
                 <div className={styles.formGroup}>
-                  <label className={styles.formLabel}>Date</label>
+                  <label className={styles.formLabel}>{t('Date')}</label>
                   <input
                     type="date"
                     className={styles.formInput}
@@ -637,7 +637,7 @@ export default function LedgerPage() {
                 </div>
 
                 <div className={styles.formGroup}>
-                  <label className={styles.formLabel}>Crop</label>
+                  <label className={styles.formLabel}>{t('Crop')}</label>
                   <input
                     type="text"
                     className={styles.formInput}
@@ -649,7 +649,7 @@ export default function LedgerPage() {
                 </div>
 
                 <div className={styles.formGroup}>
-                  <label className={styles.formLabel}>Details / Category</label>
+                  <label className={styles.formLabel}>{t('Details / Category')}</label>
                   <input
                     type="text"
                     className={styles.formInput}
@@ -662,7 +662,7 @@ export default function LedgerPage() {
 
                 <div className={styles.formGroup}>
                   <label className={styles.formLabel}>
-                    {editingRow.type === 'income' ? 'Buyer Name' : 'Payee / Store'}
+                    {editingRow.type === 'income' ? t('Buyer Name') : t('Payee / Store')}
                   </label>
                   <input
                     type="text"
@@ -675,7 +675,7 @@ export default function LedgerPage() {
                 </div>
 
                 <div className={styles.formGroup}>
-                  <label className={styles.formLabel}>Bank / Account</label>
+                  <label className={styles.formLabel}>{t('Bank / Account')}</label>
                   <input
                     type="text"
                     className={styles.formInput}
@@ -687,7 +687,7 @@ export default function LedgerPage() {
                 </div>
 
                 <div className={styles.formGroup}>
-                  <label className={styles.formLabel}>Amount (₹)</label>
+                  <label className={styles.formLabel}>{t('Amount (₹)')}</label>
                   <input
                     type="text"
                     inputMode="decimal"
@@ -717,7 +717,7 @@ export default function LedgerPage() {
                   disabled={savingEdit}
                 >
                   <Trash2 size={16} />
-                  <span>Delete</span>
+                  <span>{t('Delete')}</span>
                 </button>
 
                 <button
@@ -726,7 +726,7 @@ export default function LedgerPage() {
                   onClick={handleSaveEdit}
                   disabled={savingEdit}
                 >
-                  {savingEdit ? 'Saving...' : 'Save Changes'}
+                  {savingEdit ? t('Saving...') : t('Save Changes')}
                 </button>
               </div>
             </div>
@@ -748,13 +748,13 @@ export default function LedgerPage() {
                   style={{ display: 'flex', alignItems: 'center', gap: 8 }}
                 >
                   <Filter size={18} style={{ color: '#2563eb' }} />
-                  <span>Filter Ledger</span>
+                  <span>{t('Filter Ledger')}</span>
                 </div>
                 <button
                   type="button"
                   className={styles.modalClose}
                   onClick={() => setIsFilterModalOpen(false)}
-                  aria-label="Close filter dialog"
+                  aria-label={t('Close filter dialog')}
                 >
                   <X size={18} />
                 </button>
@@ -763,25 +763,31 @@ export default function LedgerPage() {
               <div className={styles.modalBody}>
                 {/* Crop Filter */}
                 <div className={styles.formGroup}>
-                  <label className={styles.formLabel}>Crop</label>
+                  <label className={styles.formLabel}>{t('Crop')}</label>
                   <ChoicePicker
-                    ariaLabel="Filter by crop"
+                    ariaLabel={t('Filter by crop')}
                     value={draftCrop}
-                    placeholder="All Crops"
+                    placeholder={t('All Crops')}
                     onChange={setDraftCrop}
-                    options={cropOptions.map((c) => ({ value: c, label: c }))}
+                    options={cropOptions.map((c) => ({
+                      value: c,
+                      label: c === 'All Crops' ? t('All Crops') : (t(c) !== c ? t(c) : c),
+                    }))}
                   />
                 </div>
 
                 {/* Month Filter */}
                 <div className={styles.formGroup}>
-                  <label className={styles.formLabel}>Month</label>
+                  <label className={styles.formLabel}>{t('Month')}</label>
                   <ChoicePicker
-                    ariaLabel="Filter by month"
+                    ariaLabel={t('Filter by month')}
                     value={draftMonth}
-                    placeholder="All Months"
+                    placeholder={t('All Months')}
                     onChange={setDraftMonth}
-                    options={monthOptions.map((m) => ({ value: m, label: m }))}
+                    options={monthOptions.map((m) => ({
+                      value: m,
+                      label: m === 'All Months' ? t('All Months') : (t(m) !== m ? t(m) : m),
+                    }))}
                   />
                 </div>
 
@@ -796,7 +802,7 @@ export default function LedgerPage() {
                     }}
                   >
                     <label className={styles.formLabel} style={{ marginBottom: 0 }}>
-                      Specific Date (Optional)
+                      {t('Specific Date (Optional)')}
                     </label>
                     {draftDate && (
                       <button
@@ -812,7 +818,7 @@ export default function LedgerPage() {
                           padding: 0,
                         }}
                       >
-                        Clear date
+                        {t('Clear date')}
                       </button>
                     )}
                   </div>
@@ -822,7 +828,7 @@ export default function LedgerPage() {
                     placeholder="dd-mm-yyyy"
                   />
                   <div style={{ fontSize: '0.74rem', color: '#64748b', marginTop: 4 }}>
-                    Choose a date to view entries for that specific day, or leave blank for all dates.
+                    {t('Choose a date to view entries for that specific day, or leave blank for all dates.')}
                   </div>
                 </div>
               </div>
@@ -837,7 +843,7 @@ export default function LedgerPage() {
                     setDraftDate('');
                   }}
                 >
-                  Reset
+                  {t('Reset')}
                 </button>
 
                 <button
@@ -850,7 +856,7 @@ export default function LedgerPage() {
                     setIsFilterModalOpen(false);
                   }}
                 >
-                  Apply Filters
+                  {t('Apply Filters')}
                 </button>
               </div>
             </div>

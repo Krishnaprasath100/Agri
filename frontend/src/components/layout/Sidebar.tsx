@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
+import { useLanguage } from '@/context/LanguageContext';
 import {
   Sprout,
   BookOpen,
@@ -33,6 +34,7 @@ interface NavItem {
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const pathname = usePathname();
   const { user, role, logout, isPostgresActive } = useAuth();
+  const { t } = useLanguage();
   const [mounted, setMounted] = useState(false);
   const [showConfirmLogout, setShowConfirmLogout] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
@@ -160,7 +162,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
               padding: '6px 12px',
             }}
           >
-            Management
+            {t('Management')}
           </div>
 
           {navItems.map((item) => {
@@ -186,7 +188,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                 }}
               >
                 <Icon size={18} color={isActive ? '#38bdf8' : 'rgba(255,255,255,0.6)'} />
-                <span>{item.label}</span>
+                <span>{t(item.label)}</span>
               </Link>
             );
           })}
@@ -204,7 +206,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                   padding: '14px 12px 6px',
                 }}
               >
-                Administration
+                {t('Administration')}
               </div>
 
               <Link
@@ -227,7 +229,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
               >
                 <ShieldAlert size={18} color={pathname === '/admin' ? '#fbbf24' : '#f59e0b'} />
                 <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <span>Admin Console</span>
+                  <span>{t('Admin Console')}</span>
                   <span
                     style={{
                       fontSize: '0.65rem',
@@ -350,8 +352,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
             <button
               type="button"
               onClick={() => setShowConfirmLogout(true)}
-              title="Sign Out"
-              aria-label="Sign Out"
+              title={t('Sign Out')}
+              aria-label={t('Sign Out')}
               style={{
                 flexShrink: 0,
                 display: 'inline-flex',
@@ -442,7 +444,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                 letterSpacing: '-0.02em',
               }}
             >
-              Confirm Logout
+              {t('Confirm Logout')}
             </h3>
 
             <p
@@ -453,7 +455,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                 marginBottom: '24px',
               }}
             >
-              Are you sure you want to log out of your AgriTrack account?
+              {t('Are you sure you want to log out of your AgriTrack account?')}
             </p>
 
             <div style={{ display: 'flex', gap: '12px' }}>
@@ -470,7 +472,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                   fontSize: '0.92rem',
                 }}
               >
-                Cancel
+                {t('Cancel')}
               </button>
               <button
                 type="button"
